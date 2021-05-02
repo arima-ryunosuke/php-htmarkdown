@@ -1,0 +1,1088 @@
+<html lang="">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>README.md</title>
+
+    <link id="sphinx_rtd_theme" href="https://cdn.jsdelivr.net/npm/sphinx_rtd_theme@0.4.2/css/theme.css" rel="stylesheet">
+    <link id="highlight_style" data-cdn-url="https://cdn.jsdelivr.net/npm/highlightjs@9.16.2/styles/" href="" rel="stylesheet">
+    <style>/* override theme.css */
+
+h1, h2, h3, h4, h5, h6 {
+    border-bottom: 1px solid #E1E4E5;
+}
+
+h2, h3, h4, h5, h6 {
+    margin-top: 20px;
+}
+
+.wy-nav-content {
+    max-width: 100%;
+    height: unset;
+}
+
+.wy-side-scroll.scrolling {
+    width: 300px;
+}
+
+.wy-side-scroll.no-scrollbar {
+    width: 320px;
+}
+
+.wy-side-scroll.scrolling-end {
+    transition: all 500ms 0s ease;
+}
+
+.wy-side-scroll::-webkit-scrollbar {
+    width: 12px;
+}
+
+.wy-side-scroll::-webkit-scrollbar-track {
+    background: #e1e1e1;
+}
+
+.wy-side-scroll::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: #a9a9a9;
+}
+
+.rst-content code {
+    white-space: inherit;
+}
+
+.rst-content pre div.code {
+    padding: 8px 12px;
+    line-height: 16px;
+    max-width: 100%;
+    border: solid 1px #e1e4e5;
+    font-size: 75%;
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", Courier, monospace;
+    overflow-x: auto;
+}
+
+.rst-content .section {
+    clear: both;
+}
+
+.rst-content .section ol li > *,
+.rst-content .section ul li > *,
+.rst-content .section dl dd > * {
+    margin-top: 0;
+}
+
+.rst-content .section ol li > ol,
+.rst-content .section ol li > ul,
+.rst-content .section ol li > dl,
+.rst-content .section ul li > ol,
+.rst-content .section ul li > ul,
+.rst-content .section ul li > dl,
+.rst-content .section dl dd > ol,
+.rst-content .section dl dd > ul,
+.rst-content .section dl dd > dl {
+    margin-bottom: 0;
+}
+
+.rst-content dl.field-list {
+    display: grid;
+    grid-template-columns: max-content auto;
+    overflow-x: auto;
+}
+
+.rst-content details {
+    margin-bottom: 24px;
+}
+
+.rst-content details summary {
+    cursor: pointer;
+}
+
+.rst-content .admonition-title:empty {
+    display: none;
+}
+
+.rst-content .sidebar-title:empty {
+    display: none;
+}
+
+.rst-footer-buttons {
+    display: flex;
+}
+
+.rst-footer-buttons:before, .rst-footer-buttons:after {
+    display: initial;
+    content: unset;
+}
+
+.rst-footer-buttons div:nth-child(1) {
+    width: calc(100% / 3);
+    text-align: left;
+}
+
+.rst-footer-buttons div:nth-child(2) {
+    width: calc(100% / 3);
+    text-align: center;
+
+}
+
+.rst-footer-buttons div:nth-child(3) {
+    width: calc(100% / 3);
+    text-align: right;
+
+}
+
+/* table of contents */
+
+.markdown-toc {
+    padding-bottom: 8px;
+}
+
+[data-toc-number="false"] .toc-n {
+    display: none;
+}
+
+[data-toc-level="1"] .toc-h2,
+[data-toc-level="1"] .toc-h3,
+[data-toc-level="1"] .toc-h4,
+[data-toc-level="1"] .toc-h5,
+[data-toc-level="1"] .toc-h6,
+[data-toc-level="2"] .toc-h3,
+[data-toc-level="2"] .toc-h4,
+[data-toc-level="2"] .toc-h5,
+[data-toc-level="2"] .toc-h6,
+[data-toc-level="3"] .toc-h4,
+[data-toc-level="3"] .toc-h5,
+[data-toc-level="3"] .toc-h6,
+[data-toc-level="4"] .toc-h5,
+[data-toc-level="4"] .toc-h6,
+[data-toc-level="5"] .toc-h6 {
+    display: none;
+}
+
+.toc-h {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.toc-h:not([data-section-count="0"]) {
+    font-weight: bold;
+    background-color: #4e4a4a;
+}
+
+
+a.toc-h1 {
+    font-size: 100%;
+    padding-left: 1.35rem;
+}
+
+.toc-n1 {
+    color: #a9a9a9;
+}
+
+
+a.toc-h2 {
+    font-size: 96%;
+    padding-left: 2.35rem;
+}
+
+.toc-n2 {
+    color: #a9a9a9;
+}
+
+
+a.toc-h3 {
+    font-size: 92%;
+    padding-left: 3.35rem;
+}
+
+.toc-n3 {
+    color: #a9a9a9;
+}
+
+
+a.toc-h4 {
+    font-size: 88%;
+    padding-left: 4.35rem;
+}
+
+.toc-n4 {
+    color: #a9a9a9;
+}
+
+
+a.toc-h5 {
+    font-size: 84%;
+    padding-left: 5.35rem;
+}
+
+.toc-n5 {
+    color: #a9a9a9;
+}
+
+
+a.toc-h6 {
+    font-size: 80%;
+    padding-left: 6.35rem;
+}
+
+.toc-n6 {
+    color: #a9a9a9;
+}
+
+
+/* article */
+
+small.metadata {
+    font-family: sans-serif;
+    display: block;
+    text-align: right;
+}
+
+.section-level-h1 small.metadata {
+    font-size: 100%;
+    margin-top: -3.3rem;
+}
+
+.section-level-h2 small.metadata {
+    font-size: 90%;
+    margin-top: -2.7rem;
+}
+
+
+[data-section-indent="1"] [data-section-level="1"] {
+    padding-left: 0rem;
+}
+
+
+[data-section-indent="1"] [data-section-level="2"] {
+    padding-left: 1rem;
+}
+
+
+[data-section-indent="1"] [data-section-level="3"] {
+    padding-left: 2rem;
+}
+
+
+[data-section-indent="1"] [data-section-level="4"] {
+    padding-left: 3rem;
+}
+
+
+[data-section-indent="1"] [data-section-level="5"] {
+    padding-left: 4rem;
+}
+
+
+[data-section-indent="1"] [data-section-level="6"] {
+    padding-left: 5rem;
+}
+
+
+[data-section-indent="2"] [data-section-level="1"] {
+    padding-left: 0rem;
+}
+
+
+[data-section-indent="2"] [data-section-level="2"] {
+    padding-left: 2rem;
+}
+
+
+[data-section-indent="2"] [data-section-level="3"] {
+    padding-left: 4rem;
+}
+
+
+[data-section-indent="2"] [data-section-level="4"] {
+    padding-left: 6rem;
+}
+
+
+[data-section-indent="2"] [data-section-level="5"] {
+    padding-left: 8rem;
+}
+
+
+[data-section-indent="2"] [data-section-level="6"] {
+    padding-left: 10rem;
+}
+
+
+[data-section-indent="3"] [data-section-level="1"] {
+    padding-left: 0rem;
+}
+
+
+[data-section-indent="3"] [data-section-level="2"] {
+    padding-left: 3rem;
+}
+
+
+[data-section-indent="3"] [data-section-level="3"] {
+    padding-left: 6rem;
+}
+
+
+[data-section-indent="3"] [data-section-level="4"] {
+    padding-left: 9rem;
+}
+
+
+[data-section-indent="3"] [data-section-level="5"] {
+    padding-left: 12rem;
+}
+
+
+[data-section-indent="3"] [data-section-level="6"] {
+    padding-left: 15rem;
+}
+
+
+[data-section-indent="4"] [data-section-level="1"] {
+    padding-left: 0rem;
+}
+
+
+[data-section-indent="4"] [data-section-level="2"] {
+    padding-left: 4rem;
+}
+
+
+[data-section-indent="4"] [data-section-level="3"] {
+    padding-left: 8rem;
+}
+
+
+[data-section-indent="4"] [data-section-level="4"] {
+    padding-left: 12rem;
+}
+
+
+[data-section-indent="4"] [data-section-level="5"] {
+    padding-left: 16rem;
+}
+
+
+[data-section-indent="4"] [data-section-level="6"] {
+    padding-left: 20rem;
+}
+
+
+[data-section-indent="5"] [data-section-level="1"] {
+    padding-left: 0rem;
+}
+
+
+[data-section-indent="5"] [data-section-level="2"] {
+    padding-left: 5rem;
+}
+
+
+[data-section-indent="5"] [data-section-level="3"] {
+    padding-left: 10rem;
+}
+
+
+[data-section-indent="5"] [data-section-level="4"] {
+    padding-left: 15rem;
+}
+
+
+[data-section-indent="5"] [data-section-level="5"] {
+    padding-left: 20rem;
+}
+
+
+[data-section-indent="5"] [data-section-level="6"] {
+    padding-left: 25rem;
+}
+
+
+[data-section-indent="6"] [data-section-level="1"] {
+    padding-left: 0rem;
+}
+
+
+[data-section-indent="6"] [data-section-level="2"] {
+    padding-left: 6rem;
+}
+
+
+[data-section-indent="6"] [data-section-level="3"] {
+    padding-left: 12rem;
+}
+
+
+[data-section-indent="6"] [data-section-level="4"] {
+    padding-left: 18rem;
+}
+
+
+[data-section-indent="6"] [data-section-level="5"] {
+    padding-left: 24rem;
+}
+
+
+[data-section-indent="6"] [data-section-level="6"] {
+    padding-left: 30rem;
+}
+
+
+.admonition-title:empty {
+    display: none;
+}
+
+.admonition-body {
+    white-space: pre-line;
+}
+
+.internal-file {
+    /*
+    transform: scale(0.5);
+    transform-origin: top left;
+    height: 50%;
+    width: 200%;
+    */
+    zoom: 0.5;
+    background: white;
+    padding: 2rem;
+}
+
+pre[data-label]:not([data-label=""]):before {
+    content: attr(data-label);
+    background: gray;
+    color: #fff;
+    padding: 2px;
+    position: absolute;
+    margin-top: 1px;
+    margin-left: 1px;
+    font-size: 85%;
+}
+
+pre[data-label]:not([data-label=""]) div.code {
+    padding-top: 32px
+}
+
+@media print {
+    .sentinel {
+        display: none;
+    }
+}
+
+/* control panel */
+
+.option-title {
+    color: #fcfcfc;
+    display: inline-block;
+    width: 176px;
+}
+
+.option-input {
+    display: inline-block;
+    height: 18px;
+    vertical-align: text-bottom;
+    padding: 0;
+}
+
+[type="checkbox"].option-input {
+    width: 16px;
+    cursor: pointer;
+}
+
+[type="number"].option-input {
+    width: 60px;
+    text-align: right;
+}
+
+select.option-input {
+    width: 90px;
+}
+
+/* utility */
+
+a.disabled {
+    pointer-events: none;
+    color: gray;
+}
+
+.singlefile .hidden-single {
+    display: none;
+}
+
+.downloaded .hidden-download {
+    display: none;
+}
+</style>
+
+    <script defer src="https://cdn.jsdelivr.net/npm/highlightjs@9.16.2/highlight.pack.min.js"></script>
+    <script defer>document.addEventListener('DOMContentLoaded', function () {
+    /// ショートカットとユーティリティとプロトタイプ拡張
+    const $ = document.querySelector.bind(document);
+    const $$ = document.querySelectorAll.bind(document);
+    const html = $('html');
+    const body = $('body');
+    const scroller = $('.wy-side-scroll');
+    const outline = $('.markdown-toc');
+    const article = $('.markdown-body>article');
+    const sentinel = $('.sentinel');
+    const controlPanel = $('.control-panel');
+    const Timer = function (interval, callback) {
+        let timerId = null;
+        this.start = function () {
+            clearTimeout(timerId);
+            timerId = setTimeout(callback, interval);
+        };
+        this.stop = function () {
+            clearTimeout(timerId);
+        };
+    };
+    Element.prototype.$ = Element.prototype.querySelector;
+    Element.prototype.$$ = Element.prototype.querySelectorAll;
+    Element.prototype.appendChildren = function (nodes) {
+        for (const node of Object.values(document.createElements(nodes))) {
+            this.appendChild(node);
+        }
+    }
+    Document.prototype.createElements = function (nodes) {
+        const elements = [];
+        for (const [tagname, attributes] of Object.entries(nodes)) {
+            const element = document.createElement(tagname);
+            for (const [name, attr] of Object.entries(attributes)) {
+                if (name === 'class') {
+                    element.className = (attr instanceof Array ? attr : [attr]).join(' ');
+                }
+                else if (name === 'dataset') {
+                    for (const [name, value] of Object.entries(attr)) {
+                        element.dataset[name] = value;
+                    }
+                }
+                else if (name === 'children') {
+                    const append = function (e) {
+                        if (e instanceof Array) {
+                            e.forEach(e => append(e));
+                        }
+                        else if (e instanceof Node || typeof (e) === "string") {
+                            element.append(e);
+                        }
+                        else if (e instanceof Object) {
+                            element.appendChildren(e);
+                        }
+                    };
+                    append(attr);
+                }
+                else {
+                    element[name] = attr;
+                }
+            }
+            elements.push(element);
+        }
+        return elements;
+    };
+    NodeList.prototype.observeIntersection = function (opts) {
+        const observer = new IntersectionObserver(function (entries, observer) {
+            entries.forEach((e) => (opts.change ?? function () {})(e, observer));
+            entries.filter(e => e.isIntersecting).forEach((e) => (opts.intersect ?? function () {})(e, observer));
+            entries.filter(e => !e.isIntersecting).forEach((e) => (opts.notIntersect ?? function () {})(e, observer));
+        }, opts);
+        this.forEach(node => observer.observe(node));
+        return observer;
+    };
+    HTMLInputElement.prototype.getValue = HTMLSelectElement.prototype.getValue = function () {
+        if (this.tagName === 'SELECT') {
+            return this.$('option:checked').value;
+        }
+        else if (this.type === 'checkbox') {
+            return '' + this.checked;
+        }
+        else {
+            return this.value;
+        }
+    };
+    HTMLInputElement.prototype.setValue = HTMLSelectElement.prototype.setValue = function (value) {
+        if (this.tagName === 'SELECT') {
+            this.$('option[value="' + value + '"]').selected = true;
+        }
+        else if (this.type === 'checkbox') {
+            this.checked = value === 'true';
+        }
+        else {
+            this.value = value;
+        }
+    };
+
+    /// 印刷前の処理
+    window.addEventListener('beforeprint', function (e) {
+        // Intersection で highlight.js してるので、されていないものが居る
+        article.$$('pre>div').forEach(function (node) {
+            hljs.highlightBlock(node);
+        });
+
+        // details を開かないと印刷されない
+        article.$$('details').forEach(function (node) {
+            node.open = true;
+        });
+    });
+
+    /// いくつか標準ではつかない class があるので付与
+    article.$$('table').forEach(e => e.classList.add('docutils', 'align-default'));
+    article.$$('ul').forEach(e => e.classList.add('simple'));
+
+    /// セクション由来のアウトラインの構築
+    const levels = (new Array(6)).fill(0);
+    article.$$('.section').forEach(function (section) {
+        const sectionTitle = section.$('.section-header').textContent;
+        const sectionLevel = +section.dataset.sectionLevel;
+
+        levels[sectionLevel - 1]++;
+        levels.fill(null, sectionLevel);
+
+        outline.appendChildren({
+            a: {
+                id: `toc-${section.id}`,
+                href: `#${section.id}`,
+                title: sectionTitle,
+                class: ['toc-h', `toc-h${sectionLevel}`],
+                dataset: {sectionCount: '0'},
+                children: [
+                    {
+                        span: {
+                            class: ['toc-n', `toc-n${sectionLevel}`],
+                            children: levels.filter(v => v !== null).join('.'),
+                        },
+                    },
+                    ' ' + sectionTitle
+                ],
+            },
+        });
+    });
+
+    /// アウトラインのハイライト監視
+    article.$$('.section').observeIntersection({
+        rootMargin: '0px 0px 0px 0px',
+        change: function (e) {
+            let toch = document.getElementById(`toc-${e.target.id}`);
+            while (toch.offsetParent === null) {
+                toch = toch.previousElementSibling;
+            }
+            toch.dataset.sectionCount = (Math.max(+toch.dataset.sectionCount + (e.isIntersecting ? +1 : -1), 0)) + '';
+        },
+    });
+
+    /// コードブロックの highlight.js 監視
+    article.$$('pre>div').observeIntersection({
+        rootMargin: '0px 0px 10% 0px',
+        intersect: function (e, observer) {
+            hljs.highlightBlock(e.target);
+            observer.unobserve(e.target);
+        },
+    });
+
+    /// 記事末尾の空白を確保（ジャンプしたときに「え？どこ？」となるのを回避する）
+    const headers = $$('.section-header');
+    if (headers.length) {
+        const lastHeader = headers[headers.length - 1];
+        const height = sentinel.offsetTop - lastHeader.offsetTop + parseInt(getComputedStyle(lastHeader).marginTop);
+        sentinel.style.height = `calc(100vh - ${height}px)`;
+    }
+
+    /// コンパネ
+    $('.rst-current-version').addEventListener('click', function (e) {
+        e.target.closest('.rst-versions').classList.toggle('shift-up');
+    });
+    controlPanel.addEventListener('change', function (e) {
+        if (e.target.matches('[data-input-name]')) {
+            html.dataset[e.target.dataset.inputName] = e.target.getValue();
+            controlPanel.save();
+        }
+        if (e.target.id === 'highlight_css') {
+            const highlight_style = $('#highlight_style');
+            highlight_style.href = highlight_style.dataset.cdnUrl + e.target.getValue() + '.min.css';
+        }
+    });
+    controlPanel.save = function () {
+        const savedata = {};
+        this.$$('[data-input-name]').forEach(function (input) {
+            savedata[input.dataset.inputName] = input.getValue();
+        });
+        localStorage.setItem('ht-setting', JSON.stringify(savedata));
+    };
+    controlPanel.load = function () {
+        const e = new Event('change', {bubbles: true});
+        const savedata = JSON.parse(localStorage.getItem('ht-setting') ?? '{"tocNumber":"true","tocLevel":"5"}');
+        this.$$('[data-input-name]').forEach(function (input) {
+            input.setValue(savedata[input.dataset.inputName] ?? input.dataset.defaultValue);
+            input.dispatchEvent(e);
+        });
+    };
+    controlPanel.load();
+
+    /// アウトラインのクリックイベント
+    outline.addEventListener('click', function (e) {
+        if (e.target.matches('a.toc-h')) {
+            e.preventDefault();
+            const section = $(e.target.getAttribute('href'));
+            section.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+            });
+        }
+    });
+
+    // アウトラインのスクロールの自動追従
+    const followMenuTimer = new Timer(1000, function () {
+        $$('.toc-h:not([data-section-count="0"])').forEach(function (toch) {
+            toch.scrollIntoView({
+                behavior: "smooth",
+                block: "center",
+            });
+        });
+    });
+    document.addEventListener('scroll', function (e) {
+        if (html.dataset.tocFollow === 'true') {
+            followMenuTimer.start();
+        }
+    });
+
+    /// スクロールバーを自動的に隠す
+    const scrollHideTimer = new Timer(2500, function () {
+        scroller.classList.remove('scrolling');
+        scroller.classList.add('scrolling-end');
+    });
+    const scrollEvent = function () {
+        followMenuTimer.stop();
+        scrollHideTimer.stop();
+
+        scroller.classList.add('scrolling');
+        scroller.classList.remove('scrolling-end');
+        scrollHideTimer.start();
+    };
+    scroller.addEventListener('scroll', scrollEvent);
+
+    /// スクロールが親に伝播するのは使いづらいので抑止する
+    scroller.addEventListener('wheel', function (e) {
+        if (scroller.scrollHeight > scroller.clientHeight) {
+            if (e.deltaY < 0 && scroller.scrollTop === 0) {
+                e.preventDefault();
+            }
+            if (e.deltaY > 0 && scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight) {
+                e.preventDefault();
+            }
+            scrollEvent();
+        }
+    }, {passive: false});
+});
+</script>
+</head>
+
+<body class="wy-body-for-nav downloaded singlefile">
+<div class="wy-grid-for-nav">
+    <nav class="wy-nav-side">
+        <div class="wy-side-scroll">
+            <div class="wy-side-nav-search">
+                <a href="" class="icon icon-home"> README.md</a>
+                <div class="version">
+                    Last Modified 2021/05/09 16:05:41                </div>
+                <div role="search">
+                    <form id="rtd-search-form" class="wy-form hidden-download" method="get">
+                        <input type="text" name="query" placeholder="Search docs" value="">
+                    </form>
+                </div>
+            </div>
+            <div class="wy-menu wy-menu-vertical markdown-toc">
+                <p class="caption"><span class="caption-text">Table of Contents</span></p>
+            </div>
+        </div>
+    </nav>
+    <div class="wy-nav-content-wrap">
+        <div class="wy-nav-content">
+            <div class="rst-content">
+                <header class="hidden-single">
+                    <ul class="wy-breadcrumbs">
+                        <li class="top-breadcrumb"><a href="/" class="icon icon-home"></a> »</li>
+                                                    <li><a href="./index.html">apache-markdown/</a> »</li>
+                                                <li>README.md</li>
+                        <li class="wy-breadcrumbs-aside hidden-download">
+                            <a href="?raw=true" class="fa fa-file-text"> View Markdown</a>
+                            <a href="?dl=true" class="fa fa-download" download> Download</a>
+                        </li>
+                    </ul>
+                    <hr>
+                </header>
+                <main class="markdown-body">
+                    <article><section id="_a1ea035e51bd155b85c882ccf36ecd85554081c8-1" class="section section-level-h1" data-section-level="1"><h1 class="section-header">Markdown viewer for web</h1>
+</section><section id="_55f8ebc805e65b5b71ddafdae390e3be2bcd69af-1" class="section section-level-h2" data-section-level="2"><h2 class="section-header">Description</h2>
+<p>markdown を良い感じに表示する phar です。<br>
+ざっくり言えば要するに docsify の php 版のようなものです。</p>
+<p>デザインは Read The Docs のものを使用しています。</p>
+<ul>
+<li><a href="https://arima-ryunosuke.github.io/php-htmarkdown/">Demo</a></li>
+</ul>
+</section><section id="_fd6c3ebf7befca9f8208f86c76e4d4180303745c-1" class="section section-level-h2" data-section-level="2"><h2 class="section-header">Install</h2>
+</section><section id="_454d783b07841da1d1409e2ec34ec5cfe22e35dc-1" class="section section-level-h3" data-section-level="3"><h3 class="section-header">Rewrite Mode</h3>
+<p>下記のように web サーバを設定します。</p>
+<pre data-label="apacheの場合"><div class="language-plaintext:apacheの場合 plaintext code">RewriteRule \.md$ htmarkdown.phar [QSA,L]</div></pre>
+<pre data-label="nginxの場合"><div class="language-plaintext:nginxの場合 plaintext code">rewrite \.md$ htmarkdown.phar;</div></pre>
+<p>説明はほぼ不要ですが、拡張子 md を rewrite して phar に委譲されるようにします。<br>
+<code>-d</code> オプションを加えれば Directory Index としても機能します。</p>
+<p>※ 環境によっては <code>security.limit_extensions</code> や <code>SetHandler</code> 等の設定が必要です</p>
+</section><section id="_b6116e0a38445828e0b32bcde97c58843cf50feb-1" class="section section-level-h3" data-section-level="3"><h3 class="section-header">Built in Server Mode</h3>
+<p>下記のようにして built in server で起動します。</p>
+<pre data-label=""><div class="language-bash bash code">php -S 0.0.0.0:8000 htmarkdown.phar</div></pre>
+<p>これも説明は不要でしょう。通常の built in server です。<br>
+phar がルーターの役割も持っているので、起動したカレントディレクトリ（もちろん <code>-t</code> も有効です）をドキュメントルートとして web サーバが起動します。</p>
+<p>docsify の使い方に近いです。</p>
+</section><section id="_1d787de16a8d98dec52d81dfb9c3691e3ed35031-1" class="section section-level-h3" data-section-level="3"><h3 class="section-header">Command Line Mode</h3>
+<p>下記のように引数を渡すと引数が html に変換されます。</p>
+<pre data-label=""><div class="language-bash bash code">php htmarkdown.phar /path/to/markdown.md &gt; /path/to/markdown.html</div></pre>
+<p>出力は標準出力です。なので上記のようにリダイレクトは必須です。<br>
+また、ディレクトリを渡すと zip のバイナリが出力されます。</p>
+<p>ただし、この機能は現時点ではおまけです。<br>
+この機能は後述の semver の互換性保持には含まれません。</p>
+</section><section id="_ad565d9d01d0e0bf91fd6a8532f6d81613338901-1" class="section section-level-h2" data-section-level="2"><h2 class="section-header">Feature</h2>
+<p>基本的には機能決め打ちのただの markdown viewer です。</p>
+<ul>
+<li>parent, sibling, children のような周辺リンクの生成機能</li>
+<li>自身以下からの検索機能</li>
+<li>ダウンロード機能</li>
+<li>一部の設定の画面操作</li>
+</ul>
+<p>などがありますが、おまけです。<br>
+ドキュメントルートに配置して、 markdown を踏んだときにそれらしく見やすくするのが主目的です。</p>
+</section><section id="_657459612ddba668524487766c36a883cd7728aa-1" class="section section-level-h3" data-section-level="3"><h3 class="section-header">拡張構文</h3>
+<p>標準の markdown に加えて下記の拡張構文があります。</p>
+</section><section id="_ac3e6d2e7121b2918cd5d40f68a6c79241452fba-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">ノート</h4>
+<p>コードブロックと同じように <code>"""</code> で囲むと注意書きブロックが生成されます。</p>
+<pre data-label="注意書きの例"><div class="language-markdown:注意書きの例 markdown code">"""note:title
+これは注意書きです。
+"""</div></pre>
+<p>上記のようにすると下記のようになります。</p>
+<div class="note admonition">
+<p class="admonition-title">title</p>
+<p>これは注意書きです。</p>
+</div>
+<p><code>note</code> の部分は Read The Docs の他のタイプが使えます。頻出するのは <code>hint</code> <code>info</code> <code>warning</code> <code>important</code> などでしょう。</p>
+<p>title の部分はただのラベルになります。</p>
+</section><section id="_2438d25193d3fde549bb92ce4a6f9e931ad3361d-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">サイドバー</h4>
+<p>コードブロックと同じように <code>///</code> で囲むとサイドバーブロックが生成されます。</p>
+<pre data-label="サイドバーの例"><div class="language-markdown:サイドバーの例 markdown code">///note:title
+これはサイドバーです。
+///</div></pre>
+<p>上記のようにすると下記のようになります。</p>
+<div class="note sidebar">
+<p class="sidebar-title">title</p>
+<p>これはサイドバーです。</p>
+</div>
+<p>note の部分は飾りです。 Read The Docs 本家にスタイルがなかったため、埋め込まれはしますがスタイルは変わりません。<br>
+無意味ですが、今後のために予約しています。</p>
+<p>title の部分はただのラベルになります。</p>
+</section><section id="_dc813bf775a6b910b13f1445a27fde368e5b5177-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">定義リスト</h4>
+<p><code>-</code> や <code>*</code> などのリスト記法に続けて、<code>:</code>（コロンスペース）があると定義リストが生成されます。</p>
+<pre data-label="横並び定義リストの例"><div class="language-markdown:横並び定義リストの例 markdown code">- りんご: 赤いです
+- みかん: 黄色いです</div></pre>
+<p>上記のようにすると下記のようになります。</p>
+<dl class="docutils field-list">
+<dt>りんご</dt>
+<dd>赤いです</dd>
+<dt>みかん</dt>
+<dd>黄色いです</dd>
+</dl>
+<p>コロンの直後に改行すると横並びではなくスタンダードな定義リストになります。</p>
+<pre data-label="縦並び定義リストの例"><div class="language-markdown:縦並び定義リストの例 markdown code">- りんご:
+  赤いです
+  美味しいです
+- みかん:
+  黄色いです
+  酸っぱいです</div></pre>
+<p>上記のようにすると下記のようになります。</p>
+<dl class="docutils">
+<dt>りんご</dt>
+<dd>
+<p>赤いです<br>
+美味しいです</p>
+</dd>
+<dt>みかん</dt>
+<dd>
+<p>黄色いです<br>
+酸っぱいです</p>
+</dd>
+</dl>
+<p>標準 markdown にはなぜか定義リストがなく、結構不便なので独自に定義しています。<br>
+上記の通り、他のあらゆる記法とは全く異なる独自ルールです。</p>
+<p>そもそも定義リストは<strong>リスト</strong>ですし、もともと markdown は「そのままのテキストでもそれっぽく見える」ような記法だったはずです。<br>
+ので見た目（md）とマークアップ（html）があまり剥離しないこのルールは割と好きです。</p>
+<div class="warning admonition">
+<p class="admonition-title">注意</p>
+<p>コロンスペースのスペースは必須です。でないと下記のような「URL のリスト」が定義リストと認識されてしまいます。</p>
+<ul>
+<li><a href="http://example.com/hoge">http://example.com/hoge</a></li>
+<li><a href="http://example.com/fuga">http://example.com/fuga</a></li>
+</ul>
+<p>※ スペースを必須にしないとただのリストのつもりが、下記のようになってしまう</p>
+<dl class="docutils field-list">
+<dt>http</dt>
+<dd>//example.com/hoge</dd>
+<dt>http</dt>
+<dd>//example.com/fuga</dd>
+</dl>
+</div>
+</section><section id="_58284ace71c2e08e9d914750844e1f73dcb11e14-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">折りたたみ</h4>
+<p>コードブロックと同じように <code>...</code> で囲むと折りたたみとなります。</p>
+<pre><div class=" code">...ここは summary になります
+ここが折りたたみの中身になります
+...</div></pre>
+<p>上記のようにすると下記のようになります。</p>
+<details>
+<summary class="">ここは summary になります</summary>
+<p>ここが折りたたみの中身になります</p>
+</details>
+<p>summary 部分を省略すると summary タグは生成されません。<br>
+その場合ブラウザのデフォルトになります（「省略」など）。</p>
+</section><section id="_bc7b3654354011bf0bb614fb2601b17e3428a324-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">ヒアドキュメント</h4>
+<p>コードブロックと同じように <code>&lt;&lt;&lt;</code> で囲むとヒアドキュメントとなります。</p>
+<pre data-label="ヒアドキュメントの例"><div class="language-markdown:ヒアドキュメントの例 markdown code">&lt;&lt;&lt;
+これはヒアドキュメントです。
+この中では**一切の markdown 記法や html は無効**になります。
+
+- A
+- B
+- C
+
+&lt;strong&gt;strong&lt;/strong&gt;
+&lt;&lt;&lt;</div></pre>
+<p>上記のようにすると下記のようになります。</p>
+<pre><p>これはヒアドキュメントです。
+この中では**一切の markdown 記法や html は無効**になります。
+
+- A
+- B
+- C
+
+&lt;strong&gt;strong&lt;/strong&gt;</p></pre>
+<p>コードブロックと似ていますが、シンタックスハイライトはされません。<br>
+あくまで、「マークダウンのエスケープが不要なヒアドキュメント」となります。<br>
+使う機会はそう多くないでしょう。</p>
+</section><section id="_3229609e15436ec51bcf00818a69a84dbc58a0c2-1" class="section section-level-h2" data-section-level="2"><h2 class="section-header">License</h2>
+<p>MIT</p>
+</section><section id="_d41f56cea1ac933d25c57aebc6522e2b6c58eb87-1" class="section section-level-h2" data-section-level="2"><h2 class="section-header">Release</h2>
+<p>バージョニングはセマンティックバージョンに準拠します。<br>
+が、内部的な php のコードは準拠しません。<br>
+semver 準拠はあくまで下記だけです。</p>
+<ul>
+<li>phar としてのインターフェース</li>
+<li>拡張構文の互換性</li>
+</ul>
+<p>つまり、内部設計・デザイン・レンダリング結果は互換性を維持しません。<br>
+例えば「コントールパネルから設定できる項目」「親兄弟のナビゲーション」「テキスト検索」などの機能面は予告なく追加・廃止されることがあります。<br>
+また、 Read The Docs のテーマではなく、他のものにガラリと変わることもありえます。</p>
+<p>逆に言えば「phar の引数が変更になった」「markdown の拡張構文を廃止した」などは互換性の破壊となり、 semver 準拠（メジャーアップ）となります。</p>
+<p>今のところ phar に引数はありませんが、「POST で markdown を編集できる」のようなオプションが増えることが想定されます。</p>
+</section><section id="_b79eaeeb01f40b8e5e0a4e0467c18851e78854e4-1" class="section section-level-h3" data-section-level="3"><h3 class="section-header">x.y.z</h3>
+<ul>
+<li>POST で更新する？</li>
+<li>静的ファイルは全部 CDN に逃したい</li>
+<li>markdown に include 機能を持たせたい</li>
+</ul>
+</section><section id="_91e95be6b6634e3c21072dfcd661146728694326-1" class="section section-level-h3" data-section-level="3"><h3 class="section-header">1.0.0</h3>
+<ul>
+<li>公開</li>
+</ul></section></article>                </main>
+                <footer>
+                    <div class="rst-footer-buttons hidden-single">
+                        <div>
+                                                    </div>
+                        <div>
+                                                            <a href="./index.html" class="btn btn-neutral" accesskey="u" rel="up"><span class="fa fa-arrow-circle-up" aria-hidden="true"></span> apache-markdown/</a>
+                                                    </div>
+                        <div>
+                                                            <a href="tests/index.html" class="btn btn-neutral" accesskey="n" rel="next">tests/ <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+                                                    </div>
+                    </div>
+                    <hr>
+                    <div role="contentinfo">
+                        <p>© Copyright Dave Snider, Read the Docs, Inc. &amp; contributors.</p>
+                    </div>
+                    Built with htmarkdown Using a
+                    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+                    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+                </footer>
+            </div>
+        </div>
+        <div class="sentinel"></div>
+    </div>
+</div>
+<div class="rst-versions">
+    <span class="rst-current-version">
+        <span class="fa fa-cog pull-left"> Control Panel</span>
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <form action="?" class="control-panel">
+            <div class="hidden-download">
+                <dl>
+                    <dt>Index</dt>
+                    <dd>
+                        <label class="option-title" for="list_length">listing length</label>
+                        <input name="list_length" id="list_length" class="option-input" type="number" min="100" max="1000" step="10" value="320">
+                    </dd>
+                    <dd>
+                        <label class="option-title" for="soft_limit">soft limit</label>
+                        <input name="soft_limit" id="soft_limit" class="option-input" type="number" min="0" max="1000" step="100" value="500">
+                    </dd>
+                    <dd>
+                        <label class="option-title" for="hard_limit">hard limit</label>
+                        <input name="hard_limit" id="hard_limit" class="option-input" type="number" min="100" max="3000" step="100" value="500">
+                    </dd>
+                    <dt>Markdown</dt>
+                    <dd>
+                        <label class="option-title" for="link_url">url link</label>
+                        <input name="link_url" type="hidden" value="0">
+                        <input name="link_url" id="link_url" class="option-input" type="checkbox" value="1" checked>
+                    </dd>
+                    <dd>
+                        <label class="option-title" for="break_line">keep break line</label>
+                        <input name="break_line" type="hidden" value="0">
+                        <input name="break_line" id="break_line" class="option-input" type="checkbox" value="1" checked>
+                    </dd>
+                </dl>
+                <div class="wy-text-right">
+                    <input type="submit" name="reload" value="reload">
+                </div>
+                <hr>
+            </div>
+            <dl>
+                <dt>View</dt>
+                <dd>
+                    <label class="option-title" for="toc_level">TOC level</label>
+                    <input id="toc_level" class="option-input" data-input-name="tocLevel" data-devalue-value="5" type="number" min="1" max="6">
+                </dd>
+                <dd>
+                    <label class="option-title" for="toc_number">TOC number</label>
+                    <input id="toc_number" class="option-input" data-input-name="tocNumber" data-devalue-value="true" type="checkbox" value="1">
+                </dd>
+                <dd>
+                    <label class="option-title" for="toc_follow">TOC follow</label>
+                    <input id="toc_follow" class="option-input" data-input-name="tocFollow" data-devalue-value="true" type="checkbox" value="1">
+                </dd>
+                <dd>
+                    <label class="option-title" for="section_indent">section indent</label>
+                    <input id="section_indent" class="option-input" data-input-name="sectionIndent" data-devalue-value="0" type="number" min="0" max="6">
+                </dd>
+                <dd>
+                    <label class="option-title" for="highlight_css">syntax highlight</label>
+                    <select id="highlight_css" class="option-input" data-input-name="highlightCss" data-devalue-value="default">
+                                                    <option value="default">default</option>
+                                                    <option value="zenburn">zenburn</option>
+                                                    <option value="github">github</option>
+                                                    <option value="vs">vs</option>
+                                            </select>
+                </dd>
+            </dl>
+        </form>
+    </div>
+</div>
+</body>
+
+</html>
