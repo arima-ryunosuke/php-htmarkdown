@@ -1,0 +1,30 @@
+{
+  "compression": "GZ",
+  "files": [
+    "vendor/autoload.php"
+  ],
+  "finder": [
+    {
+      "name": "*.php",
+      "exclude": [
+        "demo",
+        "Demo",
+        "Examples",
+        "test",
+        "tests",
+        "Test",
+        "Tests",
+        "unitTests"
+      ],
+      "in": [
+        "src",
+        "vendor/composer",
+        "vendor/erusev/parsedown"
+      ]
+    }
+  ],
+  "output": "htmarkdown.phar",
+  "shebang": false,
+  "main": "src/index.php",
+  "stub": true
+}
