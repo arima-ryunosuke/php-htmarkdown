@@ -1,0 +1,20 @@
+<?php
+return [
+    'language'       => 'en',
+    'last_modified'  => 'Last Modified',
+    'search_docs'    => 'Search docs',
+    'view_markdown'  => 'View Markdown',
+    'download_file'  => 'Download',
+    'control_panel'  => 'Control Panel',
+    'list_length'    => 'listing length',
+    'soft_limit'     => 'soft limit',
+    'hard_limit'     => 'hard limit',
+    'link_url'       => 'url link',
+    'break_line'     => 'keep break line',
+    'reload'         => 'reload',
+    'toc_level'      => 'TOC level',
+    'toc_number'     => 'TOC number',
+    'toc_follow'     => 'TOC follow',
+    'section_indent' => 'section indent',
+    'highlight_css'  => 'syntax highlight',
+];

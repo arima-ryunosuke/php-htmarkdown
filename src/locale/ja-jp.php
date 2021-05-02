@@ -1,0 +1,20 @@
+<?php
+return [
+    'language'       => 'ja',
+    'last_modified'  => '最終更新日',
+    'search_docs'    => 'ドキュメント内検索',
+    'view_markdown'  => 'マークダウン',
+    'download_file'  => 'ダウンロード',
+    'control_panel'  => 'コントロールパネル',
+    'list_length'    => 'リスティング文字数',
+    'soft_limit'     => 'ソフトリミット',
+    'hard_limit'     => 'ハードリミット',
+    'link_url'       => 'URL を自動リンクする',
+    'break_line'     => '改行を維持する',
+    'reload'         => '更新',
+    'toc_level'      => '見出しレベル',
+    'toc_number'     => '見出し番号を表示する',
+    'toc_follow'     => '見出しメニューを追従する',
+    'section_indent' => 'セクションごとのインデント',
+    'highlight_css'  => 'シンタックスハイライト',
+];
