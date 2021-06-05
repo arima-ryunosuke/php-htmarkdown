@@ -47,6 +47,47 @@ class MarkdownTest extends \ryunosuke\Test\AbstractTestCase
         ]);
     }
 
+    function test_inlineBadge()
+    {
+        that(Markdown::render('{}', []))->is('<p>{}</p>');
+
+        that(Markdown::render(<<<MD
+            {badge1}
+            MD
+            , []))->containsAll([
+            '<span class="badge " data-badge-title="">badge1</span>',
+        ]);
+
+        that(Markdown::render(<<<MD
+            {badge1}{badge2}
+            {badge3}
+            MD
+            , []))->containsAll([
+            '<span class="badge " data-badge-title="">badge1</span>',
+            '<span class="badge " data-badge-title="">badge2</span>',
+            '<span class="badge " data-badge-title="">badge3</span>',
+        ]);
+
+        that(Markdown::render(<<<MD
+            {badge}
+            {title|badge}
+            {alert:badge}
+            {alert:title|badge}
+            MD
+            , []))->containsAll([
+            '<span class="badge " data-badge-title="">badge</span>',
+            '<span class="badge info" data-badge-title="title">badge</span>',
+            '<span class="badge alert" data-badge-title="">badge</span>',
+            '<span class="badge alert" data-badge-title="title">badge</span>',
+        ]);
+        that(Markdown::render(<<<MD
+            {badge1
+            MD
+            , []))->containsAll([
+            '<p>{badge1</p>',
+        ]);
+    }
+
     function test_blockHere()
     {
         that(Markdown::render(<<<MD

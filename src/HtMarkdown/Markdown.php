@@ -16,6 +16,7 @@ class Markdown extends Parsedown
 
         $newInlineTypes = [
             '=' => 'Marker',
+            '{' => 'Badge',
         ];
         foreach ($newInlineTypes as $char => $inline) {
             $this->InlineTypes[$char] = array_merge($this->InlineTypes[$char] ?? [], [$inline]);
@@ -49,6 +50,41 @@ class Markdown extends Parsedown
                     'text'       => substr($Excerpt['text'], 2, $p - 2),
                     'attributes' => [
                         'class' => 'highlighted',
+                    ],
+                ],
+            ];
+        }
+    }
+
+    protected function inlineBadge($Excerpt)
+    {
+        $p = strpos($Excerpt['text'], '}');
+        if ($p !== false && preg_match('#([^:|]*):?([^:|]*)\|?([^:|]*)#', substr($Excerpt['text'], 1, $p - 1), $match)) {
+            array_shift($match);
+            $acount = count(array_filter($match, 'strlen'));
+            if ($acount === 1) {
+                [$type, $title, $text] = ['', '', $match[0]];
+            }
+            elseif ($acount === 2 && strlen($match[1])) {
+                [$type, $title, $text] = [$match[0], '', $match[1]];
+            }
+            elseif ($acount === 2 && !strlen($match[1])) {
+                [$type, $title, $text] = ['info', $match[0], $match[2]];
+            }
+            elseif ($acount === 3) {
+                [$type, $title, $text] = $match;
+            }
+            else {
+                return;
+            }
+            return [
+                'extent'  => $p + 1,
+                'element' => [
+                    'name'       => 'span',
+                    'text'       => $text,
+                    'attributes' => [
+                        'class'            => "badge $type",
+                        'data-badge-title' => $title,
                     ],
                 ],
             ];

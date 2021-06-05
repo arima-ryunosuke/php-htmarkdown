@@ -277,6 +277,60 @@ pre[data-label]:not([data-label=""]) div.code {
     padding-top: 32px
 }
 
+.badge {
+    margin-right: 5px;
+    padding: 3px 6px 3px 0;
+    font-size: 80%;
+    white-space: nowrap;
+    border-radius: 4px;
+    color: white;
+    background-color: #666666;
+}
+
+.badge[data-badge-title=""] {
+    padding-left: 6px;
+}
+
+.badge:not([data-badge-title=""]):before {
+    content: attr(data-badge-title);
+    padding: 3px 6px;
+    margin-right: 6px;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+.badge[data-badge-title=""].info {
+    background: #6ab0de;
+}
+
+.badge[data-badge-title=""].success {
+    background: #1abc9c;
+}
+
+.badge[data-badge-title=""].notice {
+    background: #f0b37e;
+}
+
+.badge[data-badge-title=""].alert {
+    background: #f29f97;
+}
+
+.badge:not([data-badge-title=""]).info:before {
+    background: #6ab0de;
+}
+
+.badge:not([data-badge-title=""]).success:before {
+    background: #1abc9c;
+}
+
+.badge:not([data-badge-title=""]).notice:before {
+    background: #f0b37e;
+}
+
+.badge:not([data-badge-title=""]).alert:before {
+    background: #f29f97;
+}
+
 @media print {
     .sentinel {
         display: none;
