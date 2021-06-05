@@ -14,6 +14,14 @@ class Markdown extends Parsedown
         $this->setStrictMode($options['strict_mode'] ?? false);
         $this->setSafeMode($options['safe_mode'] ?? false);
 
+        $newInlineTypes = [
+            '=' => 'Marker',
+        ];
+        foreach ($newInlineTypes as $char => $inline) {
+            $this->InlineTypes[$char] = array_merge($this->InlineTypes[$char] ?? [], [$inline]);
+        }
+        $this->inlineMarkerList = implode('', array_keys($this->InlineTypes));
+
         $newBlockTypes = [
             '<' => 'Here',
             '"' => 'Note',
@@ -28,6 +36,23 @@ class Markdown extends Parsedown
     public static function render($contents, $options)
     {
         return (new static($options))->text($contents);
+    }
+
+    protected function inlineMarker($Excerpt)
+    {
+        $p = strpos($Excerpt['text'], '==', 1);
+        if ($p !== false) {
+            return [
+                'extent'  => $p + 2,
+                'element' => [
+                    'name'       => 'marker',
+                    'text'       => substr($Excerpt['text'], 2, $p - 2),
+                    'attributes' => [
+                        'class' => 'highlighted',
+                    ],
+                ],
+            ];
+        }
     }
 
     protected function _commonBlock($Line, $Element)

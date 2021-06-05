@@ -27,6 +27,26 @@ class MarkdownTest extends \ryunosuke\Test\AbstractTestCase
         ]);
     }
 
+    function test_inlineMarker()
+    {
+        that(Markdown::render(<<<MD
+            ==maker1====maker2==
+            ==maker3==
+            MD
+            , []))->containsAll([
+            '<marker class="highlighted">maker1</marker>',
+            '<marker class="highlighted">maker2</marker>',
+            '<marker class="highlighted">maker3</marker>',
+        ]);
+
+        that(Markdown::render(<<<MD
+            ==maker1=
+            MD
+            , []))->containsAll([
+            '==maker1=',
+        ]);
+    }
+
     function test_blockHere()
     {
         that(Markdown::render(<<<MD
