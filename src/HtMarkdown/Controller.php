@@ -122,13 +122,14 @@ class Controller
 
     public function handleHttp(): bool
     {
-        $options = $this->request;
-        $options += json_decode($this->request['htmarkdown-opt'] ?? '[]', true);
-        $options += self::SPECIFIABLE_OPTIONS;
-        $options += [
+        $options = [
             'docroot'  => null,
             'download' => $this->isDownload(),
+            'locale'   => locale_accept_from_http($this->server['HTTP_ACCEPT_LANGUAGE']),
         ];
+        $options += $this->request;
+        $options += json_decode($this->request['htmarkdown-opt'] ?? '[]', true);
+        $options += self::SPECIFIABLE_OPTIONS;
 
         $this->cookies['htmarkdown-opt'] = array_intersect_key($options, self::SPECIFIABLE_OPTIONS);
 
