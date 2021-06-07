@@ -9,6 +9,10 @@
     <link id="sphinx_rtd_theme" href="https://cdn.jsdelivr.net/npm/sphinx_rtd_theme@0.4.2/css/theme.css" rel="stylesheet">
     <link id="highlight_style" data-cdn-url="https://cdn.jsdelivr.net/npm/highlightjs@9.16.2/styles/" href="" rel="stylesheet">
     <style>/* override theme.css */
+:root {
+    --initial-animation-ms: 0ms;
+    --side-width: 300px;
+}
 
 h1, h2, h3, h4, h5, h6 {
     border-bottom: 1px solid #E1E4E5;
@@ -18,21 +22,56 @@ h2, h3, h4, h5, h6 {
     margin-top: 20px;
 }
 
+.caption {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
 .wy-nav-content {
     max-width: 100%;
     height: unset;
 }
 
+.wy-tray-container li {
+    width: var(--side-width);
+}
+
+.wy-menu-vertical {
+    width: var(--side-width);
+}
+
+.wy-side-nav-search {
+    width: var(--side-width);
+}
+
+.wy-nav-side {
+    width: var(--side-width);
+}
+
+.wy-nav-content-wrap {
+    margin-left: var(--side-width);
+}
+
+@media screen and (max-width: 768px) {
+    .wy-nav-side {
+        width: calc(0 -var(--side-width));
+    }
+}
+
+.rst-versions {
+    width: var(--side-width);
+}
+
+.wy-side-scroll {
+    transition: width var(--initial-animation-ms) 0s ease;
+    width: calc(var(--side-width) + 20px);
+    overscroll-behavior: contain;
+}
+
 .wy-side-scroll.scrolling {
-    width: 300px;
-}
-
-.wy-side-scroll.no-scrollbar {
-    width: 320px;
-}
-
-.wy-side-scroll.scrolling-end {
-    transition: all 500ms 0s ease;
+    transition-duration: 0s;
+    width: var(--side-width);
 }
 
 .wy-side-scroll::-webkit-scrollbar {
@@ -102,6 +141,18 @@ h2, h3, h4, h5, h6 {
     display: none;
 }
 
+.rst-content .sidebar.right {
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    border: none;
+    width: auto;
+}
+
+.rst-content .sidebar.right p {
+    margin-bottom: 0;
+}
+
 .rst-content .sidebar-title:empty {
     display: none;
 }
@@ -129,7 +180,10 @@ h2, h3, h4, h5, h6 {
 .rst-footer-buttons div:nth-child(3) {
     width: calc(100% / 3);
     text-align: right;
+}
 
+.rst-versions .rst-other-versions dd {
+    display: block;
 }
 
 /* table of contents */
@@ -138,29 +192,62 @@ h2, h3, h4, h5, h6 {
     padding-bottom: 8px;
 }
 
-[data-toc-number="false"] .toc-n {
+[data-toc-number="true"] [data-block-id]:before {
+    content: attr(data-block-id);
+    color: #a9a9a9;
+}
+
+[data-toc-active="false"][data-toc-level="1"] .toc-h2,
+[data-toc-active="false"][data-toc-level="1"] .toc-h3,
+[data-toc-active="false"][data-toc-level="1"] .toc-h4,
+[data-toc-active="false"][data-toc-level="1"] .toc-h5,
+[data-toc-active="false"][data-toc-level="1"] .toc-h6,
+[data-toc-active="false"][data-toc-level="2"] .toc-h3,
+[data-toc-active="false"][data-toc-level="2"] .toc-h4,
+[data-toc-active="false"][data-toc-level="2"] .toc-h5,
+[data-toc-active="false"][data-toc-level="2"] .toc-h6,
+[data-toc-active="false"][data-toc-level="3"] .toc-h4,
+[data-toc-active="false"][data-toc-level="3"] .toc-h5,
+[data-toc-active="false"][data-toc-level="3"] .toc-h6,
+[data-toc-active="false"][data-toc-level="4"] .toc-h5,
+[data-toc-active="false"][data-toc-level="4"] .toc-h6,
+[data-toc-active="false"][data-toc-level="5"] .toc-h6 {
     display: none;
 }
 
-[data-toc-level="1"] .toc-h2,
-[data-toc-level="1"] .toc-h3,
-[data-toc-level="1"] .toc-h4,
-[data-toc-level="1"] .toc-h5,
-[data-toc-level="1"] .toc-h6,
-[data-toc-level="2"] .toc-h3,
-[data-toc-level="2"] .toc-h4,
-[data-toc-level="2"] .toc-h5,
-[data-toc-level="2"] .toc-h6,
-[data-toc-level="3"] .toc-h4,
-[data-toc-level="3"] .toc-h5,
-[data-toc-level="3"] .toc-h6,
-[data-toc-level="4"] .toc-h5,
-[data-toc-level="4"] .toc-h6,
-[data-toc-level="5"] .toc-h6 {
-    display: none;
+[data-toc-active="true"][data-toc-level="1"] .toc-h2,
+[data-toc-active="true"][data-toc-level="1"] .toc-h3,
+[data-toc-active="true"][data-toc-level="1"] .toc-h4,
+[data-toc-active="true"][data-toc-level="1"] .toc-h5,
+[data-toc-active="true"][data-toc-level="1"] .toc-h6,
+[data-toc-active="true"][data-toc-level="2"] .toc-h3,
+[data-toc-active="true"][data-toc-level="2"] .toc-h4,
+[data-toc-active="true"][data-toc-level="2"] .toc-h5,
+[data-toc-active="true"][data-toc-level="2"] .toc-h6,
+[data-toc-active="true"][data-toc-level="3"] .toc-h4,
+[data-toc-active="true"][data-toc-level="3"] .toc-h5,
+[data-toc-active="true"][data-toc-level="3"] .toc-h6,
+[data-toc-active="true"][data-toc-level="4"] .toc-h5,
+[data-toc-active="true"][data-toc-level="4"] .toc-h6,
+[data-toc-active="true"][data-toc-level="5"] .toc-h6 {
+    visibility: hidden;
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+[data-toc-active="true"] .toc-h.visible {
+    visibility: visible;
+    max-height: 36px;
+    padding-top: .4045em;
+    padding-bottom: .4045em;
 }
 
 .toc-h {
+    transition-property: all;
+    transition-delay: 0s;
+    transition-duration: var(--initial-animation-ms);
+    transition-timing-function: ease;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
@@ -177,18 +264,10 @@ a.toc-h1 {
     padding-left: 1.35rem;
 }
 
-.toc-n1 {
-    color: #a9a9a9;
-}
-
 
 a.toc-h2 {
     font-size: 96%;
     padding-left: 2.35rem;
-}
-
-.toc-n2 {
-    color: #a9a9a9;
 }
 
 
@@ -197,18 +276,10 @@ a.toc-h3 {
     padding-left: 3.35rem;
 }
 
-.toc-n3 {
-    color: #a9a9a9;
-}
-
 
 a.toc-h4 {
     font-size: 88%;
     padding-left: 4.35rem;
-}
-
-.toc-n4 {
-    color: #a9a9a9;
 }
 
 
@@ -217,18 +288,10 @@ a.toc-h5 {
     padding-left: 5.35rem;
 }
 
-.toc-n5 {
-    color: #a9a9a9;
-}
-
 
 a.toc-h6 {
     font-size: 80%;
     padding-left: 6.35rem;
-}
-
-.toc-n6 {
-    color: #a9a9a9;
 }
 
 
@@ -466,6 +529,60 @@ pre[data-label]:not([data-label=""]) div.code {
     padding-top: 32px
 }
 
+.badge {
+    margin-right: 5px;
+    padding: 3px 6px 3px 0;
+    font-size: 80%;
+    white-space: nowrap;
+    border-radius: 4px;
+    color: white;
+    background-color: #666666;
+}
+
+.badge[data-badge-title=""] {
+    padding-left: 6px;
+}
+
+.badge:not([data-badge-title=""]):before {
+    content: attr(data-badge-title);
+    padding: 3px 6px;
+    margin-right: 6px;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+.badge[data-badge-title=""].info {
+    background: #6ab0de;
+}
+
+.badge[data-badge-title=""].success {
+    background: #1abc9c;
+}
+
+.badge[data-badge-title=""].notice {
+    background: #f0b37e;
+}
+
+.badge[data-badge-title=""].alert {
+    background: #f29f97;
+}
+
+.badge:not([data-badge-title=""]).info:before {
+    background: #6ab0de;
+}
+
+.badge:not([data-badge-title=""]).success:before {
+    background: #1abc9c;
+}
+
+.badge:not([data-badge-title=""]).notice:before {
+    background: #f0b37e;
+}
+
+.badge:not([data-badge-title=""]).alert:before {
+    background: #f29f97;
+}
+
 @media print {
     .sentinel {
         display: none;
@@ -477,7 +594,7 @@ pre[data-label]:not([data-label=""]) div.code {
 .option-title {
     color: #fcfcfc;
     display: inline-block;
-    width: 176px;
+    width: 210px;
 }
 
 .option-input {
@@ -538,6 +655,9 @@ a.disabled {
         this.stop = function () {
             clearTimeout(timerId);
         };
+    };
+    Window.prototype.requestIdleCallback = Window.prototype.requestIdleCallback || function (callback) {
+        setTimeout(callback);
     };
     Element.prototype.$ = Element.prototype.querySelector;
     Element.prototype.$$ = Element.prototype.querySelectorAll;
@@ -645,16 +765,12 @@ a.disabled {
                 href: `#${section.id}`,
                 title: sectionTitle,
                 class: ['toc-h', `toc-h${sectionLevel}`],
-                dataset: {sectionCount: '0'},
-                children: [
-                    {
-                        span: {
-                            class: ['toc-n', `toc-n${sectionLevel}`],
-                            children: levels.filter(v => v !== null).join('.'),
-                        },
-                    },
-                    ' ' + sectionTitle
-                ],
+                dataset: {
+                    sectionCount: '0',
+                    blockId: levels.filter(v => v !== null).join('.'),
+                    parentBlockId: levels.filter(v => v !== null).slice(0, -1).join('.'),
+                },
+                children: ' ' + sectionTitle,
             },
         });
     });
@@ -668,6 +784,23 @@ a.disabled {
                 toch = toch.previousElementSibling;
             }
             toch.dataset.sectionCount = (Math.max(+toch.dataset.sectionCount + (e.isIntersecting ? +1 : -1), 0)) + '';
+
+            if (toch.dataset.sectionCount > 0) {
+                while (toch) {
+                    const siblings = outline.$$(`[data-parent-block-id="${toch.dataset.parentBlockId}"]`);
+                    siblings.forEach(e => e.classList.add('visible'));
+                    toch = outline.$(`[data-block-id="${toch.dataset.parentBlockId}"]`);
+                }
+            }
+            else {
+                while (toch) {
+                    const descendants = outline.$$(`[data-parent-block-id^="${toch.dataset.parentBlockId}"]`);
+                    if (Array.prototype.filter.call(descendants, e => !e.matches('[data-section-count="0"]')).length === 0) {
+                        descendants.forEach(e => e.classList.remove('visible'));
+                    }
+                    toch = outline.$(`[data-block-id="${toch.dataset.parentBlockId}"]`);
+                }
+            }
         },
     });
 
@@ -681,10 +814,9 @@ a.disabled {
     });
 
     /// 記事末尾の空白を確保（ジャンプしたときに「え？どこ？」となるのを回避する）
-    const headers = $$('.section-header');
-    if (headers.length) {
-        const lastHeader = headers[headers.length - 1];
-        const height = sentinel.offsetTop - lastHeader.offsetTop + parseInt(getComputedStyle(lastHeader).marginTop);
+    const lastSection = $('.section:last-child');
+    if (lastSection) {
+        const height = sentinel.offsetTop - lastSection.offsetTop + parseInt(getComputedStyle(lastSection).marginTop);
         sentinel.style.height = `calc(100vh - ${height}px)`;
     }
 
@@ -701,6 +833,10 @@ a.disabled {
             const highlight_style = $('#highlight_style');
             highlight_style.href = highlight_style.dataset.cdnUrl + e.target.getValue() + '.min.css';
         }
+        if (e.target.id === 'toc_width') {
+            document.documentElement.style.setProperty('--side-width', e.target.getValue() + 'px');
+        }
+
     });
     controlPanel.save = function () {
         const savedata = {};
@@ -720,59 +856,57 @@ a.disabled {
     controlPanel.load();
 
     /// アウトラインのクリックイベント
+    let intoViewScrolling = false;
     outline.addEventListener('click', function (e) {
         if (e.target.matches('a.toc-h')) {
             e.preventDefault();
-            const section = $(e.target.getAttribute('href'));
-            section.scrollIntoView({
+            const section = $$(e.target.getAttribute('href'));
+            intoViewScrolling = true;
+            section[0].scrollIntoView({
                 behavior: "smooth",
                 block: "start",
+            });
+            section.observeIntersection({
+                rootMargin: '0px 0px -99.99% 0px',
+                intersect: function (e, observer) {
+                    observer.unobserve(e.target);
+                    requestIdleCallback(function () {
+                        intoViewScrolling = false;
+                    });
+                },
             });
         }
     });
 
     // アウトラインのスクロールの自動追従
-    const followMenuTimer = new Timer(1000, function () {
-        $$('.toc-h:not([data-section-count="0"])').forEach(function (toch) {
-            toch.scrollIntoView({
-                behavior: "smooth",
-                block: "center",
-            });
+    const followMenuTimer = new Timer(32, function () {
+        const visibles = $$('.toc-h:not([data-section-count="0"])');
+        visibles[Math.floor(visibles.length / 2)].scrollIntoView({
+            behavior: "smooth",
+            block: "center",
         });
     });
     document.addEventListener('scroll', function (e) {
-        if (html.dataset.tocFollow === 'true') {
+        if (!intoViewScrolling && html.dataset.tocFollow === 'true') {
+            followMenuTimer.stop();
             followMenuTimer.start();
         }
     });
 
     /// スクロールバーを自動的に隠す
-    const scrollHideTimer = new Timer(2500, function () {
+    const scrollHideTimer = new Timer(3000, function () {
         scroller.classList.remove('scrolling');
-        scroller.classList.add('scrolling-end');
     });
-    const scrollEvent = function () {
-        followMenuTimer.stop();
+    scroller.addEventListener('scroll', function () {
         scrollHideTimer.stop();
-
         scroller.classList.add('scrolling');
-        scroller.classList.remove('scrolling-end');
         scrollHideTimer.start();
-    };
-    scroller.addEventListener('scroll', scrollEvent);
+    });
 
-    /// スクロールが親に伝播するのは使いづらいので抑止する
-    scroller.addEventListener('wheel', function (e) {
-        if (scroller.scrollHeight > scroller.clientHeight) {
-            if (e.deltaY < 0 && scroller.scrollTop === 0) {
-                e.preventDefault();
-            }
-            if (e.deltaY > 0 && scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight) {
-                e.preventDefault();
-            }
-            scrollEvent();
-        }
-    }, {passive: false});
+    /// stop initial animation
+    requestIdleCallback(function () {
+        document.documentElement.style.setProperty('--initial-animation-ms', '500ms');
+    });
 });
 </script>
 </head>
@@ -784,7 +918,7 @@ a.disabled {
             <div class="wy-side-nav-search">
                 <a href="" class="icon icon-home"> README.md</a>
                 <div class="version">
-                    Last Modified 2021/05/09 16:05:41                </div>
+                    Last Modified 2021/06/25 13:51:14                </div>
                 <div role="search">
                     <form id="rtd-search-form" class="wy-form hidden-download" method="get">
                         <input type="text" name="query" placeholder="Search docs" value="">
@@ -802,7 +936,7 @@ a.disabled {
                 <header class="hidden-single">
                     <ul class="wy-breadcrumbs">
                         <li class="top-breadcrumb"><a href="/" class="icon icon-home"></a> »</li>
-                                                    <li><a href="./index.html">apache-markdown/</a> »</li>
+                                                    <li><a href="./index.html">php-markdown/</a> »</li>
                                                 <li>README.md</li>
                         <li class="wy-breadcrumbs-aside hidden-download">
                             <a href="?raw=true" class="fa fa-file-text"> View Markdown</a>
@@ -820,7 +954,10 @@ a.disabled {
 <ul>
 <li><a href="https://arima-ryunosuke.github.io/php-htmarkdown/">Demo</a></li>
 </ul>
-</section><section id="_fd6c3ebf7befca9f8208f86c76e4d4180303745c-1" class="section section-level-h2" data-section-level="2"><h2 class="section-header">Install</h2>
+</section><section id="_0bb18642b70b9f8a9c12ccf39487328f306b8e19-1" class="section section-level-h2" data-section-level="2"><h2 class="section-header">Usage</h2>
+<p>下記の3つの使い方があります。<br>
+いずれも <code>.md</code> <code>.php.md</code> の拡張子を対象にナビゲーションリンクが生成されます。<br>
+さらに <code>.php.md</code> の場合は php が実行されます。</p>
 </section><section id="_454d783b07841da1d1409e2ec34ec5cfe22e35dc-1" class="section section-level-h3" data-section-level="3"><h3 class="section-header">Rewrite Mode</h3>
 <p>下記のように web サーバを設定します。</p>
 <pre data-label="apacheの場合"><div class="language-plaintext:apacheの場合 plaintext code">RewriteRule \.md$ htmarkdown.phar [QSA,L]</div></pre>
@@ -853,6 +990,36 @@ phar がルーターの役割も持っているので、起動したカレント
 ドキュメントルートに配置して、 markdown を踏んだときにそれらしく見やすくするのが主目的です。</p>
 </section><section id="_657459612ddba668524487766c36a883cd7728aa-1" class="section section-level-h3" data-section-level="3"><h3 class="section-header">拡張構文</h3>
 <p>標準の markdown に加えて下記の拡張構文があります。</p>
+</section><section id="_786bef306de28bcb51bdc4b38b2e8c73649db338-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">マーカー</h4>
+<p><code>==マーカー文字==</code> とするとマーカーが引かれます。</p>
+<pre data-label="マーカー"><div class="language-markdown:マーカー markdown code">これは==マーカー==文字です。</div></pre>
+<p>上記のようにすると下記のようになります。</p>
+<p>これは<marker class="highlighted">マーカー</marker>文字です。</p>
+</section><section id="_b91239427b984fe34e6b631d9b525c23fd14375e-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">バッジ</h4>
+<p><code>{タイプ:タイトル|テキスト}</code> とするとバッジになります。</p>
+<pre data-label="バッジの例"><div class="language-markdown:バッジの例 markdown code">- 単純なバッジ {this is badge}
+- success バッジ {success:テキスト}
+- タイトル付きalert バッジ {alert:タイトル|テキスト}</div></pre>
+<p>上記のようにすると下記のようになります。</p>
+<ul>
+<li>単純なバッジ <span class="badge " data-badge-title="">this is badge</span></li>
+<li>success バッジ <span class="badge success" data-badge-title="">テキスト</span></li>
+<li>タイトル付きalert バッジ <span class="badge alert" data-badge-title="タイトル">テキスト</span></li>
+</ul>
+<p>上記のようにタイプ,タイトル,テキストはある程度省略できます。<br>
+タイプは <code>info</code> <code>success</code> <code>notice</code> <code>alert</code> が使えます。</p>
+</section><section id="_6f403327f49dbb27440c972025889cf019a40adc-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">キャプション</h4>
+<p>ヘッダーのように <code>####### Caption</code> と <code>#</code> を7個並べるとキャプションになります。</p>
+<pre data-label="キャプション"><div class="language-markdown:キャプション markdown code">####### This Is Caption
+
+内容</div></pre>
+<p>上記のようにすると下記のようになります。</p>
+<em class="caption">This Is Caption</em>
+<p>内容</p>
+<p>キャプションはブロック要素となり <code>p</code> で囲われません。さらに見出しとして検出されません。<br>
+実態は <code>em</code> ですが、変更される可能性があります。<br>
+また、意図的に下部パディングを小さめにしています。</p>
+<p>セクション内のちょっとした区切りやアクセントとして使用します。</p>
 </section><section id="_ac3e6d2e7121b2918cd5d40f68a6c79241452fba-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">ノート</h4>
 <p>コードブロックと同じように <code>"""</code> で囲むと注意書きブロックが生成されます。</p>
 <pre data-label="注意書きの例"><div class="language-markdown:注意書きの例 markdown code">"""note:title
@@ -875,8 +1042,8 @@ phar がルーターの役割も持っているので、起動したカレント
 <p class="sidebar-title">title</p>
 <p>これはサイドバーです。</p>
 </div>
-<p>note の部分は飾りです。 Read The Docs 本家にスタイルがなかったため、埋め込まれはしますがスタイルは変わりません。<br>
-無意味ですが、今後のために予約しています。</p>
+<p>note の部分はほぼ飾りです。 Read The Docs 本家にスタイルがなかったため、埋め込まれはしますがスタイルは変わりません。<br>
+ただし <code>right</code> を指定した場合のみ無装飾で右上に配置されます。</p>
 <p>title の部分はただのラベルになります。</p>
 </section><section id="_dc813bf775a6b910b13f1445a27fde368e5b5177-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">定義リスト</h4>
 <p><code>-</code> や <code>*</code> などのリスト記法に続けて、<code>:</code>（コロンスペース）があると定義リストが生成されます。</p>
@@ -985,6 +1152,19 @@ semver 準拠はあくまで下記だけです。</p>
 <li>静的ファイルは全部 CDN に逃したい</li>
 <li>markdown に include 機能を持たせたい</li>
 </ul>
+</section><section id="_528cf42af97409ff91db4e7793a81bc5f447d215-1" class="section section-level-h3" data-section-level="3"><h3 class="section-header">1.1.0</h3>
+<ul>
+<li>[feature] 二重拡張子が php の場合は include する機能</li>
+<li>[feature] スクロール同期の遅延を解消</li>
+<li>[feature] アクティブな見出しは隠していても表示される機能</li>
+<li>[feature] right sidebar を実装</li>
+<li>[feature] キャプション記法を実装</li>
+<li>[feature] バッジ記法を実装</li>
+<li>[feature] マーカー記法を実装</li>
+<li>[feature] ToC のサイズ変更機能</li>
+<li>[fixbug] 言語設定が効いていない不具合を修正</li>
+<li>[fixbug] スペルミスでデフォルト値が効いていない不具合を修正</li>
+</ul>
 </section><section id="_91e95be6b6634e3c21072dfcd661146728694326-1" class="section section-level-h3" data-section-level="3"><h3 class="section-header">1.0.0</h3>
 <ul>
 <li>公開</li>
@@ -994,7 +1174,7 @@ semver 準拠はあくまで下記だけです。</p>
                         <div>
                                                     </div>
                         <div>
-                                                            <a href="./index.html" class="btn btn-neutral" accesskey="u" rel="up"><span class="fa fa-arrow-circle-up" aria-hidden="true"></span> apache-markdown/</a>
+                                                            <a href="./index.html" class="btn btn-neutral" accesskey="u" rel="up"><span class="fa fa-arrow-circle-up" aria-hidden="true"></span> php-markdown/</a>
                                                     </div>
                         <div>
                                                             <a href="tests/index.html" class="btn btn-neutral" accesskey="n" rel="next">tests/ <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
@@ -1055,24 +1235,32 @@ semver 準拠はあくまで下記だけです。</p>
             <dl>
                 <dt>View</dt>
                 <dd>
+                    <label class="option-title" for="toc_width">TOC width</label>
+                    <input id="toc_width" class="option-input" data-input-name="tocWidth" data-default-value="300" type="number" min="10" max="700">
+                </dd>
+                <dd>
                     <label class="option-title" for="toc_level">TOC level</label>
-                    <input id="toc_level" class="option-input" data-input-name="tocLevel" data-devalue-value="5" type="number" min="1" max="6">
+                    <input id="toc_level" class="option-input" data-input-name="tocLevel" data-default-value="5" type="number" min="1" max="6">
                 </dd>
                 <dd>
                     <label class="option-title" for="toc_number">TOC number</label>
-                    <input id="toc_number" class="option-input" data-input-name="tocNumber" data-devalue-value="true" type="checkbox" value="1">
+                    <input id="toc_number" class="option-input" data-input-name="tocNumber" data-default-value="true" type="checkbox" value="1">
                 </dd>
                 <dd>
                     <label class="option-title" for="toc_follow">TOC follow</label>
-                    <input id="toc_follow" class="option-input" data-input-name="tocFollow" data-devalue-value="true" type="checkbox" value="1">
+                    <input id="toc_follow" class="option-input" data-input-name="tocFollow" data-default-value="true" type="checkbox" value="1">
+                </dd>
+                <dd>
+                    <label class="option-title" for="toc_active">alway visible active level</label>
+                    <input id="toc_active" class="option-input" data-input-name="tocActive" data-default-value="true" type="checkbox" value="1">
                 </dd>
                 <dd>
                     <label class="option-title" for="section_indent">section indent</label>
-                    <input id="section_indent" class="option-input" data-input-name="sectionIndent" data-devalue-value="0" type="number" min="0" max="6">
+                    <input id="section_indent" class="option-input" data-input-name="sectionIndent" data-default-value="0" type="number" min="0" max="6">
                 </dd>
                 <dd>
                     <label class="option-title" for="highlight_css">syntax highlight</label>
-                    <select id="highlight_css" class="option-input" data-input-name="highlightCss" data-devalue-value="default">
+                    <select id="highlight_css" class="option-input" data-input-name="highlightCss" data-default-value="default">
                                                     <option value="default">default</option>
                                                     <option value="zenburn">zenburn</option>
                                                     <option value="github">github</option>
