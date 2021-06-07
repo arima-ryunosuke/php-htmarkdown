@@ -138,23 +138,23 @@ $siblings = $this->siblings();
                 <dt>View</dt>
                 <dd>
                     <label class="option-title" for="toc_level"><?= $h($locale['toc_level']) ?></label>
-                    <input id="toc_level" class="option-input" data-input-name="tocLevel" data-devalue-value="5" type="number" min="1" max="6">
+                    <input id="toc_level" class="option-input" data-input-name="tocLevel" data-default-value="5" type="number" min="1" max="6">
                 </dd>
                 <dd>
                     <label class="option-title" for="toc_number"><?= $h($locale['toc_number']) ?></label>
-                    <input id="toc_number" class="option-input" data-input-name="tocNumber" data-devalue-value="true" type="checkbox" value="1">
+                    <input id="toc_number" class="option-input" data-input-name="tocNumber" data-default-value="true" type="checkbox" value="1">
                 </dd>
                 <dd>
                     <label class="option-title" for="toc_follow"><?= $h($locale['toc_follow']) ?></label>
-                    <input id="toc_follow" class="option-input" data-input-name="tocFollow" data-devalue-value="true" type="checkbox" value="1">
+                    <input id="toc_follow" class="option-input" data-input-name="tocFollow" data-default-value="true" type="checkbox" value="1">
                 </dd>
                 <dd>
                     <label class="option-title" for="section_indent"><?= $h($locale['section_indent']) ?></label>
-                    <input id="section_indent" class="option-input" data-input-name="sectionIndent" data-devalue-value="0" type="number" min="0" max="6">
+                    <input id="section_indent" class="option-input" data-input-name="sectionIndent" data-default-value="0" type="number" min="0" max="6">
                 </dd>
                 <dd>
                     <label class="option-title" for="highlight_css"><?= $h($locale['highlight_css']) ?></label>
-                    <select id="highlight_css" class="option-input" data-input-name="highlightCss" data-devalue-value="default">
+                    <select id="highlight_css" class="option-input" data-input-name="highlightCss" data-default-value="default">
                         <?php foreach (['default', 'zenburn', 'github', 'vs', /* and more */] as $cssname): ?>
                             <option value="<?= $h($cssname) ?>"><?= $h($cssname) ?></option>
                         <?php endforeach ?>
