@@ -181,6 +181,10 @@ document.addEventListener('DOMContentLoaded', function () {
             const highlight_style = $('#highlight_style');
             highlight_style.href = highlight_style.dataset.cdnUrl + e.target.getValue() + '.min.css';
         }
+        if (e.target.id === 'toc_width') {
+            document.documentElement.style.setProperty('--side-width', e.target.getValue() + 'px');
+        }
+
     });
     controlPanel.save = function () {
         const savedata = {};

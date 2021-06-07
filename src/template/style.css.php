@@ -1,4 +1,7 @@
 /* override theme.css */
+:root {
+    --side-width: 300px;
+}
 
 h1, h2, h3, h4, h5, h6 {
     border-bottom: 1px solid #E1E4E5;
@@ -13,12 +16,46 @@ h2, h3, h4, h5, h6 {
     height: unset;
 }
 
+.wy-tray-container li {
+    width: var(--side-width);
+}
+
+.wy-menu-vertical {
+    width: var(--side-width);
+}
+
+.wy-side-nav-search {
+    width: var(--side-width);
+}
+
+.wy-nav-side {
+    width: var(--side-width);
+}
+
+.wy-side-scroll {
+    width: calc(var(--side-width) + 20px);
+}
+
+.wy-nav-content-wrap {
+    margin-left: var(--side-width);
+}
+
+@media screen and (max-width: 768px) {
+    .wy-nav-side {
+        width: calc(0 -var(--side-width));
+    }
+}
+
+.rst-versions {
+    width: var(--side-width);
+}
+
 .wy-side-scroll.scrolling {
-    width: 300px;
+    width: var(--side-width);
 }
 
 .wy-side-scroll.no-scrollbar {
-    width: 320px;
+    width: calc(var(--side-width) + 20px);
 }
 
 .wy-side-scroll.scrolling-end {
@@ -119,7 +156,10 @@ h2, h3, h4, h5, h6 {
 .rst-footer-buttons div:nth-child(3) {
     width: calc(100% / 3);
     text-align: right;
+}
 
+.rst-versions .rst-other-versions dd {
+    display: block;
 }
 
 /* table of contents */

@@ -137,6 +137,10 @@ $siblings = $this->siblings();
             <dl>
                 <dt>View</dt>
                 <dd>
+                    <label class="option-title" for="toc_width"><?= $h($locale['toc_width']) ?></label>
+                    <input id="toc_width" class="option-input" data-input-name="tocWidth" data-default-value="300" type="number" min="10" max="700">
+                </dd>
+                <dd>
                     <label class="option-title" for="toc_level"><?= $h($locale['toc_level']) ?></label>
                     <input id="toc_level" class="option-input" data-input-name="tocLevel" data-default-value="5" type="number" min="1" max="6">
                 </dd>
