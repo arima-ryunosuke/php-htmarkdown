@@ -11,6 +11,12 @@ h2, h3, h4, h5, h6 {
     margin-top: 20px;
 }
 
+.caption {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
 .wy-nav-content {
     max-width: 100%;
     height: unset;

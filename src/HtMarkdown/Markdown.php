@@ -329,4 +329,30 @@ class Markdown extends Parsedown
         }
         return $Block;
     }
+
+    protected function blockHeader($Line)
+    {
+        $level = strspn($Line['text'], '#');
+
+        if ($level === 7) {
+            $text = trim($Line['text'], '#');
+            $text = trim($text, ' ');
+
+            return [
+                'element' => [
+                    'name'       => 'em',
+                    'attributes' => [
+                        'class' => 'caption',
+                    ],
+                    'handler'    => [
+                        'function'    => 'lineElements',
+                        'argument'    => $text,
+                        'destination' => 'elements',
+                    ],
+                ],
+            ];
+        }
+
+        return parent::blockHeader($Line);
+    }
 }

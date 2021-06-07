@@ -285,7 +285,7 @@ class MarkdownTest extends \ryunosuke\Test\AbstractTestCase
         ]);
     }
 
-    function test_fenceLabel()
+    function test_blockFenceLabel()
     {
         that(Markdown::render(<<<MD
             ```lang
@@ -305,6 +305,22 @@ class MarkdownTest extends \ryunosuke\Test\AbstractTestCase
             , []))->containsAll([
             'data-label="label"',
             'language-lang:label lang',
+        ]);
+    }
+
+    function test_blockHeader()
+    {
+        that(Markdown::render(<<<MD
+            ###### H6
+            
+            ####### Caption
+            
+            ######## H8
+            MD
+            , []))->containsAll([
+            '<h6>H6</h6>',
+            '<em class="caption">Caption</em>',
+            '######## H8',
         ]);
     }
 }
