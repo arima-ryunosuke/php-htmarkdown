@@ -135,6 +135,18 @@ h2, h3, h4, h5, h6 {
     display: none;
 }
 
+.rst-content .sidebar.right {
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    border: none;
+    width: auto;
+}
+
+.rst-content .sidebar.right p {
+    margin-bottom: 0;
+}
+
 .rst-content .sidebar-title:empty {
     display: none;
 }
