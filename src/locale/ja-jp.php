@@ -16,6 +16,7 @@ return [
     'toc_level'      => '見出しレベル',
     'toc_number'     => '見出し番号を表示する',
     'toc_follow'     => '見出しメニューを追従する',
+    'toc_active'     => 'アクティブなレベルは常に表示する',
     'section_indent' => 'セクションごとのインデント',
     'highlight_css'  => 'シンタックスハイライト',
 ];

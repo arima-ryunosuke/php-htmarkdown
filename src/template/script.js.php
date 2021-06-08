@@ -19,6 +19,9 @@ document.addEventListener('DOMContentLoaded', function () {
             clearTimeout(timerId);
         };
     };
+    Window.prototype.requestIdleCallback = Window.prototype.requestIdleCallback || function (callback) {
+        setTimeout(callback);
+    };
     Element.prototype.$ = Element.prototype.querySelector;
     Element.prototype.$$ = Element.prototype.querySelectorAll;
     Element.prototype.appendChildren = function (nodes) {
@@ -125,16 +128,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 href: `#${section.id}`,
                 title: sectionTitle,
                 class: ['toc-h', `toc-h${sectionLevel}`],
-                dataset: {sectionCount: '0'},
-                children: [
-                    {
-                        span: {
-                            class: ['toc-n', `toc-n${sectionLevel}`],
-                            children: levels.filter(v => v !== null).join('.'),
-                        },
-                    },
-                    ' ' + sectionTitle
-                ],
+                dataset: {
+                    sectionCount: '0',
+                    blockId: levels.filter(v => v !== null).join('.'),
+                    parentBlockId: levels.filter(v => v !== null).slice(0, -1).join('.'),
+                },
+                children: ' ' + sectionTitle,
             },
         });
     });
@@ -148,6 +147,23 @@ document.addEventListener('DOMContentLoaded', function () {
                 toch = toch.previousElementSibling;
             }
             toch.dataset.sectionCount = (Math.max(+toch.dataset.sectionCount + (e.isIntersecting ? +1 : -1), 0)) + '';
+
+            if (toch.dataset.sectionCount > 0) {
+                while (toch) {
+                    const siblings = outline.$$(`[data-parent-block-id="${toch.dataset.parentBlockId}"]`);
+                    siblings.forEach(e => e.classList.add('visible'));
+                    toch = outline.$(`[data-block-id="${toch.dataset.parentBlockId}"]`);
+                }
+            }
+            else {
+                while (toch) {
+                    const descendants = outline.$$(`[data-parent-block-id^="${toch.dataset.parentBlockId}"]`);
+                    if (Array.prototype.filter.call(descendants, e => !e.matches('[data-section-count="0"]')).length === 0) {
+                        descendants.forEach(e => e.classList.remove('visible'));
+                    }
+                    toch = outline.$(`[data-block-id="${toch.dataset.parentBlockId}"]`);
+                }
+            }
         },
     });
 
@@ -257,4 +273,9 @@ document.addEventListener('DOMContentLoaded', function () {
             scrollEvent();
         }
     }, {passive: false});
+
+    /// stop initial animation
+    requestIdleCallback(function () {
+        document.documentElement.style.setProperty('--initial-animation-ms', '500ms');
+    });
 });

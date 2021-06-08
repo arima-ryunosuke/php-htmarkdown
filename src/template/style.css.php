@@ -1,5 +1,6 @@
 /* override theme.css */
 :root {
+    --initial-animation-ms: 0ms;
     --side-width: 300px;
 }
 
@@ -186,29 +187,62 @@ h2, h3, h4, h5, h6 {
     padding-bottom: 8px;
 }
 
-[data-toc-number="false"] .toc-n {
+[data-toc-number="true"] [data-block-id]:before {
+    content: attr(data-block-id);
+    color: #a9a9a9;
+}
+
+[data-toc-active="false"][data-toc-level="1"] .toc-h2,
+[data-toc-active="false"][data-toc-level="1"] .toc-h3,
+[data-toc-active="false"][data-toc-level="1"] .toc-h4,
+[data-toc-active="false"][data-toc-level="1"] .toc-h5,
+[data-toc-active="false"][data-toc-level="1"] .toc-h6,
+[data-toc-active="false"][data-toc-level="2"] .toc-h3,
+[data-toc-active="false"][data-toc-level="2"] .toc-h4,
+[data-toc-active="false"][data-toc-level="2"] .toc-h5,
+[data-toc-active="false"][data-toc-level="2"] .toc-h6,
+[data-toc-active="false"][data-toc-level="3"] .toc-h4,
+[data-toc-active="false"][data-toc-level="3"] .toc-h5,
+[data-toc-active="false"][data-toc-level="3"] .toc-h6,
+[data-toc-active="false"][data-toc-level="4"] .toc-h5,
+[data-toc-active="false"][data-toc-level="4"] .toc-h6,
+[data-toc-active="false"][data-toc-level="5"] .toc-h6 {
     display: none;
 }
 
-[data-toc-level="1"] .toc-h2,
-[data-toc-level="1"] .toc-h3,
-[data-toc-level="1"] .toc-h4,
-[data-toc-level="1"] .toc-h5,
-[data-toc-level="1"] .toc-h6,
-[data-toc-level="2"] .toc-h3,
-[data-toc-level="2"] .toc-h4,
-[data-toc-level="2"] .toc-h5,
-[data-toc-level="2"] .toc-h6,
-[data-toc-level="3"] .toc-h4,
-[data-toc-level="3"] .toc-h5,
-[data-toc-level="3"] .toc-h6,
-[data-toc-level="4"] .toc-h5,
-[data-toc-level="4"] .toc-h6,
-[data-toc-level="5"] .toc-h6 {
-    display: none;
+[data-toc-active="true"][data-toc-level="1"] .toc-h2,
+[data-toc-active="true"][data-toc-level="1"] .toc-h3,
+[data-toc-active="true"][data-toc-level="1"] .toc-h4,
+[data-toc-active="true"][data-toc-level="1"] .toc-h5,
+[data-toc-active="true"][data-toc-level="1"] .toc-h6,
+[data-toc-active="true"][data-toc-level="2"] .toc-h3,
+[data-toc-active="true"][data-toc-level="2"] .toc-h4,
+[data-toc-active="true"][data-toc-level="2"] .toc-h5,
+[data-toc-active="true"][data-toc-level="2"] .toc-h6,
+[data-toc-active="true"][data-toc-level="3"] .toc-h4,
+[data-toc-active="true"][data-toc-level="3"] .toc-h5,
+[data-toc-active="true"][data-toc-level="3"] .toc-h6,
+[data-toc-active="true"][data-toc-level="4"] .toc-h5,
+[data-toc-active="true"][data-toc-level="4"] .toc-h6,
+[data-toc-active="true"][data-toc-level="5"] .toc-h6 {
+    visibility: hidden;
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+[data-toc-active="true"] .toc-h.visible {
+    visibility: visible;
+    max-height: 36px;
+    padding-top: .4045em;
+    padding-bottom: .4045em;
 }
 
 .toc-h {
+    transition-property: all;
+    transition-delay: 0s;
+    transition-duration: var(--initial-animation-ms);
+    transition-timing-function: ease;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
@@ -224,10 +258,6 @@ h2, h3, h4, h5, h6 {
 a.toc-h<?= $n ?> {
     font-size: <?= 100 - (($n - 1) * 4) ?>%;
     padding-left: <?= ($n - 1) + 1.35 ?>rem;
-}
-
-.toc-n<?= $n ?> {
-    color: #a9a9a9;
 }
 
 <?php endforeach ?>
@@ -360,7 +390,7 @@ pre[data-label]:not([data-label=""]) div.code {
 .option-title {
     color: #fcfcfc;
     display: inline-block;
-    width: 176px;
+    width: 210px;
 }
 
 .option-input {

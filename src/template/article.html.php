@@ -153,6 +153,10 @@ $siblings = $this->siblings();
                     <input id="toc_follow" class="option-input" data-input-name="tocFollow" data-default-value="true" type="checkbox" value="1">
                 </dd>
                 <dd>
+                    <label class="option-title" for="toc_active"><?= $h($locale['toc_active']) ?></label>
+                    <input id="toc_active" class="option-input" data-input-name="tocActive" data-default-value="true" type="checkbox" value="1">
+                </dd>
+                <dd>
                     <label class="option-title" for="section_indent"><?= $h($locale['section_indent']) ?></label>
                     <input id="section_indent" class="option-input" data-input-name="sectionIndent" data-default-value="0" type="number" min="0" max="6">
                 </dd>
