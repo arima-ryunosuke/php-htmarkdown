@@ -144,7 +144,15 @@ class File
     public function contents(): ?string
     {
         if ($this->exists()) {
-            return $this->contents ?? file_get_contents($this->original);
+            if ($this->contents !== null) {
+                return $this->contents;
+            }
+            if (pathinfo($this->filename(), PATHINFO_EXTENSION) === 'php') {
+                ob_start();
+                include $this->original;
+                return ob_get_clean();
+            }
+            return file_get_contents($this->original);
         }
         return $this->contents;
     }

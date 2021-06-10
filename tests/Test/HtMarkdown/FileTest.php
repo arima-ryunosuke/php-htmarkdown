@@ -195,6 +195,22 @@ class FileTest extends \ryunosuke\Test\AbstractTestCase
 
         $file = new File(__FILE__, 'hoge');
         that($file->contents())->is('hoge');
+
+        $file = new File(__DIR__ . '/../../stub/php/index.php.md');
+        that($file->contents())->is(<<<MD
+# INDEX
+
+## A
+this is A
+
+## B
+this is B
+
+## C
+this is C
+
+MD
+        );
     }
 
     function test_lines()
