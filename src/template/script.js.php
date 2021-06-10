@@ -177,10 +177,9 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     /// 記事末尾の空白を確保（ジャンプしたときに「え？どこ？」となるのを回避する）
-    const headers = $$('.section-header');
-    if (headers.length) {
-        const lastHeader = headers[headers.length - 1];
-        const height = sentinel.offsetTop - lastHeader.offsetTop + parseInt(getComputedStyle(lastHeader).marginTop);
+    const lastSection = $('.section:last-child');
+    if (lastSection) {
+        const height = sentinel.offsetTop - lastSection.offsetTop + parseInt(getComputedStyle(lastSection).marginTop);
         sentinel.style.height = `calc(100vh - ${height}px)`;
     }
 
@@ -220,28 +219,39 @@ document.addEventListener('DOMContentLoaded', function () {
     controlPanel.load();
 
     /// アウトラインのクリックイベント
+    let intoViewScrolling = false;
     outline.addEventListener('click', function (e) {
         if (e.target.matches('a.toc-h')) {
             e.preventDefault();
-            const section = $(e.target.getAttribute('href'));
-            section.scrollIntoView({
+            const section = $$(e.target.getAttribute('href'));
+            intoViewScrolling = true;
+            section[0].scrollIntoView({
                 behavior: "smooth",
                 block: "start",
+            });
+            section.observeIntersection({
+                rootMargin: '0px 0px -99.99% 0px',
+                intersect: function (e, observer) {
+                    observer.unobserve(e.target);
+                    requestIdleCallback(function () {
+                        intoViewScrolling = false;
+                    });
+                },
             });
         }
     });
 
     // アウトラインのスクロールの自動追従
-    const followMenuTimer = new Timer(1000, function () {
-        $$('.toc-h:not([data-section-count="0"])').forEach(function (toch) {
-            toch.scrollIntoView({
-                behavior: "smooth",
-                block: "center",
-            });
+    const followMenuTimer = new Timer(32, function () {
+        const visibles = $$('.toc-h:not([data-section-count="0"])');
+        visibles[Math.floor(visibles.length / 2)].scrollIntoView({
+            behavior: "smooth",
+            block: "center",
         });
     });
     document.addEventListener('scroll', function (e) {
-        if (html.dataset.tocFollow === 'true') {
+        if (!intoViewScrolling && html.dataset.tocFollow === 'true') {
+            followMenuTimer.stop();
             followMenuTimer.start();
         }
     });
