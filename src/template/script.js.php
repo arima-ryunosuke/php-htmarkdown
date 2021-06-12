@@ -257,32 +257,14 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     /// スクロールバーを自動的に隠す
-    const scrollHideTimer = new Timer(2500, function () {
+    const scrollHideTimer = new Timer(3000, function () {
         scroller.classList.remove('scrolling');
-        scroller.classList.add('scrolling-end');
     });
-    const scrollEvent = function () {
-        followMenuTimer.stop();
+    scroller.addEventListener('scroll', function () {
         scrollHideTimer.stop();
-
         scroller.classList.add('scrolling');
-        scroller.classList.remove('scrolling-end');
         scrollHideTimer.start();
-    };
-    scroller.addEventListener('scroll', scrollEvent);
-
-    /// スクロールが親に伝播するのは使いづらいので抑止する
-    scroller.addEventListener('wheel', function (e) {
-        if (scroller.scrollHeight > scroller.clientHeight) {
-            if (e.deltaY < 0 && scroller.scrollTop === 0) {
-                e.preventDefault();
-            }
-            if (e.deltaY > 0 && scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight) {
-                e.preventDefault();
-            }
-            scrollEvent();
-        }
-    }, {passive: false});
+    });
 
     /// stop initial animation
     requestIdleCallback(function () {

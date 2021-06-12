@@ -39,10 +39,6 @@ h2, h3, h4, h5, h6 {
     width: var(--side-width);
 }
 
-.wy-side-scroll {
-    width: calc(var(--side-width) + 20px);
-}
-
 .wy-nav-content-wrap {
     margin-left: var(--side-width);
 }
@@ -57,16 +53,15 @@ h2, h3, h4, h5, h6 {
     width: var(--side-width);
 }
 
-.wy-side-scroll.scrolling {
-    width: var(--side-width);
-}
-
-.wy-side-scroll.no-scrollbar {
+.wy-side-scroll {
+    transition: width var(--initial-animation-ms) 0s ease;
     width: calc(var(--side-width) + 20px);
+    overscroll-behavior: contain;
 }
 
-.wy-side-scroll.scrolling-end {
-    transition: all 500ms 0s ease;
+.wy-side-scroll.scrolling {
+    transition-duration: 0s;
+    width: var(--side-width);
 }
 
 .wy-side-scroll::-webkit-scrollbar {
