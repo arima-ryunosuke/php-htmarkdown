@@ -296,12 +296,16 @@ small.metadata {
 <?php foreach(range(1, 6) as $n): ?>
 <?php foreach(range(1, 6) as $m): ?>
 
-[data-section-indent="<?= $n ?>"] [data-section-level="<?= $m ?>"] {
-    padding-left: <?= ($m - 1) * $n ?>rem;
+[data-section-indent="<?= $n ?>"] section[data-section-level="<?= $m ?>"] {
+    padding-left: <?= ($m) * $n ?>rem;
 }
 
 <?php endforeach ?>
 <?php endforeach ?>
+
+html:not([data-section-indent="0"]) section[data-section-level] .section-header {
+    margin-left: -1rem;
+}
 
 .admonition-title:empty {
     display: none;
