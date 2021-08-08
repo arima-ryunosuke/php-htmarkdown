@@ -115,25 +115,46 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /// セクション由来のアウトラインの構築
     const levels = (new Array(6)).fill(0);
+    const idmap = {};
     article.$$('.section').forEach(function (section) {
+        const sectionId = `toc-${section.id}`;
         const sectionTitle = section.$('.section-header').textContent;
         const sectionLevel = +section.dataset.sectionLevel;
 
         levels[sectionLevel - 1]++;
         levels.fill(null, sectionLevel);
 
+        const blockId = levels.filter(v => v !== null).join('.');
+        const parentId = levels.filter(v => v !== null).slice(0, -1).join('.');
+
+        idmap[blockId] = sectionId;
+        const parent = document.getElementById(idmap[parentId]);
+        if (parent) {
+            parent.dataset.childCount = (+parent.dataset.childCount + 1) + '';
+        }
+
         outline.appendChildren({
             a: {
-                id: `toc-${section.id}`,
+                id: sectionId,
                 href: `#${section.id}`,
                 title: sectionTitle,
                 class: ['toc-h', `toc-h${sectionLevel}`],
                 dataset: {
                     sectionCount: '0',
-                    blockId: levels.filter(v => v !== null).join('.'),
-                    parentBlockId: levels.filter(v => v !== null).slice(0, -1).join('.'),
+                    sectionLevel: sectionLevel,
+                    blockId: blockId,
+                    parentBlockId: parentId,
+                    childCount: '0',
+                    state: '',
                 },
-                children: ' ' + sectionTitle,
+                children: [
+                    ' ' + sectionTitle,
+                    {
+                        a: {
+                            class: 'toggler icon',
+                        }
+                    }
+                ],
             },
         });
     });
@@ -143,10 +164,16 @@ document.addEventListener('DOMContentLoaded', function () {
         rootMargin: '0px 0px 0px 0px',
         change: function (e) {
             let toch = document.getElementById(`toc-${e.target.id}`);
-            while (toch.offsetParent === null) {
-                toch = toch.previousElementSibling;
+            if (html.dataset.tocActive === 'false') {
+                while (toch.clientHeight <= 1) {
+                    toch = toch.previousElementSibling;
+                }
             }
             toch.dataset.sectionCount = (Math.max(+toch.dataset.sectionCount + (e.isIntersecting ? +1 : -1), 0)) + '';
+
+            if (html.dataset.tocActive === 'false') {
+                return;
+            }
 
             if (toch.dataset.sectionCount > 0) {
                 while (toch) {
@@ -217,6 +244,45 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     };
     controlPanel.load();
+
+    /// アウトラインの開閉ボタン
+    outline.addEventListener('mouseenter', function (e) {
+        if (e.target.matches('a.toc-h')) {
+            const toch = e.target;
+            if (toch.dataset.sectionLevel >= html.dataset.tocLevel) {
+                if (+toch.dataset.childCount) {
+                    const tochs = outline.$$(`[data-parent-block-id="${toch.dataset.blockId}"]`);
+                    const visibles = Array.prototype.filter.call(tochs, e => e.matches('.visible,.forced-visible'));
+                    if (tochs.length === visibles.length) {
+                        toch.dataset.state = 'close';
+                    }
+                    else {
+                        toch.dataset.state = 'open';
+                    }
+                }
+            }
+        }
+    }, true);
+    outline.addEventListener('mouseleave', function (e) {
+        if (e.target.matches('a.toc-h')) {
+            e.target.dataset.state = '';
+        }
+    }, true);
+    outline.addEventListener('click', function (e) {
+        if (e.target.matches('a.toggler')) {
+            const toch = e.target.parentElement;
+            if (toch.dataset.state === 'open') {
+                toch.dataset.state = 'close';
+                outline.$$(`[data-parent-block-id="${toch.dataset.blockId}"]`).forEach(e => e.classList.add('forced-visible', 'visible'));
+            }
+            else {
+                toch.dataset.state = 'open';
+                outline.$$(`[data-parent-block-id^="${toch.dataset.blockId}"]`).forEach(e => e.classList.remove('forced-visible', 'visible'));
+            }
+            e.preventDefault();
+            return false;
+        }
+    });
 
     /// アウトラインのクリックイベント
     let intoViewScrolling = false;

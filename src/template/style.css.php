@@ -187,46 +187,29 @@ h2, h3, h4, h5, h6 {
     color: #a9a9a9;
 }
 
-[data-toc-active="false"][data-toc-level="1"] .toc-h2,
-[data-toc-active="false"][data-toc-level="1"] .toc-h3,
-[data-toc-active="false"][data-toc-level="1"] .toc-h4,
-[data-toc-active="false"][data-toc-level="1"] .toc-h5,
-[data-toc-active="false"][data-toc-level="1"] .toc-h6,
-[data-toc-active="false"][data-toc-level="2"] .toc-h3,
-[data-toc-active="false"][data-toc-level="2"] .toc-h4,
-[data-toc-active="false"][data-toc-level="2"] .toc-h5,
-[data-toc-active="false"][data-toc-level="2"] .toc-h6,
-[data-toc-active="false"][data-toc-level="3"] .toc-h4,
-[data-toc-active="false"][data-toc-level="3"] .toc-h5,
-[data-toc-active="false"][data-toc-level="3"] .toc-h6,
-[data-toc-active="false"][data-toc-level="4"] .toc-h5,
-[data-toc-active="false"][data-toc-level="4"] .toc-h6,
-[data-toc-active="false"][data-toc-level="5"] .toc-h6 {
-    display: none;
-}
-
-[data-toc-active="true"][data-toc-level="1"] .toc-h2,
-[data-toc-active="true"][data-toc-level="1"] .toc-h3,
-[data-toc-active="true"][data-toc-level="1"] .toc-h4,
-[data-toc-active="true"][data-toc-level="1"] .toc-h5,
-[data-toc-active="true"][data-toc-level="1"] .toc-h6,
-[data-toc-active="true"][data-toc-level="2"] .toc-h3,
-[data-toc-active="true"][data-toc-level="2"] .toc-h4,
-[data-toc-active="true"][data-toc-level="2"] .toc-h5,
-[data-toc-active="true"][data-toc-level="2"] .toc-h6,
-[data-toc-active="true"][data-toc-level="3"] .toc-h4,
-[data-toc-active="true"][data-toc-level="3"] .toc-h5,
-[data-toc-active="true"][data-toc-level="3"] .toc-h6,
-[data-toc-active="true"][data-toc-level="4"] .toc-h5,
-[data-toc-active="true"][data-toc-level="4"] .toc-h6,
-[data-toc-active="true"][data-toc-level="5"] .toc-h6 {
+[data-toc-level="1"] .toc-h2,
+[data-toc-level="1"] .toc-h3,
+[data-toc-level="1"] .toc-h4,
+[data-toc-level="1"] .toc-h5,
+[data-toc-level="1"] .toc-h6,
+[data-toc-level="2"] .toc-h3,
+[data-toc-level="2"] .toc-h4,
+[data-toc-level="2"] .toc-h5,
+[data-toc-level="2"] .toc-h6,
+[data-toc-level="3"] .toc-h4,
+[data-toc-level="3"] .toc-h5,
+[data-toc-level="3"] .toc-h6,
+[data-toc-level="4"] .toc-h5,
+[data-toc-level="4"] .toc-h6,
+[data-toc-level="5"] .toc-h6 {
     visibility: hidden;
     max-height: 0;
     padding-top: 0;
     padding-bottom: 0;
 }
 
-[data-toc-active="true"] .toc-h.visible {
+.toc-h.visible,
+.toc-h.forced-visible {
     visibility: visible;
     max-height: 36px;
     padding-top: .4045em;
@@ -255,7 +238,42 @@ a.toc-h<?= $n ?> {
     padding-left: <?= ($n - 1) + 1.35 ?>rem;
 }
 
+a.toc-h<?= $n ?> a.toggler {
+    left: <?= ($n - 2) + 1.1 ?>rem;
+}
+
 <?php endforeach ?>
+
+a.toggler {
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: inherit;
+    display: inline-block;
+    padding: .4045em 0;
+    text-align: center;
+}
+
+a.toggler:before {
+    line-height: inherit;
+    opacity: 0.7;
+}
+
+a.toggler:hover:before {
+    opacity: 1;
+}
+
+[data-state=""] a.toggler:before {
+    content: "";
+}
+
+[data-state="open"] a.toggler:before {
+    content: "";
+}
+
+[data-state="close"] a.toggler:before {
+    content: "";
+}
 
 /* article */
 
