@@ -195,8 +195,10 @@ class Document
             return [];
         }
 
+        $files = glob("{$this->file->dirname()}/*");
+        sort($files);
         $children = [];
-        foreach (glob("{$this->file->dirname()}/*") as $file) {
+        foreach ($files as $file) {
             $child = new self($file, $this->options);
             if ($child->isSupported() ?? true) {
                 $children[] = $child;

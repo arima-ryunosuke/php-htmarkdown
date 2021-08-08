@@ -237,6 +237,7 @@ class MarkdownTest extends \ryunosuke\Test\AbstractTestCase
             MD
             , []))->containsAll([
             '<dl class="docutils field-list">',
+            '<div class="dtdd-container">',
             '<dt>A</dt>',
             '<dd>a</dd>',
             '<dt>B</dt>',
@@ -252,6 +253,7 @@ class MarkdownTest extends \ryunosuke\Test\AbstractTestCase
             MD
             , []))->containsAll([
             '<dl class="docutils field-list">',
+            '<div class="dtdd-container">',
             '<dt><code>A</code>',
             '<dd><code>a</code>',
             '<dt><strong>B</strong>',
@@ -273,6 +275,7 @@ class MarkdownTest extends \ryunosuke\Test\AbstractTestCase
             MD
             , []))->containsAll([
             '<dl class="docutils">',
+            '<div class="dtdd-container">',
             '<dt>A</dt>',
             '<p>a1',
             'a2</p>',

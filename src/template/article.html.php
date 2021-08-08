@@ -26,7 +26,7 @@ $siblings = $this->siblings();
 
 <body class="wy-body-for-nav <?= $this->download ? 'downloaded' : '' ?> <?= $this->singlefile ? 'singlefile' : '' ?>">
 <div class="wy-grid-for-nav">
-    <nav class="wy-nav-side">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
         <div class="wy-side-scroll">
             <div class="wy-side-nav-search">
                 <a href="" class="icon icon-home"> <?= $h($this->localName()) ?></a>
@@ -44,7 +44,11 @@ $siblings = $this->siblings();
             </div>
         </div>
     </nav>
-    <div class="wy-nav-content-wrap">
+    <div data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+        <nav class="wy-nav-top" aria-label="Mobile navigation menu">
+            <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+            <a href=""> <?= $h($this->localName()) ?></a>
+        </nav>
         <div class="wy-nav-content">
             <div class="rst-content">
                 <header class="hidden-single">
@@ -95,7 +99,7 @@ $siblings = $this->siblings();
         <div class="sentinel"></div>
     </div>
 </div>
-<div class="rst-versions">
+<div data-toggle="wy-nav-shift" class="rst-versions">
     <span class="rst-current-version">
         <span class="fa fa-cog pull-left"> <?= $h($locale['control_panel']) ?></span>
         <span class="fa fa-caret-down"></span>

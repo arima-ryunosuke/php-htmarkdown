@@ -9,26 +9,37 @@ document.addEventListener('DOMContentLoaded', function () {
     const article = $('.markdown-body>article');
     const sentinel = $('.sentinel');
     const controlPanel = $('.control-panel');
+    const noop = function () {};
     const Timer = function (interval, callback) {
-        let timerId = null;
-        this.start = function () {
-            clearTimeout(timerId);
-            timerId = setTimeout(callback, interval);
-        };
-        this.stop = function () {
-            clearTimeout(timerId);
-        };
+        this.timerId = null;
+        this.interval = interval;
+        this.callback = callback;
+    };
+    Timer.prototype.start = function () {
+        clearTimeout(this.timerId);
+        this.timerId = setTimeout(this.callback, this.interval);
+    };
+    Timer.prototype.stop = function () {
+        clearTimeout(this.timerId);
     };
     Window.prototype.requestIdleCallback = Window.prototype.requestIdleCallback || function (callback) {
         setTimeout(callback);
     };
+    Array.prototype.findLastIndex = function (predicate, thisArg) {
+        for (let i = this.length - 1; i >= 0; i--) {
+            if (predicate.call(thisArg, this[i], i, this)) {
+                return i;
+            }
+        }
+        return -1;
+    };
     Element.prototype.$ = Element.prototype.querySelector;
     Element.prototype.$$ = Element.prototype.querySelectorAll;
     Element.prototype.appendChildren = function (nodes) {
-        for (const node of Object.values(document.createElements(nodes))) {
-            this.appendChild(node);
-        }
-    }
+        const children = document.createElements(nodes);
+        children.forEach(child => this.appendChild(child));
+        return children;
+    };
     Document.prototype.createElements = function (nodes) {
         const elements = [];
         for (const [tagname, attributes] of Object.entries(nodes)) {
@@ -47,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         if (e instanceof Array) {
                             e.forEach(e => append(e));
                         }
-                        else if (e instanceof Node || typeof (e) === "string") {
+                        else if (e instanceof Node || typeof (e) === 'string') {
                             element.append(e);
                         }
                         else if (e instanceof Object) {
@@ -65,26 +76,37 @@ document.addEventListener('DOMContentLoaded', function () {
         return elements;
     };
     NodeList.prototype.observeIntersection = function (opts) {
+        opts = Object.assign({
+            change: noop,
+            intersect: noop,
+            notIntersect: noop,
+        }, opts);
         const observer = new IntersectionObserver(function (entries, observer) {
-            entries.forEach((e) => (opts.change ?? function () {})(e, observer));
-            entries.filter(e => e.isIntersecting).forEach((e) => (opts.intersect ?? function () {})(e, observer));
-            entries.filter(e => !e.isIntersecting).forEach((e) => (opts.notIntersect ?? function () {})(e, observer));
+            entries.forEach(e => opts.change(e, observer));
+            entries.filter(e => e.isIntersecting).forEach(e => opts.intersect(e, observer));
+            entries.filter(e => !e.isIntersecting).forEach(e => opts.notIntersect(e, observer));
         }, opts);
         this.forEach(node => observer.observe(node));
         return observer;
     };
     NodeList.prototype.observeMutation = function (opts) {
+        opts = Object.assign({
+            attribute: noop,
+            character: noop,
+            child: noop,
+
+            attributes: !!opts.attribute,
+            attributeOldValue: !!opts.attribute,
+            characterData: !!opts.character,
+            characterDataOldValue: !!opts.character,
+            childList: !!opts.child,
+            subtree: !!opts.child,
+        }, opts);
         const observer = new MutationObserver(function (entries, observer) {
-            entries.filter(e => e.type === 'attributes').forEach((e) => (opts.attribute ?? function () {})(e, observer));
-            entries.filter(e => e.type === 'characterData ').forEach((e) => (opts.character ?? function () {})(e, observer));
-            entries.filter(e => e.type === 'childList').forEach((e) => (opts.child ?? function () {})(e, observer));
+            entries.filter(e => e.type === 'attributes').forEach(e => opts.attribute(e, observer));
+            entries.filter(e => e.type === 'characterData').forEach(e => opts.character(e, observer));
+            entries.filter(e => e.type === 'childList').forEach(e => opts.child(e, observer));
         });
-        opts.attributes = opts.attributes ?? !!opts.attribute;
-        opts.attributeOldValue = opts.attributeOldValue ?? !!opts.attribute;
-        opts.characterData = opts.characterData ?? !!opts.character;
-        opts.characterDataOldValue = opts.characterDataOldValue ?? !!opts.character;
-        opts.childList = opts.childList ?? !!opts.child;
-        opts.subtree = opts.subtree ?? !!opts.child;
         this.forEach(node => observer.observe(node, opts));
         return observer;
     };
@@ -101,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function () {
     };
     HTMLInputElement.prototype.setValue = HTMLSelectElement.prototype.setValue = function (value) {
         if (this.tagName === 'SELECT') {
-            this.$('option[value="' + value + '"]').selected = true;
+            this.$(`option[value="${value}"]`).selected = true;
         }
         else if (this.type === 'checkbox') {
             this.checked = value === 'true';
@@ -124,6 +146,46 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    /// スマホメニュー
+    $('[data-toggle="wy-nav-top"]').addEventListener('click', function (e) {
+        $$('[data-toggle="wy-nav-shift"]').forEach(e => e.classList.toggle('shift'))
+    });
+
+    /// コンパネ
+    const SAVENAME = 'ht-setting';
+    $('.rst-current-version').addEventListener('click', function (e) {
+        e.target.closest('.rst-versions').classList.toggle('shift-up');
+    });
+    controlPanel.addEventListener('change', function (e) {
+        if (e.target.matches('[data-input-name]')) {
+            html.dataset[e.target.dataset.inputName] = e.target.getValue();
+            controlPanel.save();
+        }
+        if (e.target.id === 'highlight_css') {
+            const highlight_style = $('#highlight_style');
+            highlight_style.href = highlight_style.dataset.cdnUrl + e.target.getValue() + '.min.css';
+        }
+        if (e.target.id === 'toc_width') {
+            document.documentElement.style.setProperty('--side-width', e.target.getValue() + 'px');
+        }
+    });
+    controlPanel.save = function () {
+        const savedata = {};
+        this.$$('[data-input-name]').forEach(function (input) {
+            savedata[input.dataset.inputName] = input.getValue();
+        });
+        localStorage.setItem(SAVENAME, JSON.stringify(savedata));
+    };
+    controlPanel.load = function () {
+        const e = new Event('change', {bubbles: true});
+        const savedata = JSON.parse(localStorage.getItem(SAVENAME) ?? '{"tocNumber":"true","tocLevel":"5"}');
+        this.$$('[data-input-name]').forEach(function (input) {
+            input.setValue(savedata[input.dataset.inputName] ?? input.dataset.defaultValue);
+            input.dispatchEvent(e);
+        });
+    };
+    controlPanel.load();
+
     /// いくつか標準ではつかない class があるので付与
     article.$$('table').forEach(e => e.classList.add('docutils', 'align-default'));
     article.$$('ul').forEach(e => e.classList.add('simple'));
@@ -137,10 +199,13 @@ document.addEventListener('DOMContentLoaded', function () {
         const sectionLevel = +section.dataset.sectionLevel;
 
         levels[sectionLevel - 1]++;
-        levels.fill(null, sectionLevel);
+        levels.fill(0, sectionLevel);
 
-        const blockId = levels.filter(v => v !== null).join('.');
-        const parentId = levels.filter(v => v !== null).slice(0, -1).join('.');
+        const trailing = levels.findLastIndex(v => v !== 0);
+        const currentLevels = levels.slice(0, trailing + 1);
+        const blockId = currentLevels.join('.');
+        const parentId = currentLevels.slice(0, -1).join('.');
+        section.firstChild.dataset.blockId = blockId;
 
         idmap[blockId] = sectionId;
         const parent = document.getElementById(idmap[parentId]);
@@ -163,7 +228,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     state: '',
                 },
                 children: [
-                    ' ' + sectionTitle,
+                    sectionTitle,
                     {
                         a: {
                             class: 'toggler icon',
@@ -172,6 +237,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 ],
             },
         });
+    });
+
+    /// コードブロックの highlight.js 監視
+    article.$$('pre>div').observeIntersection({
+        rootMargin: '0px 0px 10% 0px',
+        intersect: function (e, observer) {
+            hljs.highlightBlock(e.target);
+            observer.unobserve(e.target);
+        },
     });
 
     /// アウトラインのハイライト監視
@@ -220,57 +294,6 @@ document.addEventListener('DOMContentLoaded', function () {
         },
     });
 
-    /// コードブロックの highlight.js 監視
-    article.$$('pre>div').observeIntersection({
-        rootMargin: '0px 0px 10% 0px',
-        intersect: function (e, observer) {
-            hljs.highlightBlock(e.target);
-            observer.unobserve(e.target);
-        },
-    });
-
-    /// 記事末尾の空白を確保（ジャンプしたときに「え？どこ？」となるのを回避する）
-    const lastSection = $('.section:last-child');
-    if (lastSection) {
-        const height = sentinel.offsetTop - lastSection.offsetTop + parseInt(getComputedStyle(lastSection).marginTop);
-        sentinel.style.height = `calc(100vh - ${height}px)`;
-    }
-
-    /// コンパネ
-    $('.rst-current-version').addEventListener('click', function (e) {
-        e.target.closest('.rst-versions').classList.toggle('shift-up');
-    });
-    controlPanel.addEventListener('change', function (e) {
-        if (e.target.matches('[data-input-name]')) {
-            html.dataset[e.target.dataset.inputName] = e.target.getValue();
-            controlPanel.save();
-        }
-        if (e.target.id === 'highlight_css') {
-            const highlight_style = $('#highlight_style');
-            highlight_style.href = highlight_style.dataset.cdnUrl + e.target.getValue() + '.min.css';
-        }
-        if (e.target.id === 'toc_width') {
-            document.documentElement.style.setProperty('--side-width', e.target.getValue() + 'px');
-        }
-
-    });
-    controlPanel.save = function () {
-        const savedata = {};
-        this.$$('[data-input-name]').forEach(function (input) {
-            savedata[input.dataset.inputName] = input.getValue();
-        });
-        localStorage.setItem('ht-setting', JSON.stringify(savedata));
-    };
-    controlPanel.load = function () {
-        const e = new Event('change', {bubbles: true});
-        const savedata = JSON.parse(localStorage.getItem('ht-setting') ?? '{"tocNumber":"true","tocLevel":"5"}');
-        this.$$('[data-input-name]').forEach(function (input) {
-            input.setValue(savedata[input.dataset.inputName] ?? input.dataset.defaultValue);
-            input.dispatchEvent(e);
-        });
-    };
-    controlPanel.load();
-
     /// アウトラインの開閉ボタン
     outline.addEventListener('mouseenter', function (e) {
         if (e.target.matches('a.toc-h')) {
@@ -318,8 +341,8 @@ document.addEventListener('DOMContentLoaded', function () {
             const section = $$(e.target.getAttribute('href'));
             intoViewScrolling = true;
             section[0].scrollIntoView({
-                behavior: "smooth",
-                block: "start",
+                behavior: 'smooth',
+                block: 'start',
             });
             section.observeIntersection({
                 rootMargin: '0px 0px -99.99% 0px',
@@ -335,11 +358,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // アウトラインのスクロールの自動追従
     const followMenuTimer = new Timer(32, function () {
-        const visibles = $$('.toc-h:not([data-section-count="0"])');
-        visibles[Math.floor(visibles.length / 2)].scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-        });
+        if ($('.wy-nav-side').clientWidth > 0) {
+            const visibles = $$('.toc-h:not([data-section-count="0"])');
+            visibles[Math.floor(visibles.length / 2)].scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+            });
+        }
     });
     document.addEventListener('scroll', function (e) {
         if (!intoViewScrolling && html.dataset.tocFollow === 'true') {
@@ -358,8 +383,15 @@ document.addEventListener('DOMContentLoaded', function () {
         scrollHideTimer.start();
     });
 
-    /// stop initial animation
     requestIdleCallback(function () {
+        /// stop initial animation
         document.documentElement.style.setProperty('--initial-animation-ms', '500ms');
+
+        /// 記事末尾の空白を確保（ジャンプしたときに「え？どこ？」となるのを回避する）
+        const lastSection = $('.section:last-child');
+        if (lastSection) {
+            const height = sentinel.offsetTop - lastSection.offsetTop + parseInt(getComputedStyle(lastSection).marginTop);
+            sentinel.style.height = `calc(100vh - ${height}px)`;
+        }
     });
 });

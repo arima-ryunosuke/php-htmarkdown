@@ -292,15 +292,25 @@ class Markdown extends Parsedown
                     if (isset($argument[1]) && (strlen($argument[1]) === 0 || $argument[1][0] === ' ')) {
                         $Block['element']['name'] = 'dl';
                         $Block['element']['attributes']['class'] = strlen($argument[1]) ? 'docutils field-list' : 'docutils';
-                        $Block['element']['elements'][] = [
-                            'name'    => 'dt',
-                            'text'    => $argument[0],
-                            'handler' => 'line',
-                        ];
 
                         $element['name'] = 'dd';
                         $element['handler']['argument'][0] = trim($argument[1]);
-                        $Block['element']['elements'][] = $element;
+
+                        $Block['element']['elements'][] = [
+                            'name'       => 'div',
+                            'attributes' => [
+                                'class' => 'dtdd-container',
+                            ],
+                            'elements'   => [
+                                [
+                                    'name'    => 'dt',
+                                    'text'    => $argument[0],
+                                    'handler' => 'line',
+                                ],
+                                $element,
+                            ],
+                        ];
+
                         continue;
                     }
                 }
