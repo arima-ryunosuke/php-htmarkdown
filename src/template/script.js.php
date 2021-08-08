@@ -73,6 +73,21 @@ document.addEventListener('DOMContentLoaded', function () {
         this.forEach(node => observer.observe(node));
         return observer;
     };
+    NodeList.prototype.observeMutation = function (opts) {
+        const observer = new MutationObserver(function (entries, observer) {
+            entries.filter(e => e.type === 'attributes').forEach((e) => (opts.attribute ?? function () {})(e, observer));
+            entries.filter(e => e.type === 'characterData ').forEach((e) => (opts.character ?? function () {})(e, observer));
+            entries.filter(e => e.type === 'childList').forEach((e) => (opts.child ?? function () {})(e, observer));
+        });
+        opts.attributes = opts.attributes ?? !!opts.attribute;
+        opts.attributeOldValue = opts.attributeOldValue ?? !!opts.attribute;
+        opts.characterData = opts.characterData ?? !!opts.character;
+        opts.characterDataOldValue = opts.characterDataOldValue ?? !!opts.character;
+        opts.childList = opts.childList ?? !!opts.child;
+        opts.subtree = opts.subtree ?? !!opts.child;
+        this.forEach(node => observer.observe(node, opts));
+        return observer;
+    };
     HTMLInputElement.prototype.getValue = HTMLSelectElement.prototype.getValue = function () {
         if (this.tagName === 'SELECT') {
             return this.$('option:checked').value;
@@ -170,25 +185,36 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
             toch.dataset.sectionCount = (Math.max(+toch.dataset.sectionCount + (e.isIntersecting ? +1 : -1), 0)) + '';
+        },
+    });
 
-            if (html.dataset.tocActive === 'false') {
-                return;
-            }
+    // アウトラインの自動開閉
+    const outlineTimer = new Timer(10, function () {
+        const tochs = outline.$$('.toc-h');
+        const actives = Array.prototype.filter.call(tochs, e => e.dataset.sectionCount > 0);
+        const firstIndex = Array.prototype.indexOf.call(tochs, actives[0]);
+        const lastIndex = Array.prototype.indexOf.call(tochs, actives[actives.length - 1]);
+        const min = firstIndex === -1 ? 0 : firstIndex - 3;
+        const max = lastIndex === -1 ? tochs.length - 1 : lastIndex + 3;
 
-            if (toch.dataset.sectionCount > 0) {
+        tochs.forEach(function (toch, i) {
+            if ((min <= i && i <= max)) {
+                toch.classList.add('visible');
                 while (toch) {
-                    const siblings = outline.$$(`[data-parent-block-id="${toch.dataset.parentBlockId}"]`);
-                    siblings.forEach(e => e.classList.add('visible'));
                     toch = outline.$(`[data-block-id="${toch.dataset.parentBlockId}"]`);
+                    toch?.classList?.add('visible');
                 }
             }
             else {
-                while (toch) {
-                    const descendants = outline.$$(`[data-parent-block-id^="${toch.dataset.parentBlockId}"]`);
-                    if (Array.prototype.filter.call(descendants, e => !e.matches('[data-section-count="0"]')).length === 0) {
-                        descendants.forEach(e => e.classList.remove('visible'));
-                    }
-                    toch = outline.$(`[data-block-id="${toch.dataset.parentBlockId}"]`);
+                toch.classList.remove('visible');
+            }
+        });
+    });
+    outline.$$('[data-section-count]').observeMutation({
+        attribute: function (e) {
+            if (e.attributeName === 'data-section-count' && html.dataset.tocActive === 'true') {
+                if (e.oldValue !== e.target.dataset.sectionCount) {
+                    outlineTimer.start();
                 }
             }
         },
