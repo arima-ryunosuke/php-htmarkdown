@@ -397,6 +397,22 @@ class Document
             }
         }
 
+        $xpath = new \DOMXPath($this->dom);
+        foreach ($xpath->query('//a') as $a) {
+            $href = $a->getAttribute('href');
+            if (!parse_url($href, PHP_URL_HOST) && pathinfo($href, PATHINFO_EXTENSION) === '') {
+                if (($href[0] ?? '') === '/') {
+                    $fullpath = $this->docroot . '/' . $href;
+                }
+                else {
+                    $fullpath = $this->file->parent() . '/' . $href;
+                }
+                if (!is_dir($fullpath) && is_file("$fullpath.md")) {
+                    $a->setAttribute('href', $href . ($this->download ? '.html' : '.md'));
+                }
+            }
+        }
+
         return $this->dom;
     }
 

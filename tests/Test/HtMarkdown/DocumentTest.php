@@ -337,6 +337,22 @@ class DocumentTest extends \ryunosuke\Test\AbstractTestCase
         that($doc->summary($doc, ''))->is('');
     }
 
+    function test_markup()
+    {
+        $dir = __DIR__ . '/../../stub';
+
+        $doc = new Document("$dir/sub/sub/sub/index.md", [
+            'docroot' => $dir,
+        ]);
+        that($doc->markup('')->saveHTML())->containsAll([
+            'href="index"',
+            'href="hoge.md"',
+            'href="/plain.md"',
+            'href="http://example.com"',
+            'href="unknown"',
+        ]);
+    }
+
     function test_archive()
     {
         $dir = __DIR__ . '/../../stub';
