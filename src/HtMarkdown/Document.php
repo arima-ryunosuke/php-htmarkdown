@@ -317,7 +317,7 @@ class Document
             }
             if ($matched) {
                 if ($queried) {
-                    $line = preg_replace('#(' . preg_quote($query, '#') . ')#u', '<mark class="highlighted">$1</mark>', $line);
+                    $line = preg_replace('#(' . preg_quote($query, '#') . ')#ui', '<mark class="highlighted">$1</mark>', $line);
                 }
                 $summary .= $line;
                 $mblen += mb_strlen($line);

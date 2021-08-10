@@ -370,9 +370,10 @@ class DocumentTest extends \ryunosuke\Test\AbstractTestCase
         ]);
 
         $doc = new Document("$dir/sub", []);
-        that($doc->plain('hoge'))->containsAll([
-            "Search Results 'hoge'",
+        that($doc->plain('HOGE'))->containsAll([
+            "Search Results 'HOGE'",
             '## [sub/](sub/sub/index.md',
+            'class="highlighted"'
         ]);
     }
 
