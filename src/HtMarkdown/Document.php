@@ -191,7 +191,7 @@ class Document
      */
     public function children(): array
     {
-        if ($this->file->exists()) {
+        if ($this->file->exists() && $this->file->basename() !== self::DIRECTORY_INDEX) {
             return [];
         }
 
@@ -200,7 +200,7 @@ class Document
         $children = [];
         foreach ($files as $file) {
             $child = new self($file, $this->options);
-            if ($child->isSupported() ?? true) {
+            if (($child->isSupported() ?? true) && strcmp($this->file, $child->file) !== 0) {
                 $children[] = $child;
             }
         }
@@ -270,7 +270,7 @@ class Document
             if ($ext !== 'md') {
                 return $path;
             }
-            return $path->changeExtension($this->download ? '.html' : '.md');
+            return preg_replace('#^\\./#u', '', $path->changeExtension($this->download ? '.html' : '.md'));
         }
         else {
             return $this->file->basename();
@@ -451,9 +451,21 @@ class Document
 
     public function plain(string $query): string
     {
-        if ($this->file->exists()) {
+        if (!strlen($query) && $this->file->exists()) {
             return $this->file->contents();
         }
+
+        $link = function (self $item) use ($query) {
+            if (!strlen($query)) {
+                return $item->localName();
+            }
+
+            $link = $item->localPath($this);
+            if ($item->file->exists() && $item->file->basename() !== $item->options['index_file']) {
+                return $link;
+            }
+            return dirname($link) . '/';
+        };
 
         $metadata = function ($length, $unit, $time) {
             return vsprintf("<small class='metadata'>%s $unit, %s</small>\n\n", [
@@ -472,14 +484,14 @@ class Document
             if (!$item->file->exists()) {
                 if (count($item->children())) {
                     $summary = $item->summary($this, $query);
-                    $contents .= "## [{$item->localName()}]({$item->localPath($this)})\n\n";
+                    $contents .= "## [{$link($item)}]({$item->localPath($this)})\n\n";
                     $contents .= $metadata(count($item->children()), 'item', $item->file->parent()->mtime());
                     $contents .= $summary . "\n";
                 }
             }
             else {
                 $summary = $item->summary($this, $query);
-                $contents .= "## [{$item->localName()}]({$item->localPath($this)})\n\n";
+                $contents .= "## [{$link($item)}]({$item->localPath($this)})\n\n";
                 $contents .= $metadata($item->file->size(), 'byte', $item->file->mtime());
                 if (strlen($summary)) {
                     $contents .= "<div class='internal-file'>\n\n" . $summary;

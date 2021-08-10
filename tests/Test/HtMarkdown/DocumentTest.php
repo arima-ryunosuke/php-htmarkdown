@@ -195,6 +195,7 @@ class DocumentTest extends \ryunosuke\Test\AbstractTestCase
             realpath("$dir/sub"),
             realpath("$dir/sub/sub"),
             realpath("$dir/sub/sub/sub/index.md"),
+            realpath("$dir/sub/sub/sub/hoge.md"),
         ]);
     }
 
@@ -210,7 +211,17 @@ class DocumentTest extends \ryunosuke\Test\AbstractTestCase
             realpath("$dir/hogera"),
             realpath("$dir/hogera/hogera1"),
             realpath("$dir/sub/sub/sub/index.md"),
+            realpath("$dir/sub/sub/sub/hoge.md"),
         ]);
+
+        $doc = new Document(realpath("$dir/sub/sub"), [
+            'soft_limit' => 256,
+            'docroot'    => realpath($dir),
+        ]);
+        $result = iterator_to_array($doc->search('this is hoge'), false);
+        that($result)->count(1);
+        $result = iterator_to_array($doc->search('plain markdown'), false);
+        that($result)->count(0);
     }
 
     function test_match()
@@ -251,7 +262,7 @@ class DocumentTest extends \ryunosuke\Test\AbstractTestCase
         that($doc->localPath($root))->is('img/a.png');
 
         $doc = new Document("$dir/index.md", []);
-        that($doc->localPath($root))->is('./index.md');
+        that($doc->localPath($root))->is('index.md');
 
         $doc = new Document("$dir/parent", []);
         that($doc->localPath($root))->is('parent/index.md');
@@ -262,7 +273,7 @@ class DocumentTest extends \ryunosuke\Test\AbstractTestCase
         $doc = new Document("$dir/index.md", [
             'download' => true,
         ]);
-        that($doc->localPath($root))->is('./index.html');
+        that($doc->localPath($root))->is('index.html');
 
         $doc = new Document("$dir/parent", [
             'download' => true,
@@ -365,14 +376,15 @@ class DocumentTest extends \ryunosuke\Test\AbstractTestCase
         $doc = new Document("$dir/parent", []);
         that($doc->plain(''))->containsAll([
             'Index of parent',
-            '## [b.md](./b.md',
-            '## [d.md](./d.md',
+            '## [b.md](b.md',
+            '## [d.md](d.md',
         ]);
 
         $doc = new Document("$dir/sub", []);
         that($doc->plain('HOGE'))->containsAll([
             "Search Results 'HOGE'",
-            '## [sub/](sub/sub/index.md',
+            '## [sub/sub/](sub/sub/index.md',
+            '## [sub/sub/hoge.md](sub/sub/hoge.md',
             'class="highlighted"'
         ]);
     }

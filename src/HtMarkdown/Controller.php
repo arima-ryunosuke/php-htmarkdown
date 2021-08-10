@@ -136,6 +136,7 @@ class Controller
         $docroot = strtr($this->server['CONTEXT_DOCUMENT_ROOT'] ?? $this->server['DOCUMENT_ROOT'] ?? null, [DIRECTORY_SEPARATOR => '/']);
         $reqfile = parse_url($this->server['REDIRECT_URL'] ?? $this->server['REQUEST_URI'] ?? null, PHP_URL_PATH);
         $filename = rtrim($docroot . $reqfile, '/');
+        $filename = strlen($this->request['query'] ?? '') && !is_dir($filename) ? dirname($filename) : $filename;
         $options['docroot'] = $docroot;
         $document = new Document($filename, $options);
 

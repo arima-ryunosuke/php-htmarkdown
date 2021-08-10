@@ -2,7 +2,7 @@
 return [
     'language'       => 'ja',
     'last_modified'  => '最終更新日',
-    'search_docs'    => 'ドキュメント内検索',
+    'search_docs'    => 'ディレクトリ内検索',
     'view_markdown'  => 'マークダウン',
     'download_file'  => 'ダウンロード',
     'control_panel'  => 'コントロールパネル',

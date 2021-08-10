@@ -2,7 +2,7 @@
 return [
     'language'       => 'en',
     'last_modified'  => 'Last Modified',
-    'search_docs'    => 'Search docs',
+    'search_docs'    => 'Search directory',
     'view_markdown'  => 'View Markdown',
     'download_file'  => 'Download',
     'control_panel'  => 'Control Panel',
