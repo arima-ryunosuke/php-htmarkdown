@@ -9,10 +9,10 @@ class Markdown extends Parsedown
     public function __construct($options)
     {
         $this->setMarkupEscaped(false);
-        $this->setBreaksEnabled($options['break_line'] ?? true);
-        $this->setUrlsLinked($options['link_url'] ?? true);
-        $this->setStrictMode($options['strict_mode'] ?? false);
-        $this->setSafeMode($options['safe_mode'] ?? false);
+        $this->setBreaksEnabled(!!($options['break_line'] ?? true));
+        $this->setUrlsLinked(!!($options['link_url'] ?? true));
+        $this->setStrictMode(!!($options['strict_mode'] ?? false));
+        $this->setSafeMode(!!($options['safe_mode'] ?? false));
 
         $newInlineTypes = [
             '=' => 'Marker',
