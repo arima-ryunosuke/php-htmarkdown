@@ -490,7 +490,7 @@ class Document
         }
 
         if (strlen($query)) {
-            $header = "# Search Results '{$query}'\n\n";
+            $header = "# Search Results '" . htmlspecialchars($query) . "'\n\n";
             $header .= $metadata($count, 'item', time());
         }
         else {
