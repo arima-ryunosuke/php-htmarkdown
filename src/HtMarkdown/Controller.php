@@ -6,6 +6,7 @@ class Controller
 {
     const SPECIFIABLE_OPTIONS = [
         'docroot'     => null,
+        'index_file'  => null,
         'locale'      => 'en',
         'list_length' => 320,
         'soft_limit'  => 200,
@@ -123,9 +124,10 @@ class Controller
     public function handleHttp(): bool
     {
         $options = [
-            'docroot'  => null,
-            'download' => $this->isDownload(),
-            'locale'   => locale_accept_from_http($this->server['HTTP_ACCEPT_LANGUAGE']),
+            'docroot'    => null,
+            'download'   => $this->isDownload(),
+            'locale'     => locale_accept_from_http($this->server['HTTP_ACCEPT_LANGUAGE']),
+            'index_file' => $this->server['index_file'] ?? null,
         ];
         $options += $this->request;
         $options += json_decode($this->request['htmarkdown-opt'] ?? '[]', true);

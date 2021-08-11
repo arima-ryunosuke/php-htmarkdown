@@ -8,10 +8,10 @@ mb_regex_encoding('UTF-8');
 require __DIR__ . '/../vendor/autoload.php';
 
 if (isset($argv[1])) {
-    $controller = new \ryunosuke\HtMarkdown\Controller($_SERVER, $argv);
+    $controller = new \ryunosuke\HtMarkdown\Controller($_SERVER + $_ENV, $argv);
     return $controller->handleCli();
 }
 else {
-    $controller = new \ryunosuke\HtMarkdown\Controller($_SERVER, $_GET + $_COOKIE);
+    $controller = new \ryunosuke\HtMarkdown\Controller($_SERVER + $_ENV, $_GET + $_COOKIE);
     return $controller->handleHttp();
 }
