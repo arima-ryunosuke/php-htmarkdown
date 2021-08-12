@@ -8,8 +8,6 @@ namespace ryunosuke\HtMarkdown;
  * @property-read int $list_length
  * @property-read int $soft_limit
  * @property-read int $hard_limit
- * @property-read bool $link_url
- * @property-read bool $break_line
  */
 class Document
 {
@@ -31,8 +29,6 @@ class Document
             'index_file' => 'index.md',
             'singlefile' => false,
             'download'   => false,
-            'link_url'   => true,
-            'break_line' => true,
         ], array_filter($options, function ($v) { return !is_null($v); }));
 
         if (is_dir($filename)) {
@@ -57,7 +53,7 @@ class Document
 
     public function __toString(): string
     {
-        if (!$this->file->exists() && $this->file->parent()->exists() && $this->file->basename() === $this->options['index_file']) {
+        if ($this->isDirectoryIndex()) {
             return (string) $this->file->parent()->realpath();
         }
         else {
@@ -144,12 +140,17 @@ class Document
         return self::$cache[$key] ?? self::$cache[$key] = $main();
     }
 
+    public function isDirectoryIndex(): bool
+    {
+        return $this->file->basename() === $this->options['index_file'];
+    }
+
     /**
      * @return static[]
      */
     public function parents(): array
     {
-        $dirname = $this->file->dirname($this->file->basename() === $this->options['index_file'] ? 2 : 1);
+        $dirname = $this->file->dirname($this->isDirectoryIndex() ? 2 : 1);
         $parents = [];
         for ($i = 1; $i < 128; $i++) {
             if (strlen($dirname) < strlen($this->options['docroot']) || in_array($dirname, [$this->options['docroot'], '.', '/'], true)) {
@@ -192,7 +193,7 @@ class Document
      */
     public function children(): array
     {
-        if ($this->file->exists() && $this->file->basename() !== $this->options['index_file']) {
+        if (!$this->isDirectoryIndex()) {
             return [];
         }
 
@@ -255,7 +256,7 @@ class Document
 
     public function localName(): string
     {
-        if ($this->file->exists() && $this->file->basename() !== $this->options['index_file']) {
+        if (!$this->isDirectoryIndex()) {
             return $this->file->basename();
         }
         else {
@@ -385,11 +386,14 @@ class Document
                     }
                 }
 
-                $childNode->setAttribute('class', trim($childNode->getAttribute('class') . ' section-header'));
+                $childClass = $childNode->getAttribute('class');
+                $childNode->setAttribute('class', trim($childClass . ' section-header'));
+                $mainHeader = strpos($childClass, 'main-header') !== false;
+                $subHeader = strpos($childClass, 'sub-header') !== false;
 
                 $section = $this->dom->createElement('section');
                 $section->setAttribute('id', $id);
-                $section->setAttribute('class', 'section section-level-' . $childNode->nodeName);
+                $section->setAttribute('class', 'section section-level-' . $childNode->nodeName . ($mainHeader ? ' main-section' : '') . ($subHeader ? ' sub-section' : ''));
                 $section->setAttribute('data-section-level', substr($childNode->nodeName, 1));
                 $this->dom->documentElement->appendChild($section);
             }
@@ -478,7 +482,7 @@ class Document
             }
 
             $link = $item->localPath($this);
-            if ($item->file->exists() && $item->file->basename() !== $item->options['index_file']) {
+            if (!$item->isDirectoryIndex()) {
                 return $link;
             }
             return dirname($link) . '/';

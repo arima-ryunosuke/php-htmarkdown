@@ -9,8 +9,8 @@ class Markdown extends Parsedown
     public function __construct($options)
     {
         $this->setMarkupEscaped(false);
-        $this->setBreaksEnabled(!!($options['break_line'] ?? true));
-        $this->setUrlsLinked(!!($options['link_url'] ?? true));
+        $this->setBreaksEnabled(true);
+        $this->setUrlsLinked(true);
         $this->setStrictMode(!!($options['strict_mode'] ?? false));
         $this->setSafeMode(!!($options['safe_mode'] ?? false));
 
@@ -37,6 +37,26 @@ class Markdown extends Parsedown
     public static function render($contents, $options)
     {
         return (new static($options))->text($contents);
+    }
+
+    protected function inlineText($text)
+    {
+        $Inline = parent::inlineText($text);
+        foreach ($Inline['element']['elements'] as $n => $element) {
+            if (($element['name'] ?? '') === 'br') {
+                $Inline['element']['elements'][$n]['attributes']['class'] = 'break-line';
+            }
+        }
+        return $Inline;
+    }
+
+    protected function inlineUrl($Excerpt)
+    {
+        $Inline = parent::inlineUrl($Excerpt);
+        if ($Inline !== null) {
+            $Inline['element']['attributes']['class'] = 'link-url';
+        }
+        return $Inline;
     }
 
     protected function inlineMarker($Excerpt)
@@ -364,5 +384,33 @@ class Markdown extends Parsedown
         }
 
         return parent::blockHeader($Line);
+    }
+
+    protected function blockSetextHeader($Line, array $Block = null)
+    {
+        $Block = parent::blockSetextHeader($Line, $Block);
+        if ($Block !== null) {
+            $main_or_sub = $Block['element']['name'] === 'h1' ? 'main' : 'sub';
+            $Block['element']['attributes']['class'] = ($Block['element']['attributes']['class'] ?? '') . " $main_or_sub-header";
+        }
+        return $Block;
+    }
+
+    protected function blockTable($Line, array $Block = null)
+    {
+        $Block = parent::blockTable($Line, $Block);
+        if ($Block !== null) {
+            $Block['element']['attributes']['class'] = ($Block['element']['attributes']['class'] ?? '') . ' docutils align-default';
+        }
+        return $Block;
+    }
+
+    protected function blockList($Line, array $CurrentBlock = null)
+    {
+        $Block = parent::blockList($Line, $CurrentBlock);
+        if ($Block !== null && $Block['element']['name'] === 'ul') {
+            $Block['element']['attributes']['class'] = ($Block['element']['attributes']['class'] ?? '') . ' simple';
+        }
+        return $Block;
     }
 }

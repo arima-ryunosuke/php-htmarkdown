@@ -5,14 +5,13 @@ namespace ryunosuke\HtMarkdown;
 class Controller
 {
     const SPECIFIABLE_OPTIONS = [
+        'dummy'       => false,
         'docroot'     => null,
         'index_file'  => null,
         'locale'      => 'en',
         'list_length' => 320,
         'soft_limit'  => 200,
         'hard_limit'  => 500,
-        'link_url'    => true,
-        'break_line'  => true,
         'ignore_path' => [
             'vendor',
             'node_modules',
@@ -22,7 +21,6 @@ class Controller
     private $server;
     private $request;
 
-    private $cookies  = [];
     private $headers  = [];
     private $contents = [];
 
@@ -76,10 +74,6 @@ class Controller
 
     public function response(): self
     {
-        foreach ($this->cookies as $name => $cookie) {
-            setcookie($name, json_encode($cookie), time() + 60 * 60 * 24 * 365 * 10, '/', '', false, true);
-        }
-
         foreach ($this->headers as $header) {
             header($header);
         }
@@ -124,16 +118,11 @@ class Controller
     public function handleHttp(): bool
     {
         $options = [
-            'docroot'    => null,
-            'download'   => $this->isDownload(),
-            'locale'     => locale_accept_from_http($this->server['HTTP_ACCEPT_LANGUAGE']),
-            'index_file' => $this->server['index_file'] ?? null,
+            'docroot'  => null,
+            'download' => $this->isDownload(),
+            'locale'   => locale_accept_from_http($this->server['HTTP_ACCEPT_LANGUAGE']),
         ];
-        $options += $this->request;
-        $options += json_decode($this->request['htmarkdown-opt'] ?? '[]', true);
-        $options += self::SPECIFIABLE_OPTIONS;
-
-        $this->cookies['htmarkdown-opt'] = array_intersect_key($options, self::SPECIFIABLE_OPTIONS);
+        $options += array_intersect_key($this->server, self::SPECIFIABLE_OPTIONS);
 
         $docroot = strtr($this->server['CONTEXT_DOCUMENT_ROOT'] ?? $this->server['DOCUMENT_ROOT'] ?? null, [DIRECTORY_SEPARATOR => '/']);
         $reqfile = parse_url($this->server['REDIRECT_URL'] ?? $this->server['REQUEST_URI'] ?? null, PHP_URL_PATH);

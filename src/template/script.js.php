@@ -75,40 +75,56 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         return elements;
     };
-    NodeList.prototype.observeIntersection = function (opts) {
-        opts = Object.assign({
-            change: noop,
-            intersect: noop,
-            notIntersect: noop,
-        }, opts);
-        const observer = new IntersectionObserver(function (entries, observer) {
-            entries.forEach(e => opts.change(e, observer));
-            entries.filter(e => e.isIntersecting).forEach(e => opts.intersect(e, observer));
-            entries.filter(e => !e.isIntersecting).forEach(e => opts.notIntersect(e, observer));
-        }, opts);
-        this.forEach(node => observer.observe(node));
-        return observer;
-    };
-    NodeList.prototype.observeMutation = function (opts) {
-        opts = Object.assign({
-            attribute: noop,
-            character: noop,
-            child: noop,
+    EventTarget.prototype.on = function (event, selector, handler, data) {
+        if (typeof (selector) === 'function') {
+            data = handler;
+            handler = selector;
+            selector = null;
+        }
+        if (typeof (data) === 'boolean') {
+            data = {
+                capture: data,
+            };
+        }
+        if (data == null) {
+            data = {};
+        }
 
-            attributes: !!opts.attribute,
-            attributeOldValue: !!opts.attribute,
-            characterData: !!opts.character,
-            characterDataOldValue: !!opts.character,
-            childList: !!opts.child,
-            subtree: !!opts.child,
-        }, opts);
-        const observer = new MutationObserver(function (entries, observer) {
-            entries.filter(e => e.type === 'attributes').forEach(e => opts.attribute(e, observer));
-            entries.filter(e => e.type === 'characterData').forEach(e => opts.character(e, observer));
-            entries.filter(e => e.type === 'childList').forEach(e => opts.child(e, observer));
-        });
-        this.forEach(node => observer.observe(node, opts));
-        return observer;
+        if (event === 'intersect') {
+            const opt = Object.assign({
+                root: null,
+                rootMargin: '0px',
+                threshold: 0,
+            }, data)
+            const observer = new IntersectionObserver(function (entries, observer) {
+                entries.forEach(e => handler(Object.assign(e, {observer: observer})));
+            }, opt);
+            const targets = selector == null ? [this] : this.$$(selector);
+            targets.forEach(node => observer.observe(node));
+            return observer;
+        }
+        if (event === 'mutate') {
+            const opt = Object.assign({
+                attributes: false,
+                attributeOldValue: false,
+                characterData: false,
+                characterDataOldValue: false,
+                childList: false,
+                subtree: false,
+            }, data)
+            const observer = new MutationObserver(function (entries, observer) {
+                entries.forEach(e => handler(Object.assign(e, {observer: observer})));
+            });
+            const targets = selector == null ? [this] : this.$$(selector);
+            targets.forEach(node => observer.observe(node, opt));
+            return observer;
+        }
+
+        this.addEventListener(event, function (e) {
+            if (selector == null || e.target.matches(selector)) {
+                return handler(e);
+            }
+        }, data);
     };
     HTMLInputElement.prototype.getValue = HTMLSelectElement.prototype.getValue = function () {
         if (this.tagName === 'SELECT') {
@@ -134,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     /// 印刷前の処理
-    window.addEventListener('beforeprint', function (e) {
+    window.on('beforeprint', function (e) {
         // Intersection で highlight.js してるので、されていないものが居る
         article.$$('pre>div').forEach(function (node) {
             hljs.highlightBlock(node);
@@ -146,49 +162,56 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    /// スマホメニュー
-    $('[data-toggle="wy-nav-top"]').addEventListener('click', function (e) {
-        $$('[data-toggle="wy-nav-shift"]').forEach(e => e.classList.toggle('shift'))
+    /// トグルイベント
+    document.on('click', '[data-toggle-class]', function (e) {
+        const target = e.target;
+        const targets = target.dataset.toggleTarget ? $$(e.target.dataset.toggleTarget) : [target];
+        targets.forEach(e => e.classList.toggle(target.dataset.toggleClass));
     });
 
     /// コンパネ
     const SAVENAME = 'ht-setting';
-    $('.rst-current-version').addEventListener('click', function (e) {
-        e.target.closest('.rst-versions').classList.toggle('shift-up');
+    const alldata = JSON.parse(localStorage.getItem(SAVENAME) ?? '{}');
+    const directory = location.pathname.split('/').slice(0, -1).join('/');
+    controlPanel.on('change', function (e) {
+        if (!e.target.validity.valid) {
+            return;
+        }
+        if (!e.target.matches('.savedata')) {
+            return;
+        }
+        controlPanel.sync();
+        controlPanel.save();
     });
-    controlPanel.addEventListener('change', function (e) {
-        if (e.target.matches('[data-input-name]')) {
-            html.dataset[e.target.dataset.inputName] = e.target.getValue();
-            controlPanel.save();
-        }
-        if (e.target.id === 'highlight_css') {
-            const highlight_style = $('#highlight_style');
-            highlight_style.href = highlight_style.dataset.cdnUrl + e.target.getValue() + '.min.css';
-        }
-        if (e.target.id === 'toc_width') {
-            document.documentElement.style.setProperty('--side-width', e.target.getValue() + 'px');
-        }
-    });
+    controlPanel.sync = function () {
+        this.$$('.savedata').forEach(function (input) {
+            html.dataset[input.id] = input.getValue();
+            if (input.id === 'highlightCss') {
+                const highlight_style = $('#highlight_style');
+                highlight_style.href = highlight_style.dataset.cdnUrl + input.getValue() + '.min.css';
+            }
+            if (input.id === 'tocWidth') {
+                document.documentElement.style.setProperty('--side-width', input.getValue() + 'px');
+            }
+        });
+    };
     controlPanel.save = function () {
         const savedata = {};
-        this.$$('[data-input-name]').forEach(function (input) {
-            savedata[input.dataset.inputName] = input.getValue();
+        this.$$('.savedata').forEach(function (input) {
+            savedata[input.id] = input.getValue();
         });
-        localStorage.setItem(SAVENAME, JSON.stringify(savedata));
+        alldata[directory] = savedata;
+        localStorage.setItem(SAVENAME, JSON.stringify(alldata));
     };
     controlPanel.load = function () {
-        const e = new Event('change', {bubbles: true});
-        const savedata = JSON.parse(localStorage.getItem(SAVENAME) ?? '{"tocNumber":"true","tocLevel":"5"}');
-        this.$$('[data-input-name]').forEach(function (input) {
-            input.setValue(savedata[input.dataset.inputName] ?? input.dataset.defaultValue);
-            input.dispatchEvent(e);
+        const dir = Object.keys(alldata).sort((a, b) => b.length - a.length).find(dir => directory.indexOf(dir) === 0);
+        const savedata = alldata[dir] ?? Object.assign({}, html.dataset);
+        this.$$('.savedata').forEach(function (input) {
+            input.setValue(savedata[input.id] ?? input.dataset.defaultValue);
         });
+        controlPanel.sync();
     };
     controlPanel.load();
-
-    /// いくつか標準ではつかない class があるので付与
-    article.$$('table').forEach(e => e.classList.add('docutils', 'align-default'));
-    article.$$('ul').forEach(e => e.classList.add('simple'));
 
     /// セクション由来のアウトラインの構築
     const levels = (new Array(6)).fill(0);
@@ -240,26 +263,26 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     /// コードブロックの highlight.js 監視
-    article.$$('pre>div').observeIntersection({
-        rootMargin: '0px 0px 10% 0px',
-        intersect: function (e, observer) {
+    article.on('intersect', 'pre>div', function (e) {
+        if (e.isIntersecting) {
             hljs.highlightBlock(e.target);
-            observer.unobserve(e.target);
-        },
+            e.observer.unobserve(e.target);
+        }
+    }, {
+        rootMargin: '0px 0px 10% 0px',
     });
 
     /// アウトラインのハイライト監視
-    article.$$('.section').observeIntersection({
-        rootMargin: '0px 0px 0px 0px',
-        change: function (e) {
-            let toch = document.getElementById(`toc-${e.target.id}`);
-            if (html.dataset.tocActive === 'false') {
-                while (toch.clientHeight <= 1) {
-                    toch = toch.previousElementSibling;
-                }
+    article.on('intersect', '.section', function (e) {
+        let toch = document.getElementById(`toc-${e.target.id}`);
+        if (html.dataset.tocActive === 'false') {
+            while (toch.clientHeight <= 1) {
+                toch = toch.previousElementSibling;
             }
-            toch.dataset.sectionCount = (Math.max(+toch.dataset.sectionCount + (e.isIntersecting ? +1 : -1), 0)) + '';
-        },
+        }
+        toch.dataset.sectionCount = (Math.max(+toch.dataset.sectionCount + (e.isIntersecting ? +1 : -1), 0)) + '';
+    }, {
+        rootMargin: '0px 0px 0px 0px',
     });
 
     // アウトラインの自動開閉
@@ -284,76 +307,70 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     });
-    outline.$$('[data-section-count]').observeMutation({
-        attribute: function (e) {
-            if (e.attributeName === 'data-section-count' && html.dataset.tocActive === 'true') {
-                if (e.oldValue !== e.target.dataset.sectionCount) {
-                    outlineTimer.start();
-                }
+    outline.on('mutate', '[data-section-count]', function (e) {
+        if (e.attributeName === 'data-section-count' && html.dataset.tocActive === 'true') {
+            if (e.oldValue !== e.target.dataset.sectionCount) {
+                outlineTimer.start();
             }
-        },
+        }
+    }, {
+        attributes: true,
+        attributeOldValue: true,
     });
 
     /// アウトラインの開閉ボタン
-    outline.addEventListener('mouseenter', function (e) {
-        if (e.target.matches('a.toc-h')) {
-            const toch = e.target;
-            if (toch.dataset.sectionLevel >= html.dataset.tocLevel) {
-                if (+toch.dataset.childCount) {
-                    const tochs = outline.$$(`[data-parent-block-id="${toch.dataset.blockId}"]`);
-                    const visibles = Array.prototype.filter.call(tochs, e => e.matches('.visible,.forced-visible'));
-                    if (tochs.length === visibles.length) {
-                        toch.dataset.state = 'close';
-                    }
-                    else {
-                        toch.dataset.state = 'open';
-                    }
+    outline.on('mouseenter', 'a.toc-h', function (e) {
+        const toch = e.target;
+        if (toch.dataset.sectionLevel >= html.dataset.tocLevel) {
+            if (+toch.dataset.childCount) {
+                const tochs = outline.$$(`[data-parent-block-id="${toch.dataset.blockId}"]`);
+                const visibles = Array.prototype.filter.call(tochs, e => e.matches('.visible,.forced-visible'));
+                if (tochs.length === visibles.length) {
+                    toch.dataset.state = 'close';
+                }
+                else {
+                    toch.dataset.state = 'open';
                 }
             }
         }
     }, true);
-    outline.addEventListener('mouseleave', function (e) {
-        if (e.target.matches('a.toc-h')) {
-            e.target.dataset.state = '';
-        }
+    outline.on('mouseleave', 'a.toc-h', function (e) {
+        e.target.dataset.state = '';
     }, true);
-    outline.addEventListener('click', function (e) {
-        if (e.target.matches('a.toggler')) {
-            const toch = e.target.parentElement;
-            if (toch.dataset.state === 'open') {
-                toch.dataset.state = 'close';
-                outline.$$(`[data-parent-block-id="${toch.dataset.blockId}"]`).forEach(e => e.classList.add('forced-visible', 'visible'));
-            }
-            else {
-                toch.dataset.state = 'open';
-                outline.$$(`[data-parent-block-id^="${toch.dataset.blockId}"]`).forEach(e => e.classList.remove('forced-visible', 'visible'));
-            }
-            e.preventDefault();
-            return false;
+    outline.on('click', 'a.toggler', function (e) {
+        const toch = e.target.parentElement;
+        if (toch.dataset.state === 'open') {
+            toch.dataset.state = 'close';
+            outline.$$(`[data-parent-block-id="${toch.dataset.blockId}"]`).forEach(e => e.classList.add('forced-visible', 'visible'));
         }
+        else {
+            toch.dataset.state = 'open';
+            outline.$$(`[data-parent-block-id^="${toch.dataset.blockId}"]`).forEach(e => e.classList.remove('forced-visible', 'visible'));
+        }
+        e.preventDefault();
+        return false;
     });
 
     /// アウトラインのクリックイベント
     let intoViewScrolling = false;
-    outline.addEventListener('click', function (e) {
-        if (e.target.matches('a.toc-h')) {
-            e.preventDefault();
-            const section = $$(e.target.getAttribute('href'));
-            intoViewScrolling = true;
-            section[0].scrollIntoView({
-                behavior: 'smooth',
-                block: 'start',
-            });
-            section.observeIntersection({
-                rootMargin: '0px 0px -99.99% 0px',
-                intersect: function (e, observer) {
-                    observer.unobserve(e.target);
-                    requestIdleCallback(function () {
-                        intoViewScrolling = false;
-                    });
-                },
-            });
-        }
+    outline.on('click', 'a.toc-h', function (e) {
+        e.preventDefault();
+        const section = $(e.target.getAttribute('href'));
+        intoViewScrolling = true;
+        section.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+        });
+        section.on('intersect', function (e) {
+            if (e.isIntersecting) {
+                e.observer.unobserve(e.target);
+                requestIdleCallback(function () {
+                    intoViewScrolling = false;
+                });
+            }
+        }, {
+            rootMargin: '0px 0px -99.99% 0px',
+        });
     });
 
     // アウトラインのスクロールの自動追従
@@ -366,7 +383,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
     });
-    document.addEventListener('scroll', function (e) {
+    document.on('scroll', function (e) {
         if (!intoViewScrolling && html.dataset.tocFollow === 'true') {
             followMenuTimer.stop();
             followMenuTimer.start();
@@ -377,7 +394,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const scrollHideTimer = new Timer(3000, function () {
         scroller.classList.remove('scrolling');
     });
-    scroller.addEventListener('scroll', function () {
+    scroller.on('scroll', function () {
         scrollHideTimer.stop();
         scroller.classList.add('scrolling');
         scrollHideTimer.start();

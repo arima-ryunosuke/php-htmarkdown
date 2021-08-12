@@ -373,6 +373,20 @@ html:not([data-section-indent="0"]) section[data-section-level] .section-header 
     margin-left: -1rem;
 }
 
+[data-break-line="false"] br.break-line {
+    display: none;
+}
+
+[data-link-url="false"] a.link-url {
+    color: #404040;
+    cursor: text;
+    pointer-events: none;
+}
+
+[data-toggle-class] * {
+    pointer-events: none;
+}
+
 .admonition-title:empty {
     display: none;
 }
@@ -484,6 +498,18 @@ pre[data-label]:not([data-label=""]) div.code {
         position: static;
     }
 
+    h1.main-header {
+        background: transparent;
+        font-size: 320%;
+        text-align: center;
+    }
+
+    h2.sub-header {
+        background: transparent;
+        font-size: 220%;
+        text-align: center;
+    }
+
     h1 {
         background: #e2e2e2;
         padding: 8px;
@@ -506,6 +532,14 @@ pre[data-label]:not([data-label=""]) div.code {
 
     .section-level-h2 {
         page-break-before: always;
+    }
+
+    .main-section {
+        padding-top: 5cm;
+    }
+
+    .sub-section {
+        page-break-before: avoid;
     }
 
     header {

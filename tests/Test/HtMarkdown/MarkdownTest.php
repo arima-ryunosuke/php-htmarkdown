@@ -8,22 +8,31 @@ use ryunosuke\HtMarkdown\Markdown;
  */
 class MarkdownTest extends \ryunosuke\Test\AbstractTestCase
 {
-    function test_common()
+    function test_inlineText()
     {
         that(Markdown::render(<<<MD
-            ""
-            less
-            ""
-            
-            """type:la"bel
-            invalid
-            """
-            
-            """
-            interrupt
+            line1
+            line2
             MD
-            , []))->containsAll([
-            'interrupt',
+            , [
+                'break_line' => true,
+            ]))->containsAll([
+            '<br class="break-line" />',
+        ]);
+    }
+
+    function test_inlineUrl()
+    {
+        that(Markdown::render(<<<MD
+            http://example.com/path1/
+            http://example.com/path2/
+            MD
+            , [
+                'link_url' => true,
+            ]))->containsAll([
+            'class="link-url"',
+            'href="http://example.com/path1/"',
+            'href="http://example.com/path2/"',
         ]);
     }
 
@@ -87,6 +96,26 @@ class MarkdownTest extends \ryunosuke\Test\AbstractTestCase
             '<p>{badge1</p>',
         ]);
     }
+
+    function test_commonBlock()
+    {
+        that(Markdown::render(<<<MD
+            ""
+            less
+            ""
+            
+            """type:la"bel
+            invalid
+            """
+            
+            """
+            interrupt
+            MD
+            , []))->containsAll([
+            'interrupt',
+        ]);
+    }
+
 
     function test_blockHere()
     {
@@ -220,9 +249,9 @@ class MarkdownTest extends \ryunosuke\Test\AbstractTestCase
               - C
             MD
             , []))->containsAll([
-            '<ul>',
+            '<ul class=" simple">',
             '<li>A</li>',
-            '<li>B<ul>',
+            '<li>B<ul class=" simple">',
             '<li>C</li>',
         ])->notContainsAll([
             '<dl',
@@ -324,6 +353,49 @@ class MarkdownTest extends \ryunosuke\Test\AbstractTestCase
             '<h6>H6</h6>',
             '<em class="caption">Caption</em>',
             '######## H8',
+        ]);
+    }
+
+    function test_blockSetextHeader()
+    {
+        that(Markdown::render(<<<MD
+            main
+            =====
+            
+            sub
+            -----
+            MD
+            , []))->containsAll([
+            'main-header',
+            'sub-header',
+        ]);
+    }
+
+    function test_blockTable()
+    {
+        that(Markdown::render(<<<MD
+            | headA  | headB |
+            |:-------|:-------|
+            | cellA1 | cellB1 |
+            | cellA2 | cellB2 |
+            | cellA3 | cellB3 |
+            MD
+            , []))->containsAll([
+            '<table class=" docutils align-default">',
+        ]);
+    }
+
+    function test_blockList()
+    {
+        that(Markdown::render(<<<MD
+            - listA
+            - listB
+              1. number1
+              2. number2
+            MD
+            , []))->containsAll([
+            '<ul class=" simple">',
+            '<ol>',
         ]);
     }
 }

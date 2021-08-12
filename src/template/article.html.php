@@ -46,7 +46,7 @@ $siblings = $this->siblings();
     </nav>
     <div data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
         <nav class="wy-nav-top" aria-label="Mobile navigation menu">
-            <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+            <i data-toggle="wy-nav-top" class="fa fa-bars" data-toggle-target="[data-toggle=&quot;wy-nav-shift&quot;]" data-toggle-class="shift"></i>
             <a href=""> <?= $h($this->localName()) ?></a>
         </nav>
         <div class="wy-nav-content">
@@ -100,77 +100,54 @@ $siblings = $this->siblings();
     </div>
 </div>
 <div data-toggle="wy-nav-shift" class="rst-versions">
-    <span class="rst-current-version">
+    <span class="rst-current-version" data-toggle-target=".rst-versions" data-toggle-class="shift-up">
         <span class="fa fa-cog pull-left"> <?= $h($locale['control_panel']) ?></span>
         <span class="fa fa-caret-down"></span>
     </span>
     <div class="rst-other-versions">
-        <form action="?" class="control-panel">
-            <div class="hidden-download">
-                <dl>
-                    <dt>Index</dt>
-                    <dd>
-                        <label class="option-title" for="list_length"><?= $h($locale['list_length']) ?></label>
-                        <input name="list_length" id="list_length" class="option-input" type="number" min="100" max="1000" step="10" value="<?= $h($this->list_length) ?>">
-                    </dd>
-                    <dd>
-                        <label class="option-title" for="soft_limit"><?= $h($locale['soft_limit']) ?></label>
-                        <input name="soft_limit" id="soft_limit" class="option-input" type="number" min="0" max="1000" step="100" value="<?= $h($this->soft_limit) ?>">
-                    </dd>
-                    <dd>
-                        <label class="option-title" for="hard_limit"><?= $h($locale['hard_limit']) ?></label>
-                        <input name="hard_limit" id="hard_limit" class="option-input" type="number" min="100" max="3000" step="100" value="<?= $h($this->hard_limit) ?>">
-                    </dd>
-                    <dt>Markdown</dt>
-                    <dd>
-                        <label class="option-title" for="link_url"><?= $h($locale['link_url']) ?></label>
-                        <input name="link_url" type="hidden" value="0">
-                        <input name="link_url" id="link_url" class="option-input" type="checkbox" value="1" <?= $this->link_url ? 'checked' : '' ?>>
-                    </dd>
-                    <dd>
-                        <label class="option-title" for="break_line"><?= $h($locale['break_line']) ?></label>
-                        <input name="break_line" type="hidden" value="0">
-                        <input name="break_line" id="break_line" class="option-input" type="checkbox" value="1" <?= $this->break_line ? 'checked' : '' ?>>
-                    </dd>
-                </dl>
-                <div class="wy-text-right">
-                    <input type="submit" name="reload" value="<?= $h($locale['reload']) ?>">
-                </div>
-                <hr>
-            </div>
+        <form class="control-panel">
             <dl>
-                <dt>View</dt>
+                <dt>Head</dt>
                 <dd>
                     <label class="option-title" for="toc_width"><?= $h($locale['toc_width']) ?></label>
-                    <input id="toc_width" class="option-input" data-input-name="tocWidth" data-default-value="300" type="number" min="10" max="700">
+                    <input id="tocWidth" class="option-input savedata" data-default-value="300" type="number" min="10" max="700">
                 </dd>
                 <dd>
                     <label class="option-title" for="toc_level"><?= $h($locale['toc_level']) ?></label>
-                    <input id="toc_level" class="option-input" data-input-name="tocLevel" data-default-value="5" type="number" min="1" max="6">
+                    <input id="tocLevel" class="option-input savedata" data-default-value="5" type="number" min="1" max="6">
                 </dd>
                 <dd>
                     <label class="option-title" for="toc_number"><?= $h($locale['toc_number']) ?></label>
-                    <input id="toc_number" class="option-input" data-input-name="tocNumber" data-default-value="true" type="checkbox" value="1">
+                    <input id="tocNumber" class="option-input savedata" data-default-value="true" type="checkbox" value="1">
                 </dd>
                 <dd>
                     <label class="option-title" for="toc_follow"><?= $h($locale['toc_follow']) ?></label>
-                    <input id="toc_follow" class="option-input" data-input-name="tocFollow" data-default-value="true" type="checkbox" value="1">
+                    <input id="tocFollow" class="option-input savedata" data-default-value="true" type="checkbox" value="1">
                 </dd>
                 <dd>
                     <label class="option-title" for="toc_active"><?= $h($locale['toc_active']) ?></label>
-                    <input id="toc_active" class="option-input" data-input-name="tocActive" data-default-value="true" type="checkbox" value="1">
+                    <input id="tocActive" class="option-input savedata" data-default-value="true" type="checkbox" value="1">
                 </dd>
+                <dt>Body</dt>
                 <dd>
                     <label class="option-title" for="section_indent"><?= $h($locale['section_indent']) ?></label>
-                    <input id="section_indent" class="option-input" data-input-name="sectionIndent" data-default-value="0" type="number" min="0" max="6">
+                    <input id="sectionIndent" class="option-input savedata" data-default-value="0" type="number" min="0" max="6">
                 </dd>
                 <dd>
                     <label class="option-title" for="highlight_css"><?= $h($locale['highlight_css']) ?></label>
-                    <select id="highlight_css" class="option-input" data-input-name="highlightCss" data-default-value="default">
+                    <select id="highlightCss" class="option-input savedata" data-default-value="default">
                         <?php foreach (['default', 'zenburn', 'github', 'vs', /* and more */] as $cssname): ?>
                             <option value="<?= $h($cssname) ?>"><?= $h($cssname) ?></option>
                         <?php endforeach ?>
                     </select>
+                </dd>
+                <dd>
+                    <label class="option-title" for="link_url"><?= $h($locale['link_url']) ?></label>
+                    <input id="linkUrl" class="option-input savedata" data-default-value="true" type="checkbox" value="1">
+                </dd>
+                <dd>
+                    <label class="option-title" for="break_line"><?= $h($locale['break_line']) ?></label>
+                    <input id="breakLine" class="option-input savedata" data-default-value="true" type="checkbox" value="1">
                 </dd>
             </dl>
         </form>

@@ -1,4 +1,8 @@
-# this is hoge
+this is hoge
+=====
+
+this is fuga
+-----
 
 - [directory](index)
 - [relative](hoge)

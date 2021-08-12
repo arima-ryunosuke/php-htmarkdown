@@ -36,7 +36,7 @@ class DocumentTest extends \ryunosuke\Test\AbstractTestCase
         that(strval($doc))->is(realpath("$dir"));
 
         $doc = new Document("$dir/sub/sub/sub/index.md", []);
-        that(strval($doc))->is(realpath("$dir/sub/sub/sub/index.md"));
+        that(strval($doc))->is(realpath("$dir/sub/sub/sub"));
 
         $doc = new Document("$dir", []);
         that(strval($doc))->is(realpath("$dir"));
@@ -194,7 +194,7 @@ class DocumentTest extends \ryunosuke\Test\AbstractTestCase
             realpath("$dir/plain.md"),
             realpath("$dir/sub"),
             realpath("$dir/sub/sub"),
-            realpath("$dir/sub/sub/sub/index.md"),
+            realpath("$dir/sub/sub/sub"),
             realpath("$dir/sub/sub/sub/hoge.md"),
         ]);
     }
@@ -210,7 +210,7 @@ class DocumentTest extends \ryunosuke\Test\AbstractTestCase
         that(array_map('strval', $result))->is([
             realpath("$dir/hogera"),
             realpath("$dir/hogera/hogera1"),
-            realpath("$dir/sub/sub/sub/index.md"),
+            realpath("$dir/sub/sub/sub"),
             realpath("$dir/sub/sub/sub/hoge.md"),
         ]);
 
@@ -345,6 +345,8 @@ class DocumentTest extends \ryunosuke\Test\AbstractTestCase
             'docroot' => $dir,
         ]);
         that($doc->markup('')->saveHTML())->containsAll([
+            'main-section',
+            'sub-section',
             'href="index"',
             'href="hoge.md"',
             'href="/plain.md"',
@@ -401,7 +403,7 @@ class DocumentTest extends \ryunosuke\Test\AbstractTestCase
             "Search Results 'HOGE'",
             '## [sub/sub/](sub/sub/index.md',
             '## [sub/sub/hoge.md](sub/sub/hoge.md',
-            'class="highlighted"'
+            'class="highlighted"',
         ]);
     }
 

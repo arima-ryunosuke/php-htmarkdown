@@ -12,6 +12,6 @@ if (isset($argv[1])) {
     return $controller->handleCli();
 }
 else {
-    $controller = new \ryunosuke\HtMarkdown\Controller($_SERVER + $_ENV, $_GET + $_COOKIE);
+    $controller = new \ryunosuke\HtMarkdown\Controller($_SERVER + $_ENV, $_GET);
     return $controller->handleHttp();
 }
