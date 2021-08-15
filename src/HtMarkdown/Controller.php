@@ -8,6 +8,8 @@ class Controller
         'dummy'       => false,
         'docroot'     => null,
         'index_file'  => null,
+        'js_file'     => null,
+        'css_file'    => null,
         'locale'      => 'en',
         'list_length' => 320,
         'soft_limit'  => 200,

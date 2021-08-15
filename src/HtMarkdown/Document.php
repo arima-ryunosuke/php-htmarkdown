@@ -68,7 +68,11 @@ class Document
 
     public function lastModified(): int
     {
-        $targets = [(string) $this];
+        $targets = [
+            (string) $this,
+            $this->options['js_file'],
+            $this->options['css_file'],
+        ];
 
         // for debug
         if (!\Phar::running()) {
@@ -82,14 +86,16 @@ class Document
 
         $mtimes = [];
         foreach ($targets as $target) {
-            $target = realpath($target);
-            if (is_dir($target)) {
-                foreach (glob("$target/*") as $file) {
-                    $mtimes[$file] = filemtime($file);
+            if (file_exists($target)) {
+                $target = realpath($target);
+                if (is_dir($target)) {
+                    foreach (glob("$target/*") as $file) {
+                        $mtimes[$file] = filemtime($file);
+                    }
                 }
-            }
-            else {
-                $mtimes[$target] = filemtime($target);
+                else {
+                    $mtimes[$target] = filemtime($target);
+                }
             }
         }
         return max($mtimes);

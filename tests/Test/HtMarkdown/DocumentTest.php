@@ -411,8 +411,15 @@ class DocumentTest extends \ryunosuke\Test\AbstractTestCase
     {
         $dir = __DIR__ . '/../../stub';
 
-        $doc = new Document("$dir/dummy.md", []);
+        $doc = new Document("$dir/dummy.md", [
+            'js_file'  => "$dir/custom.js",
+            'css_file' => "$dir/custom.css",
+        ]);
         that($doc->html())->containsAll([
+            'console.log',
+            'customjs',
+            '#custom-css',
+            'color: yellowgreen',
             'section-level-h',
             'data-section-level',
         ]);

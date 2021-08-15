@@ -19,9 +19,15 @@ $siblings = $this->siblings();
     <link id="sphinx_rtd_theme" href="<?= $CDN ?>/npm/sphinx_rtd_theme@0.4.2/css/theme.css" rel="stylesheet">
     <link id="highlight_style" data-cdn-url="<?= $CDN ?>/npm/highlightjs@9.16.2/styles/" href="" rel="stylesheet">
     <style><?php include __DIR__ . '/style.css.php' ?></style>
+    <?php if (strlen($this->css_file)): ?>
+        <style><?php include $this->css_file ?></style>
+    <?php endif ?>
 
     <script defer src="<?= $CDN ?>/npm/highlightjs@9.16.2/highlight.pack.min.js"></script>
     <script defer><?php include __DIR__ . '/script.js.php' ?></script>
+    <?php if (strlen($this->js_file)): ?>
+        <script><?php include $this->js_file ?></script>
+    <?php endif ?>
 </head>
 
 <body class="wy-body-for-nav <?= $this->download ? 'downloaded' : '' ?> <?= $this->singlefile ? 'singlefile' : '' ?>">
