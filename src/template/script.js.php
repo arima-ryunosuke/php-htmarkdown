@@ -148,9 +148,25 @@ document.addEventListener('DOMContentLoaded', function () {
             this.value = value;
         }
     };
+    HTMLImageElement.prototype.toDataURL = function (mimetype) {
+        const canvas = document.createElement('canvas');
+        canvas.width = this.width;
+        canvas.height = this.height;
+        canvas.getContext('2d').drawImage(this, 0, 0);
+        return canvas.toDataURL(mimetype);
+    };
+    Blob.prototype.toDataURL = function () {
+        const reader = new FileReader();
+        const dataurl = new Promise(function (resolve, reject) {
+            reader.onload = e => resolve(reader.result);
+            reader.onerror = e => reject(reader.error);
+        });
+        reader.readAsDataURL(this);
+        return dataurl;
+    };
 
     /// 印刷前の処理
-    window.on('beforeprint', function (e) {
+    const readyprint = function () {
         // Intersection で highlight.js してるので、されていないものが居る
         article.$$('pre>div').forEach(function (node) {
             hljs.highlightBlock(node);
@@ -160,6 +176,76 @@ document.addEventListener('DOMContentLoaded', function () {
         article.$$('details').forEach(function (node) {
             node.open = true;
         });
+    };
+    window.on('beforeprint', readyprint);
+
+    /// エクスポート
+    document.on('click', '#button-export', async function (e) {
+        readyprint();
+
+        const root = html.cloneNode(true);
+        const requests = [];
+        root.dataset.exported = 'true';
+        root.$$('header,footer').forEach(function (e) {
+            e.parentNode.removeChild(e);
+        });
+        root.$$('[data-section-count]').forEach(function (e) {
+            e.dataset.sectionCount = 0;
+        });
+        root.$$('img[src]').forEach(function (e) {
+            const element = document.createElements({
+                img: {
+                    src: e.toDataURL('image/png'),
+                }
+            })[0];
+            e.parentNode.replaceChild(element, e);
+        });
+        root.$$('link[href]').forEach(function (e) {
+            requests.push((async function () {
+                const response = await (await fetch(e.href)).text();
+                const data = [];
+                for (const url of response.matchAll(/url\((.+?)\)/g)) {
+                    const fullurl = e.href + '/../' + url[1].replace(/['"]/g, '');
+                    const response = await fetch(fullurl);
+                    const binary = await response.blob();
+                    const dataurl = await binary.toDataURL();
+                    data.push(dataurl);
+                }
+                const element = document.createElements({
+                    style: {
+                        children: response.replace(/url\((.+?)\)/g, function () {
+                            return 'url("' + data.shift() + '")';
+                        }),
+                    }
+                })[0];
+                e.parentNode.replaceChild(element, e);
+            })());
+        });
+        root.$$('script[src]').forEach(function (e) {
+            requests.push((async function () {
+                const response = await (await fetch(e.src)).text();
+                const element = document.createElements({
+                    script: {
+                        children: response,
+                    }
+                })[0];
+                e.parentNode.replaceChild(element, e);
+            })());
+        });
+        await Promise.all(requests);
+
+        const htmlURL = URL.createObjectURL(new Blob([root.outerHTML]));
+        const a = document.createElements({
+            a: {
+                href: htmlURL,
+                download: html.$('title').innerText + '.html',
+            }
+        })[0];
+
+        body.appendChild(a);
+        a.click();
+        body.removeChild(a);
+        URL.revokeObjectURL(htmlURL);
     });
 
     /// トグルイベント
@@ -213,54 +299,57 @@ document.addEventListener('DOMContentLoaded', function () {
     };
     controlPanel.load();
 
-    /// セクション由来のアウトラインの構築
-    const levels = (new Array(6)).fill(0);
-    const idmap = {};
-    article.$$('.section').forEach(function (section) {
-        const sectionId = `toc-${section.id}`;
-        const sectionTitle = section.$('.section-header').textContent;
-        const sectionLevel = +section.dataset.sectionLevel;
+    /// DOM ビルド
+    if (!html.matches('[data-exported]')) {
+        /// セクション由来のアウトラインの構築
+        const levels = (new Array(6)).fill(0);
+        const idmap = {};
+        article.$$('.section').forEach(function (section) {
+            const sectionId = `toc-${section.id}`;
+            const sectionTitle = section.$('.section-header').textContent;
+            const sectionLevel = +section.dataset.sectionLevel;
 
-        levels[sectionLevel - 1]++;
-        levels.fill(0, sectionLevel);
+            levels[sectionLevel - 1]++;
+            levels.fill(0, sectionLevel);
 
-        const trailing = levels.findLastIndex(v => v !== 0);
-        const currentLevels = levels.slice(0, trailing + 1);
-        const blockId = currentLevels.join('.');
-        const parentId = currentLevels.slice(0, -1).join('.');
-        section.firstChild.dataset.blockId = blockId;
+            const trailing = levels.findLastIndex(v => v !== 0);
+            const currentLevels = levels.slice(0, trailing + 1);
+            const blockId = currentLevels.join('.');
+            const parentId = currentLevels.slice(0, -1).join('.');
+            section.firstChild.dataset.blockId = blockId;
 
-        idmap[blockId] = sectionId;
-        const parent = document.getElementById(idmap[parentId]);
-        if (parent) {
-            parent.dataset.childCount = (+parent.dataset.childCount + 1) + '';
-        }
+            idmap[blockId] = sectionId;
+            const parent = document.getElementById(idmap[parentId]);
+            if (parent) {
+                parent.dataset.childCount = (+parent.dataset.childCount + 1) + '';
+            }
 
-        outline.appendChildren({
-            a: {
-                id: sectionId,
-                href: `#${section.id}`,
-                title: sectionTitle,
-                class: ['toc-h', `toc-h${sectionLevel}`],
-                dataset: {
-                    sectionCount: '0',
-                    sectionLevel: sectionLevel,
-                    blockId: blockId,
-                    parentBlockId: parentId,
-                    childCount: '0',
-                    state: '',
-                },
-                children: [
-                    sectionTitle,
-                    {
-                        a: {
-                            class: 'toggler icon',
+            outline.appendChildren({
+                a: {
+                    id: sectionId,
+                    href: `#${section.id}`,
+                    title: sectionTitle,
+                    class: ['toc-h', `toc-h${sectionLevel}`],
+                    dataset: {
+                        sectionCount: '0',
+                        sectionLevel: sectionLevel,
+                        blockId: blockId,
+                        parentBlockId: parentId,
+                        childCount: '0',
+                        state: '',
+                    },
+                    children: [
+                        sectionTitle,
+                        {
+                            a: {
+                                class: 'toggler icon',
+                            }
                         }
-                    }
-                ],
-            },
+                    ],
+                },
+            });
         });
-    });
+    }
 
     /// コードブロックの highlight.js 監視
     article.on('intersect', 'pre>div', function (e) {

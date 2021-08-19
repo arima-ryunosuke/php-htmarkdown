@@ -61,6 +61,7 @@ $siblings = $this->siblings();
                         <li class="wy-breadcrumbs-aside hidden-download">
                             <a href="?raw=true" class="fa fa-file-text"> <?= $h($locale['view_markdown']) ?></a>
                             <a href="?dl=true" class="fa fa-download" download> <?= $h($locale['download_file']) ?></a>
+                            <a id="button-export" href="javascript:void(0)" class="fa fa-arrow-circle-down"> <?= $h($locale['export_file']) ?></a>
                         </li>
                     </ul>
                     <hr>

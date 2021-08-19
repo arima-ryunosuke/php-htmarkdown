@@ -5,6 +5,7 @@ return [
     'search_docs'    => 'ディレクトリ内検索',
     'view_markdown'  => 'マークダウン',
     'download_file'  => 'ダウンロード',
+    'export_file'    => 'エクスポート',
     'control_panel'  => 'コントロールパネル',
     'list_length'    => 'リスティング文字数',
     'soft_limit'     => 'ソフトリミット',

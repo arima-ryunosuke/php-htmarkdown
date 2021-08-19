@@ -5,6 +5,7 @@ return [
     'search_docs'    => 'Search directory',
     'view_markdown'  => 'View Markdown',
     'download_file'  => 'Download',
+    'export_file'    => 'Export',
     'control_panel'  => 'Control Panel',
     'list_length'    => 'listing length',
     'soft_limit'     => 'soft limit',
