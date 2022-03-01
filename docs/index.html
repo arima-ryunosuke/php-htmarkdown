@@ -12,6 +12,7 @@
 :root {
     --initial-animation-ms: 0ms;
     --side-width: 300px;
+    --font-family: serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -118,18 +119,26 @@ h2, h3, h4, h5, h6 {
     margin-bottom: 0;
 }
 
+.rst-content table.docutils {
+    width: 100%
+}
+
+.rst-content table.docutils:not(.field-list) tr th {
+    background: #e1e4e5;
+}
+
 .rst-content dl dt {
-    background: #e0e0e0;
+    background: rgba(225, 228, 229, 1);
     margin-bottom: 4px;
     padding: 0 8px;
 }
 
 .rst-content dl dd dl dt {
-    background: #e8e8e8;
+    background: rgba(225, 228, 229, 0.7);
 }
 
 .rst-content dl dd dl dd dl dt {
-    background: #f0f0f0;
+    background: rgba(225, 228, 229, 0.4);
 }
 
 .rst-content dl dd p,
@@ -256,6 +265,10 @@ h2, h3, h4, h5, h6 {
 
 .markdown-toc {
     padding-bottom: 8px;
+}
+
+:not([data-font-family=""]) * {
+    font-family: var(--font-family);
 }
 
 [data-toc-number="true"] [data-block-id]:before {
@@ -706,12 +719,16 @@ pre[data-label]:not([data-label=""]) div.code {
 }
 
 @page {
-    margin: 2cm 1.5cm;
+    margin: 1.5cm 1.0cm;
 }
 
 @media print {
     * {
         overflow: visible !important;
+    }
+
+    body {
+        color: #000000;
     }
 
     .wy-nav-content-wrap {
@@ -729,24 +746,28 @@ pre[data-label]:not([data-label=""]) div.code {
 
     h1.main-header {
         background: transparent;
+        color: #333333 ;
         font-size: 320%;
         text-align: center;
     }
 
     h2.sub-header {
         background: transparent;
+        color: #333333 ;
         font-size: 220%;
         text-align: center;
     }
 
     h1 {
-        background: #e2e2e2;
+        background: #3f3f3f;
+        color: #eeeeee;
         padding: 8px;
         border: none;
     }
 
     h2 {
-        background: #d2d2d2;
+        background: #3f3f3f;
+        color: #eeeeee;
         padding: 5px;
         border: none;
     }
@@ -783,12 +804,24 @@ pre[data-label]:not([data-label=""]) div.code {
         white-space: pre-wrap;
     }
 
+    .rst-content table.docutils td {
+        background: transparent !important;
+    }
+
     .sentinel {
         display: none;
     }
 }
 
 /* control panel */
+
+input[type="search"] {
+    -webkit-appearance: searchfield;
+}
+
+input[type="search"]::-webkit-search-cancel-button {
+    -webkit-appearance: searchfield-cancel-button;
+}
 
 .option-title {
     color: #fcfcfc;
@@ -813,6 +846,10 @@ pre[data-label]:not([data-label=""]) div.code {
     text-align: right;
 }
 
+[type="search"].option-input {
+    width: 90px;
+}
+
 select.option-input {
     width: 90px;
 }
@@ -834,6 +871,7 @@ a.disabled {
 </style>
     
     <script defer src="https://cdn.jsdelivr.net/npm/highlightjs@9.16.2/highlight.pack.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mermaid@8.14.0/dist/mermaid.min.js"></script>
     <script defer>document.addEventListener('DOMContentLoaded', function () {
     /// ショートカットとユーティリティとプロトタイプ拡張
     const $ = document.querySelector.bind(document);
@@ -1001,11 +1039,33 @@ a.disabled {
         return dataurl;
     };
 
+    mermaid.initialize({startOnLoad: false});
+
+    // ハイライト
+    let svg_id = 0;
+    const highlight = function (element) {
+        if (element.classList.contains('complete-highlight')) {
+            return;
+        }
+        element.classList.add('complete-highlight');
+        if (element.classList.contains('mermaid')) {
+            mermaid.render(`mermaid_svg-${++svg_id}`, element.textContent, (svgCode, bindFunctions) => {
+                element.innerHTML = svgCode;
+                if (bindFunctions) {
+                    bindFunctions(element);
+                }
+            }, element);
+        }
+        else {
+            hljs.highlightBlock(element);
+        }
+    };
+
     /// 印刷前の処理
     const readyprint = function () {
         // Intersection で highlight.js してるので、されていないものが居る
         article.$$('pre>div').forEach(function (node) {
-            hljs.highlightBlock(node);
+            highlight(node);
         });
 
         // details を開かないと印刷されない
@@ -1049,6 +1109,7 @@ a.disabled {
                 }
                 const element = document.createElements({
                     style: {
+                        id: e.id,
                         children: response.replace(/url\((.+?)\)/g, function () {
                             return 'url("' + data.shift() + '")';
                         }),
@@ -1093,7 +1154,7 @@ a.disabled {
 
     /// コンパネ
     const SAVENAME = 'ht-setting';
-    const alldata = JSON.parse(localStorage.getItem(SAVENAME) ?? '{}');
+    const alldata = html.matches('[data-exported]') ? {} : JSON.parse(localStorage.getItem(SAVENAME) ?? '{}');
     const directory = location.pathname.split('/').slice(0, -1).join('/');
     controlPanel.on('change', function (e) {
         if (!e.target.validity.valid) {
@@ -1114,6 +1175,9 @@ a.disabled {
             }
             if (input.id === 'tocWidth') {
                 document.documentElement.style.setProperty('--side-width', input.getValue() + 'px');
+            }
+            if (input.id === 'fontFamily') {
+                document.documentElement.style.setProperty('--font-family', input.getValue());
             }
         });
     };
@@ -1148,8 +1212,9 @@ a.disabled {
             levels[sectionLevel - 1]++;
             levels.fill(0, sectionLevel);
 
+            const leading = levels.findIndex(v => v !== 0);
             const trailing = levels.findLastIndex(v => v !== 0);
-            const currentLevels = levels.slice(0, trailing + 1);
+            const currentLevels = levels.slice(leading, trailing + 1);
             const blockId = currentLevels.join('.');
             const parentId = currentLevels.slice(0, -1).join('.');
             section.firstChild.dataset.blockId = blockId;
@@ -1190,7 +1255,7 @@ a.disabled {
     /// コードブロックの highlight.js 監視
     article.on('intersect', 'pre>div', function (e) {
         if (e.isIntersecting) {
-            hljs.highlightBlock(e.target);
+            highlight(e.target);
             e.observer.unobserve(e.target);
         }
     }, {
@@ -1347,7 +1412,7 @@ a.disabled {
             <div class="wy-side-nav-search">
                 <a href="" class="icon icon-home"> README.md</a>
                 <div class="version">
-                    Last Modified 2021/08/29 21:32:18                </div>
+                    Last Modified 2022/03/03 13:15:55                </div>
                 <div role="search">
                     <form id="rtd-search-form" class="wy-form hidden-download" method="get">
                         <input type="text" name="query" placeholder="Search directory" value="">
@@ -1380,7 +1445,8 @@ a.disabled {
                     <hr>
                 </header>
                 <main class="markdown-body">
-                    <article><section id="_a1ea035e51bd155b85c882ccf36ecd85554081c8-1" class="section section-level-h1 main-section" data-section-level="1"><h1 class="main-header section-header">Markdown viewer for web</h1>
+                    <article><section id="_a1ea035e51bd155b85c882ccf36ecd85554081c8-1" class="main-section"><h1 class="main-header section-header">Markdown viewer for web</h1>
+</section><section id="_9e1516648f1127f9153f91a5a931fd7c7dcfd37f-1" class="sub-section"><h2 class="sub-header section-header">This is sub header</h2>
 </section><section id="_55f8ebc805e65b5b71ddafdae390e3be2bcd69af-1" class="section section-level-h2" data-section-level="2"><h2 class="section-header">Description</h2>
 <p>markdown を良い感じに表示する phar です。<br class="break-line">
 ざっくり言えば要するに docsify の php 版のようなものです。</p>
@@ -1477,8 +1543,15 @@ phar がルーターの役割も持っているので、起動したカレント
 <p>これはサイドバーです。</p>
 </div>
 <p>note の部分はほぼ飾りです。 Read The Docs 本家にスタイルがなかったため、埋め込まれはしますがスタイルは変わりません。<br class="break-line">
-ただし <code>right</code> を指定した場合のみ無装飾で右上に配置されます。</p>
-<p>title の部分はただのラベルになります。</p>
+title の部分はただのラベルになります。</p>
+<p>ただし <code>right</code> を指定した場合のみ無装飾で右上に配置されます。</p>
+<pre data-label="right"><div class="language-markdown:right markdown code">///right
+これは右側に配置されます。
+///</div></pre>
+<div class="right sidebar">
+<p class="sidebar-title"></p>
+<p>これは右側に配置されます。</p>
+</div>
 </section><section id="_dc813bf775a6b910b13f1445a27fde368e5b5177-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">定義リスト</h4>
 <p><code>-</code> や <code>*</code> などのリスト記法に続けて、<code>:</code>（コロンスペース）があると定義リストが生成されます。</p>
 <pre data-label="横並び定義リストの例"><div class="language-markdown:横並び定義リストの例 markdown code">- りんご: 赤いです
@@ -1632,6 +1705,34 @@ echo 2;</div></pre>
 <p>コードブロックと似ていますが、シンタックスハイライトはされません。<br class="break-line">
 あくまで、「マークダウンのエスケープが不要なヒアドキュメント」となります。<br class="break-line">
 使う機会はそう多くないでしょう。</p>
+</section><section id="_77e6a9baa61f1e1b165eea0638b94468985c9671-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">mermaid</h4>
+<p>コードブロックで mermaid を明示すると mermaid 記法になります。</p>
+<pre data-label="mermaid"><div class="language-markdown:mermaid markdown code">```mermaid
+sequenceDiagram
+    participant Alice
+    participant Bob
+    Alice-&gt;&gt;John: Hello John, how are you?
+    loop Healthcheck
+        John-&gt;&gt;John: Fight against hypochondria
+    end
+    Note right of John: Rational thoughts &lt;br/&gt;prevail!
+    John--&gt;&gt;Alice: Great!
+    John-&gt;&gt;Bob: How about you?
+    Bob--&gt;&gt;John: Jolly good!
+```</div></pre>
+<p>上記のようにすると下記のようになります。</p>
+<pre data-label=""><div class="language-mermaid mermaid code">sequenceDiagram
+    participant Alice
+    participant Bob
+    Alice-&gt;&gt;John: Hello John, how are you?
+    loop Healthcheck
+        John-&gt;&gt;John: Fight against hypochondria
+    end
+    Note right of John: Rational thoughts &lt;br/&gt;prevail!
+    John--&gt;&gt;Alice: Great!
+    John-&gt;&gt;Bob: How about you?
+    Bob--&gt;&gt;John: Jolly good!</div></pre>
+<p>単に mermaid.js を呼んでいるだけであり、特別なことはしていません。</p>
 </section><section id="_3229609e15436ec51bcf00818a69a84dbc58a0c2-1" class="section section-level-h2" data-section-level="2"><h2 class="section-header">License</h2>
 <p>MIT</p>
 </section><section id="_d41f56cea1ac933d25c57aebc6522e2b6c58eb87-1" class="section section-level-h2" data-section-level="2"><h2 class="section-header">Release</h2>
@@ -1652,6 +1753,14 @@ semver 準拠はあくまで下記だけです。</p>
 <li>POST で更新する？</li>
 <li>静的ファイルは全部 CDN に逃したい</li>
 <li>markdown に include 機能を持たせたい</li>
+</ul>
+</section><section id="_e3429934f4f3ac1c68dc8b2eef6c7df0aa7a7f9c-1" class="section section-level-h3" data-section-level="3"><h3 class="section-header">1.1.2</h3>
+<ul class=" simple">
+<li>[fixbug] エクスポート時に出ていたエラーを修正</li>
+<li>[change] main,sub ヘッダーはセクションとみなさない</li>
+<li>[change] デザイン調整</li>
+<li>[feature] フォントの指定機能</li>
+<li>[feature] mermaid.js 対応</li>
 </ul>
 </section><section id="_bd952513ae9dce3e914b4918eae08e1eddd37faa-1" class="section section-level-h3" data-section-level="3"><h3 class="section-header">1.1.1</h3>
 <ul class=" simple">
@@ -1718,6 +1827,16 @@ semver 準拠はあくまで下記だけです。</p>
     <div class="rst-other-versions">
         <form class="control-panel">
             <dl>
+                <dt>View</dt>
+                <dd>
+                    <label class="option-title" for="font_family">font</label>
+                    <input id="fontFamily" class="option-input savedata" data-default-value="" type="search" list="fonts">
+                    <datalist id="fonts">
+                                                    <option value="serif">serif</option>
+                                                    <option value="sans-serif">sans-serif</option>
+                                                    <option value="monospace">monospace</option>
+                                            </datalist>
+                </dd>
                 <dt>Head</dt>
                 <dd>
                     <label class="option-title" for="toc_width">TOC width</label>
