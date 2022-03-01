@@ -235,6 +235,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
                 const element = document.createElements({
                     style: {
+                        id: e.id,
                         children: response.replace(/url\((.+?)\)/g, function () {
                             return 'url("' + data.shift() + '")';
                         }),
@@ -279,7 +280,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /// コンパネ
     const SAVENAME = 'ht-setting';
-    const alldata = JSON.parse(localStorage.getItem(SAVENAME) ?? '{}');
+    const alldata = html.matches('[data-exported]') ? {} : JSON.parse(localStorage.getItem(SAVENAME) ?? '{}');
     const directory = location.pathname.split('/').slice(0, -1).join('/');
     controlPanel.on('change', function (e) {
         if (!e.target.validity.valid) {
