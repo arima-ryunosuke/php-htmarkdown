@@ -109,18 +109,26 @@ h2, h3, h4, h5, h6 {
     margin-bottom: 0;
 }
 
+.rst-content table.docutils {
+    width: 100%
+}
+
+.rst-content table.docutils:not(.field-list) tr th {
+    background: #e1e4e5;
+}
+
 .rst-content dl dt {
-    background: #e0e0e0;
+    background: rgba(225, 228, 229, 1);
     margin-bottom: 4px;
     padding: 0 8px;
 }
 
 .rst-content dl dd dl dt {
-    background: #e8e8e8;
+    background: rgba(225, 228, 229, 0.7);
 }
 
 .rst-content dl dd dl dd dl dt {
-    background: #f0f0f0;
+    background: rgba(225, 228, 229, 0.4);
 }
 
 .rst-content dl dd p,
@@ -482,12 +490,16 @@ pre[data-label]:not([data-label=""]) div.code {
 }
 
 @page {
-    margin: 2cm 1.5cm;
+    margin: 1.5cm 1.0cm;
 }
 
 @media print {
     * {
         overflow: visible !important;
+    }
+
+    body {
+        color: #000000;
     }
 
     .wy-nav-content-wrap {
@@ -505,24 +517,28 @@ pre[data-label]:not([data-label=""]) div.code {
 
     h1.main-header {
         background: transparent;
+        color: #333333 ;
         font-size: 320%;
         text-align: center;
     }
 
     h2.sub-header {
         background: transparent;
+        color: #333333 ;
         font-size: 220%;
         text-align: center;
     }
 
     h1 {
-        background: #e2e2e2;
+        background: #3f3f3f;
+        color: #eeeeee;
         padding: 8px;
         border: none;
     }
 
     h2 {
-        background: #d2d2d2;
+        background: #3f3f3f;
+        color: #eeeeee;
         padding: 5px;
         border: none;
     }
@@ -557,6 +573,10 @@ pre[data-label]:not([data-label=""]) div.code {
 
     .rst-content pre {
         white-space: pre-wrap;
+    }
+
+    .rst-content table.docutils td {
+        background: transparent !important;
     }
 
     .sentinel {
