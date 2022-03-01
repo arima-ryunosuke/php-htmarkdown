@@ -1,5 +1,7 @@
 Markdown viewer for web
 ====
+This is sub header
+----
 
 ## Description
 
@@ -166,9 +168,19 @@ title の部分はただのラベルになります。
 ///
 
 note の部分はほぼ飾りです。 Read The Docs 本家にスタイルがなかったため、埋め込まれはしますがスタイルは変わりません。
+title の部分はただのラベルになります。
+
 ただし `right` を指定した場合のみ無装飾で右上に配置されます。
 
-title の部分はただのラベルになります。
+```markdown:right
+///right
+これは右側に配置されます。
+///
+```
+
+///right
+これは右側に配置されます。
+///
 
 #### 定義リスト
 
@@ -310,6 +322,44 @@ summary 部分を省略すると summary タグは生成されません。
 あくまで、「マークダウンのエスケープが不要なヒアドキュメント」となります。
 使う機会はそう多くないでしょう。
 
+#### mermaid
+
+コードブロックで mermaid を明示すると mermaid 記法になります。
+
+````markdown:mermaid の例
+```mermaid
+sequenceDiagram
+    participant Alice
+    participant Bob
+    Alice->>John: Hello John, how are you?
+    loop Healthcheck
+        John->>John: Fight against hypochondria
+    end
+    Note right of John: Rational thoughts <br/>prevail!
+    John-->>Alice: Great!
+    John->>Bob: How about you?
+    Bob-->>John: Jolly good!
+```
+````
+
+上記のようにすると下記のようになります。
+
+```mermaid
+sequenceDiagram
+    participant Alice
+    participant Bob
+    Alice->>John: Hello John, how are you?
+    loop Healthcheck
+        John->>John: Fight against hypochondria
+    end
+    Note right of John: Rational thoughts <br/>prevail!
+    John-->>Alice: Great!
+    John->>Bob: How about you?
+    Bob-->>John: Jolly good!
+```
+
+単に mermaid.js を呼んでいるだけであり、特別なことはしていません。
+
 ## License
 
 MIT
@@ -336,6 +386,14 @@ semver 準拠はあくまで下記だけです。
 - POST で更新する？
 - 静的ファイルは全部 CDN に逃したい
 - markdown に include 機能を持たせたい
+
+### 1.1.2
+
+- [fixbug] エクスポート時に出ていたエラーを修正
+- [change] main,sub ヘッダーはセクションとみなさない
+- [change] デザイン調整
+- [feature] フォントの指定機能
+- [feature] mermaid.js 対応
 
 ### 1.1.1
 
