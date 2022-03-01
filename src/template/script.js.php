@@ -165,11 +165,33 @@ document.addEventListener('DOMContentLoaded', function () {
         return dataurl;
     };
 
+    mermaid.initialize({startOnLoad: false});
+
+    // ハイライト
+    let svg_id = 0;
+    const highlight = function (element) {
+        if (element.classList.contains('complete-highlight')) {
+            return;
+        }
+        element.classList.add('complete-highlight');
+        if (element.classList.contains('mermaid')) {
+            mermaid.render(`mermaid_svg-${++svg_id}`, element.textContent, (svgCode, bindFunctions) => {
+                element.innerHTML = svgCode;
+                if (bindFunctions) {
+                    bindFunctions(element);
+                }
+            }, element);
+        }
+        else {
+            hljs.highlightBlock(element);
+        }
+    };
+
     /// 印刷前の処理
     const readyprint = function () {
         // Intersection で highlight.js してるので、されていないものが居る
         article.$$('pre>div').forEach(function (node) {
-            hljs.highlightBlock(node);
+            highlight(node);
         });
 
         // details を開かないと印刷されない
@@ -354,7 +376,7 @@ document.addEventListener('DOMContentLoaded', function () {
     /// コードブロックの highlight.js 監視
     article.on('intersect', 'pre>div', function (e) {
         if (e.isIntersecting) {
-            hljs.highlightBlock(e.target);
+            highlight(e.target);
             e.observer.unobserve(e.target);
         }
     }, {
