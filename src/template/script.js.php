@@ -301,6 +301,9 @@ document.addEventListener('DOMContentLoaded', function () {
             if (input.id === 'tocWidth') {
                 document.documentElement.style.setProperty('--side-width', input.getValue() + 'px');
             }
+            if (input.id === 'fontFamily') {
+                document.documentElement.style.setProperty('--font-family', input.getValue());
+            }
         });
     };
     controlPanel.save = function () {

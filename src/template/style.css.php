@@ -2,6 +2,7 @@
 :root {
     --initial-animation-ms: 0ms;
     --side-width: 300px;
+    --font-family: serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -246,6 +247,10 @@ h2, h3, h4, h5, h6 {
 
 .markdown-toc {
     padding-bottom: 8px;
+}
+
+:not([data-font-family=""]) * {
+    font-family: var(--font-family);
 }
 
 [data-toc-number="true"] [data-block-id]:before {
@@ -561,6 +566,14 @@ pre[data-label]:not([data-label=""]) div.code {
 
 /* control panel */
 
+input[type="search"] {
+    -webkit-appearance: searchfield;
+}
+
+input[type="search"]::-webkit-search-cancel-button {
+    -webkit-appearance: searchfield-cancel-button;
+}
+
 .option-title {
     color: #fcfcfc;
     display: inline-block;
@@ -582,6 +595,10 @@ pre[data-label]:not([data-label=""]) div.code {
 [type="number"].option-input {
     width: 60px;
     text-align: right;
+}
+
+[type="search"].option-input {
+    width: 90px;
 }
 
 select.option-input {

@@ -115,6 +115,16 @@ $siblings = $this->siblings();
     <div class="rst-other-versions">
         <form class="control-panel">
             <dl>
+                <dt>View</dt>
+                <dd>
+                    <label class="option-title" for="font_family"><?= $h($locale['font_family']) ?></label>
+                    <input id="fontFamily" class="option-input savedata" data-default-value="" type="search" list="fonts">
+                    <datalist id="fonts">
+                        <?php foreach (['serif', 'sans-serif', 'monospace', /* and more */] as $family): ?>
+                            <option value="<?= $h($family) ?>"><?= $h($family) ?></option>
+                        <?php endforeach ?>
+                    </datalist>
+                </dd>
                 <dt>Head</dt>
                 <dd>
                     <label class="option-title" for="toc_width"><?= $h($locale['toc_width']) ?></label>

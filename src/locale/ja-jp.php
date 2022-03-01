@@ -7,6 +7,7 @@ return [
     'download_file'  => 'ダウンロード',
     'export_file'    => 'エクスポート',
     'control_panel'  => 'コントロールパネル',
+    'font_family'    => 'フォント',
     'list_length'    => 'リスティング文字数',
     'soft_limit'     => 'ソフトリミット',
     'hard_limit'     => 'ハードリミット',
