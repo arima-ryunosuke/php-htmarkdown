@@ -399,8 +399,13 @@ class Document
 
                 $section = $this->dom->createElement('section');
                 $section->setAttribute('id', $id);
-                $section->setAttribute('class', 'section section-level-' . $childNode->nodeName . ($mainHeader ? ' main-section' : '') . ($subHeader ? ' sub-section' : ''));
-                $section->setAttribute('data-section-level', substr($childNode->nodeName, 1));
+                if ($mainHeader || $subHeader) {
+                    $section->setAttribute('class', ($mainHeader ? 'main-section' : '') . ($subHeader ? 'sub-section' : ''));
+                }
+                else {
+                    $section->setAttribute('class', 'section section-level-' . $childNode->nodeName);
+                    $section->setAttribute('data-section-level', substr($childNode->nodeName, 1));
+                }
                 $this->dom->documentElement->appendChild($section);
             }
             if (isset($section)) {

@@ -337,8 +337,9 @@ document.addEventListener('DOMContentLoaded', function () {
             levels[sectionLevel - 1]++;
             levels.fill(0, sectionLevel);
 
+            const leading = levels.findIndex(v => v !== 0);
             const trailing = levels.findLastIndex(v => v !== 0);
-            const currentLevels = levels.slice(0, trailing + 1);
+            const currentLevels = levels.slice(leading, trailing + 1);
             const blockId = currentLevels.join('.');
             const parentId = currentLevels.slice(0, -1).join('.');
             section.firstChild.dataset.blockId = blockId;
