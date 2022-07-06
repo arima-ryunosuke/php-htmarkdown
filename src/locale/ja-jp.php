@@ -14,6 +14,7 @@ return [
     'link_url'       => 'URL を自動リンクする',
     'break_line'     => '改行を維持する',
     'reload'         => '更新',
+    'toc_visible'    => '見出し表示',
     'toc_width'      => '見出しサイズ',
     'toc_level'      => '見出しレベル',
     'toc_number'     => '見出し番号を表示する',

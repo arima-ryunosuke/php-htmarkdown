@@ -125,10 +125,14 @@ $siblings = $this->siblings();
                         <?php endforeach ?>
                     </datalist>
                 </dd>
+                <dd>
+                    <label class="option-title" for="toc_visible"><?= $h($locale['toc_visible']) ?></label>
+                    <input id="tocVisible" class="option-input savedata" data-default-value="true" type="checkbox" value="1">
+                </dd>
                 <dt>Head</dt>
                 <dd>
                     <label class="option-title" for="toc_width"><?= $h($locale['toc_width']) ?></label>
-                    <input id="tocWidth" class="option-input savedata" data-default-value="300" type="number" min="10" max="700">
+                    <input id="tocWidth" class="option-input savedata" data-default-value="370" type="number" min="0" max="700">
                 </dd>
                 <dd>
                     <label class="option-title" for="toc_level"><?= $h($locale['toc_level']) ?></label>

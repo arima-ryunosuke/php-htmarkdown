@@ -37,6 +37,7 @@ h2, h3, h4, h5, h6 {
 }
 
 .wy-nav-side {
+    transition: width var(--initial-animation-ms) 0s ease;
     width: var(--side-width);
 }
 
@@ -46,6 +47,11 @@ h2, h3, h4, h5, h6 {
 
 .rst-versions {
     width: var(--side-width);
+    min-width: 35px;
+}
+
+.rst-versions.shift-up {
+    min-width: 370px;
 }
 
 .wy-side-scroll {
@@ -618,11 +624,11 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 
 [type="search"].option-input {
-    width: 90px;
+    width: 120px;
 }
 
 select.option-input {
-    width: 90px;
+    width: 120px;
 }
 
 /* utility */

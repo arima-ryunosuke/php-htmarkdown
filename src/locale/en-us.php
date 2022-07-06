@@ -14,6 +14,7 @@ return [
     'link_url'       => 'url link',
     'break_line'     => 'keep break line',
     'reload'         => 'reload',
+    'toc_visible'    => 'TOC visible',
     'toc_width'      => 'TOC width',
     'toc_level'      => 'TOC level',
     'toc_number'     => 'TOC number',

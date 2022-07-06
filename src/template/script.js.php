@@ -295,17 +295,11 @@ document.addEventListener('DOMContentLoaded', function () {
     controlPanel.sync = function () {
         this.$$('.savedata').forEach(function (input) {
             html.dataset[input.id] = input.getValue();
-            if (input.id === 'highlightCss') {
-                const highlight_style = $('#highlight_style');
-                highlight_style.href = highlight_style.dataset.cdnUrl + input.getValue() + '.min.css';
-            }
-            if (input.id === 'tocWidth') {
-                document.documentElement.style.setProperty('--side-width', input.getValue() + 'px');
-            }
-            if (input.id === 'fontFamily') {
-                document.documentElement.style.setProperty('--font-family', input.getValue());
-            }
         });
+        const highlight_style = $('#highlight_style');
+        highlight_style.href = highlight_style.dataset.cdnUrl + $('#highlightCss').getValue() + '.min.css';
+        document.documentElement.style.setProperty('--side-width', `min(${$('#tocWidth').getValue()}px, ${$('#tocVisible').checked ? 9999 : 0}px)`);
+        document.documentElement.style.setProperty('--font-family', $('#fontFamily').getValue());
     };
     controlPanel.save = function () {
         const savedata = {};
