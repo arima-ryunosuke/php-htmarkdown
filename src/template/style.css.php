@@ -89,7 +89,7 @@ h2, h3, h4, h5, h6 {
     max-width: 100%;
     border: solid 1px #e1e4e5;
     font-size: 90%;
-    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", Courier, monospace;
+    font-family: monospace;
     overflow-x: auto;
 }
 
@@ -126,7 +126,7 @@ h2, h3, h4, h5, h6 {
 .rst-content dl dt {
     background: rgba(225, 228, 229, 1);
     margin-bottom: 4px;
-    padding: 0 8px;
+    padding: 6px 8px;
 }
 
 .rst-content dl dd dl dt {
@@ -137,34 +137,27 @@ h2, h3, h4, h5, h6 {
     background: rgba(225, 228, 229, 0.4);
 }
 
-.rst-content dl dd p,
-.rst-content dl dd pre,
-.rst-content dl dd ol,
-.rst-content dl dd ul {
+.rst-content dl dd > * {
     margin-bottom: 0px !important;
 }
 
 .rst-content dl.field-list {
-    display: table;
-    border-collapse: separate;
-    border-spacing: 4px 3px;
+    display: grid;
+    grid-template-columns: max-content auto;
+    overflow-x: auto;
+    gap: 4px 3px;
 }
 
-.rst-content dl.field-list > .dtdd-container {
-    display: table-row;
+.rst-content dl.field-list .dtdd-container {
+    display: contents;
 }
 
-.rst-content dl.field-list > .dtdd-container > dt,
-.rst-content dl.field-list > .dtdd-container > dd {
-    display: table-cell;
-}
-
-.rst-content dl.field-list > .dtdd-container > dt {
+.rst-content dl.field-list dt,
+.rst-content dl.field-list dd {
     white-space: nowrap;
-}
-
-.rst-content dl.field-list > .dtdd-container dd pre {
-    white-space: pre-wrap;
+    margin: 0;
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
 .rst-content details {
@@ -422,7 +415,7 @@ html:not([data-section-indent="0"]) section[data-section-level] .section-header 
     width: 200%;
     */
     zoom: 0.5;
-    background: white;
+    background: #f3f3f3;
     padding: 2rem;
 }
 
