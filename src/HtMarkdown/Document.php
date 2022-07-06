@@ -459,14 +459,14 @@ class Document
             }
 
             $zip = new \ZipArchive();
-            $zip->open($basename, \ZipArchive::CREATE);
+            $zip->open($basename, \ZipArchive::OVERWRITE);
             $addContents($zip, $this->file, $contents);
             $zip->close();
             return (new File($basename))->alias("$alias.zip");
         }
         else {
             $zip = new \ZipArchive();
-            $zip->open($basename, \ZipArchive::CREATE);
+            $zip->open($basename, \ZipArchive::OVERWRITE);
 
             $addContents($zip, $this->file, $this->contents());
             foreach ($this->descendants() as $it) {
