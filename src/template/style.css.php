@@ -300,9 +300,55 @@ h2, h3, h4, h5, h6 {
 .toc-h.visible,
 .toc-h.forced-visible {
     visibility: visible;
-    max-height: 36px;
+    max-height: unset;
     padding-top: .4045em;
     padding-bottom: .4045em;
+}
+
+.toc-h.visible:before,
+.toc-h.visible:after {
+    color: #aaaaaa;
+    font-size: 90%;
+}
+
+[data-toc-level="1"] .toc-h2.visible:not([data-first-above="0"]):before,
+[data-toc-level="1"] .toc-h3.visible:not([data-first-above="0"]):before,
+[data-toc-level="1"] .toc-h4.visible:not([data-first-above="0"]):before,
+[data-toc-level="1"] .toc-h5.visible:not([data-first-above="0"]):before,
+[data-toc-level="1"] .toc-h6.visible:not([data-first-above="0"]):before,
+[data-toc-level="2"] .toc-h3.visible:not([data-first-above="0"]):before,
+[data-toc-level="2"] .toc-h4.visible:not([data-first-above="0"]):before,
+[data-toc-level="2"] .toc-h5.visible:not([data-first-above="0"]):before,
+[data-toc-level="2"] .toc-h6.visible:not([data-first-above="0"]):before,
+[data-toc-level="3"] .toc-h4.visible:not([data-first-above="0"]):before,
+[data-toc-level="3"] .toc-h5.visible:not([data-first-above="0"]):before,
+[data-toc-level="3"] .toc-h6.visible:not([data-first-above="0"]):before,
+[data-toc-level="4"] .toc-h5.visible:not([data-first-above="0"]):before,
+[data-toc-level="4"] .toc-h6.visible:not([data-first-above="0"]):before,
+[data-toc-level="5"] .toc-h6.visible:not([data-first-above="0"]):before {
+    content: "(" attr(data-first-above) " more sections)";
+    padding-bottom: 0.809em;
+    display: block;
+}
+
+[data-toc-level="1"] .toc-h2.visible:not([data-last-below="0"]):after,
+[data-toc-level="1"] .toc-h3.visible:not([data-last-below="0"]):after,
+[data-toc-level="1"] .toc-h4.visible:not([data-last-below="0"]):after,
+[data-toc-level="1"] .toc-h5.visible:not([data-last-below="0"]):after,
+[data-toc-level="1"] .toc-h6.visible:not([data-last-below="0"]):after,
+[data-toc-level="2"] .toc-h3.visible:not([data-last-below="0"]):after,
+[data-toc-level="2"] .toc-h4.visible:not([data-last-below="0"]):after,
+[data-toc-level="2"] .toc-h5.visible:not([data-last-below="0"]):after,
+[data-toc-level="2"] .toc-h6.visible:not([data-last-below="0"]):after,
+[data-toc-level="3"] .toc-h4.visible:not([data-last-below="0"]):after,
+[data-toc-level="3"] .toc-h5.visible:not([data-last-below="0"]):after,
+[data-toc-level="3"] .toc-h6.visible:not([data-last-below="0"]):after,
+[data-toc-level="4"] .toc-h5.visible:not([data-last-below="0"]):after,
+[data-toc-level="4"] .toc-h6.visible:not([data-last-below="0"]):after,
+[data-toc-level="5"] .toc-h6.visible:not([data-last-below="0"]):after {
+    content: "(" attr(data-last-below) " more sections)";
+    padding-top: 0.809em;
+    display: block;
 }
 
 .toc-h {

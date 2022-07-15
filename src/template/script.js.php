@@ -432,6 +432,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 toch.classList.remove('visible');
             }
         });
+        tochs.forEach(function (toch, i) {
+            toch.dataset.firstAbove = '0';
+            toch.dataset.lastBelow = '0';
+            if (i === min) {
+                const brother = Array.from(outline.$$(`[data-parent-block-id="${toch.dataset.parentBlockId}"]`));
+                toch.dataset.firstAbove = brother.slice(0, brother.indexOf(toch)).filter(node => !node.matches('.visible,.forced-visible')).length;
+            }
+            if (i === max) {
+                const brother = Array.from(outline.$$(`[data-parent-block-id="${toch.dataset.parentBlockId}"]`));
+                toch.dataset.lastBelow = brother.slice(brother.indexOf(toch)).filter(node => !node.matches('.visible,.forced-visible')).length;
+            }
+        });
     });
     outline.on('mutate', '[data-section-count]', function (e) {
         if (e.attributeName === 'data-section-count' && html.dataset.tocActive === 'true') {
@@ -467,7 +479,11 @@ document.addEventListener('DOMContentLoaded', function () {
         const toch = e.target.parentElement;
         if (toch.dataset.state === 'open') {
             toch.dataset.state = 'close';
-            outline.$$(`[data-parent-block-id="${toch.dataset.blockId}"]`).forEach(e => e.classList.add('forced-visible', 'visible'));
+            outline.$$(`[data-parent-block-id="${toch.dataset.blockId}"]`).forEach(e => {
+                e.classList.add('forced-visible', 'visible');
+                e.dataset.firstAbove = '0';
+                e.dataset.lastBelow = '0';
+            });
         }
         else {
             toch.dataset.state = 'open';
