@@ -20,6 +20,7 @@ return [
     'toc_number'     => 'TOC number',
     'toc_follow'     => 'TOC follow',
     'toc_active'     => 'alway visible active level',
+    'section_number' => 'section number',
     'section_indent' => 'section indent',
     'highlight_css'  => 'syntax highlight',
 ];

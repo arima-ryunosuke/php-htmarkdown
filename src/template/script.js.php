@@ -35,9 +35,14 @@ document.addEventListener('DOMContentLoaded', function () {
     };
     Element.prototype.$ = Element.prototype.querySelector;
     Element.prototype.$$ = Element.prototype.querySelectorAll;
+    Element.prototype.prependChildren = function (nodes) {
+        const children = document.createElements(nodes);
+        children.forEach(child => this.prepend(child));
+        return children;
+    };
     Element.prototype.appendChildren = function (nodes) {
         const children = document.createElements(nodes);
-        children.forEach(child => this.appendChild(child));
+        children.forEach(child => this.append(child));
         return children;
     };
     Document.prototype.createElements = function (nodes) {
@@ -337,7 +342,13 @@ document.addEventListener('DOMContentLoaded', function () {
             const currentLevels = levels.slice(leading, trailing + 1);
             const blockId = currentLevels.join('.');
             const parentId = currentLevels.slice(0, -1).join('.');
-            section.firstChild.dataset.blockId = blockId;
+            section.firstChild.prependChildren({
+                span: {
+                    dataset: {
+                        sectionNumber: blockId,
+                    }
+                }
+            });
 
             idmap[blockId] = sectionId;
             const parent = document.getElementById(idmap[parentId]);
@@ -360,12 +371,17 @@ document.addEventListener('DOMContentLoaded', function () {
                         state: '',
                     },
                     children: [
-                        sectionTitle,
                         {
                             a: {
                                 class: 'toggler icon',
+                            },
+                            span: {
+                                dataset: {
+                                    tocNumber: blockId,
+                                }
                             }
-                        }
+                        },
+                        sectionTitle
                     ],
                 },
             });

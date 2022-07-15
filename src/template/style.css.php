@@ -260,9 +260,20 @@ h2, h3, h4, h5, h6 {
     font-family: var(--font-family);
 }
 
-[data-toc-number="true"] [data-block-id]:before {
-    content: attr(data-block-id) ' ';
-    color: #999999;
+[data-toc-number] {
+    color: #aaaaaa;
+}
+
+[data-section-number] {
+    color: #888888;
+}
+
+[data-toc-number="true"] [data-toc-number]:before {
+    content: attr(data-toc-number) ' ';
+}
+
+[data-section-number="true"] [data-section-number]:before {
+    content: attr(data-section-number) ' ';
 }
 
 [data-toc-level="1"] .toc-h2,
@@ -540,6 +551,11 @@ pre[data-label]:not([data-label=""]) div.code {
         color: #eeeeee;
         padding: 5px;
         border: none;
+    }
+
+    h1 [data-section-number],
+    h2 [data-section-number] {
+        color: #cccccc;
     }
 
     h3 {

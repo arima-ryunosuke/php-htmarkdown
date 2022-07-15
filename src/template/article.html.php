@@ -164,6 +164,10 @@ $siblings = $this->siblings();
                     </select>
                 </dd>
                 <dd>
+                    <label class="option-title" for="section_number"><?= $h($locale['section_number']) ?></label>
+                    <input id="sectionNumber" class="option-input savedata" data-default-value="true" type="checkbox" value="1">
+                </dd>
+                <dd>
                     <label class="option-title" for="link_url"><?= $h($locale['link_url']) ?></label>
                     <input id="linkUrl" class="option-input savedata" data-default-value="true" type="checkbox" value="1">
                 </dd>
