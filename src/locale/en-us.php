@@ -17,6 +17,7 @@ return [
     'toc_visible'    => 'TOC visible',
     'toc_width'      => 'TOC width',
     'toc_level'      => 'TOC level',
+    'toc_sticky'     => 'TOC sticky',
     'toc_number'     => 'TOC number',
     'toc_follow'     => 'TOC follow',
     'toc_active'     => 'alway visible active level',

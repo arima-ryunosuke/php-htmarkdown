@@ -315,7 +315,7 @@ h2, h3, h4, h5, h6 {
     overflow: hidden;
 }
 
-.toc-h:not([data-section-count="0"]) {
+:root .toc-h:not([data-section-count="0"]) {
     font-weight: bold;
     background-color: #4e4a4a;
 }
@@ -332,6 +332,33 @@ a.toc-h<?= $n ?> a.toggler {
 }
 
 <?php endforeach ?>
+
+[data-toc-sticky="1"] .toc-h1,
+[data-toc-sticky="2"] .toc-h1,
+[data-toc-sticky="2"] .toc-h2,
+[data-toc-sticky="3"] .toc-h1,
+[data-toc-sticky="3"] .toc-h2,
+[data-toc-sticky="3"] .toc-h3,
+[data-toc-sticky="4"] .toc-h1,
+[data-toc-sticky="4"] .toc-h2,
+[data-toc-sticky="4"] .toc-h3,
+[data-toc-sticky="4"] .toc-h4,
+[data-toc-sticky="5"] .toc-h1,
+[data-toc-sticky="5"] .toc-h2,
+[data-toc-sticky="5"] .toc-h3,
+[data-toc-sticky="5"] .toc-h4,
+[data-toc-sticky="5"] .toc-h5,
+[data-toc-sticky="6"] .toc-h1,
+[data-toc-sticky="6"] .toc-h2,
+[data-toc-sticky="6"] .toc-h3,
+[data-toc-sticky="6"] .toc-h4,
+[data-toc-sticky="6"] .toc-h5,
+[data-toc-sticky="6"] .toc-h6 {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: #343131;
+}
 
 a.toggler {
     position: absolute;

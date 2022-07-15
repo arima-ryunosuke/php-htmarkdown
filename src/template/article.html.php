@@ -139,6 +139,10 @@ $siblings = $this->siblings();
                     <input id="tocLevel" class="option-input savedata" data-default-value="5" type="number" min="1" max="6">
                 </dd>
                 <dd>
+                    <label class="option-title" for="toc_sticky"><?= $h($locale['toc_sticky']) ?></label>
+                    <input id="tocSticky" class="option-input savedata" data-default-value="3" type="number" min="0" max="6">
+                </dd>
+                <dd>
                     <label class="option-title" for="toc_number"><?= $h($locale['toc_number']) ?></label>
                     <input id="tocNumber" class="option-input savedata" data-default-value="true" type="checkbox" value="1">
                 </dd>
