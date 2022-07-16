@@ -395,14 +395,65 @@ class MarkdownTest extends \ryunosuke\Test\AbstractTestCase
     function test_blockTable()
     {
         that(Markdown::render(<<<MD
-            | headA  | headB |
-            |:-------|:-------|
-            | cellA1 | cellB1 |
-            | cellA2 | cellB2 |
-            | cellA3 | cellB3 |
+            | headA      | headB            |
+            |:---------- |:---------------- |
+            | cellA1     | cellB1           |
+            | cellA2     | cellB2           |
+            | cellA3     | cellB3           |
             MD
             , []))->containsAll([
-            '<table class=" docutils align-default">',
+            '<div class="wy-table-responsive">',
+            '<table class=" docutils align-default has-colgroup">',
+            '<col style="width:35%"',
+            '<col style="width:65%"',
+        ]);
+
+        that(Markdown::render(<<<MD
+             headA     | headB           
+            :----------|:----------------
+             cellA1    | cellB1          
+             cellA2    | cellB2          
+             cellA3    | cellB3          
+            MD
+            , []))->containsAll([
+            '<div class="wy-table-responsive">',
+            '<table class=" no-border docutils align-default">',
+        ]);
+
+        that(Markdown::render(<<<MD
+            |           |                 |
+            |:----------|:----------------|
+            | cellA1    | cellB1          |
+            | cellA2    | cellB2          |
+            | cellA3    | cellB3          |
+            MD
+            , []))->containsAll([
+            '<div class="wy-table-responsive">',
+            '<table class=" docutils align-default no-header">',
+        ])->notContains('<thead>');
+
+        that(Markdown::render(<<<MD
+            caption-top:
+            | headA     | headB           |
+            |:----------|:----------------|
+            | cellA1    | cellB1          |
+            | cellA2    | cellB2          |
+            | cellA3    | cellB3          |
+            :caption-bottom
+            
+            :caption-center:
+            | headA     | headB           |
+            |:----------|:----------------|
+            | cellA1    | cellB1          |
+            | cellA2    | cellB2          |
+            | cellA3    | cellB3          |
+            MD
+            , []))->containsAll([
+            '<div class="wy-table-responsive">',
+            '<table class=" docutils align-default has-caption has-top-caption has-bottom-caption">',
+            '<caption style="text-align: right;caption-side: top">caption-top</caption>',
+            '<caption style="text-align: left;caption-side: bottom">caption-bottom</caption>',
+            '<caption style="text-align: center;caption-side: top">caption-center</caption>',
         ]);
     }
 

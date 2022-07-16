@@ -55,6 +55,11 @@ p {
     margin-left: var(--side-width);
 }
 
+.wy-table-responsive table td,
+.wy-table-responsive table th {
+    white-space: normal;
+}
+
 .rst-versions {
     width: var(--side-width);
     min-width: 35px;
@@ -214,8 +219,37 @@ p {
     font-size: 1rem;
 }
 
+.rst-content table.docutils tr {
+    border-bottom: 1px solid #e1e4e5;
+}
+
+.rst-content table.docutils:not(.field-list) caption {
+    font: revert;
+    font-weight: bold;
+    text-align: left;
+    padding: 8px 0;
+}
+
 .rst-content table.docutils:not(.field-list) tr th {
     background: #e1e4e5;
+}
+
+.rst-content table.has-colgroup:not(.field-list) {
+    table-layout: fixed;
+    word-break: break-all;
+}
+
+.rst-content table.no-border:not(.field-list) {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+}
+
+.rst-content table.no-border:not(.field-list) tr th,
+.rst-content table.no-border:not(.field-list) tr td:nth-child(n) {
+    background: none;
+    border-left: none;
+    border-right: none;
 }
 
 .rst-content dl dt {

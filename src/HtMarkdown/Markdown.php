@@ -368,11 +368,147 @@ class Markdown extends Parsedown
         return $Block;
     }
 
+    protected function _tableCaption($oneline)
+    {
+        if (false
+            || preg_match('#^(:)(.+?)(:)$#u', $oneline, $matches)
+            || preg_match('#^(:)(.+?)(:?)$#u', $oneline, $matches)
+            || preg_match('#^(:?)(.+?)(:)$#u', $oneline, $matches)
+        ) {
+            $caption['text'] = $matches[2];
+            $caption['align'] = 'unset';
+            if (strlen($matches[1] ?? '')) {
+                $caption['align'] = 'left';
+            }
+            if (strlen($matches[3] ?? '')) {
+                $caption['align'] = $caption['align'] === 'left' ? 'center' : 'right';
+            }
+            return $caption;
+        }
+        return null;
+    }
+
     protected function blockTable($Line, array $Block = null)
     {
+        $caption = [];
+        if (isset($Block) && $Block['type'] === 'Paragraph' && !isset($Block['interrupted'])) {
+            $lines = explode("\n", $Block['element']['handler']['argument']);
+            if (count($lines) === 2) {
+                $caption = $this->_tableCaption(array_shift($lines)) ?? [];
+                if ($caption) {
+                    $Block['element']['handler']['argument'] = implode("\n", $lines);
+                }
+            }
+        }
+
         $Block = parent::blockTable($Line, $Block);
+        if ($Block === null) {
+            return;
+        }
+
+        $text = trim($Line['text']);
+        $bare = trim($text, '|');
+
+        $Block['cols'] = [];
+        foreach (explode('|', $bare) as $dividerCell) {
+            $Block['cols'][] = [
+                'space' => substr_count($dividerCell, ' '),
+                'width' => substr_count($dividerCell, '-') - 3, // minimum count in table notation
+            ];
+        }
+
+        $Block['captions'] = [];
+        if ($caption) {
+            $Block['captions']['top'] = $caption;
+        }
+
+        $Block['element']['attributes']['class'] = ($Block['element']['attributes']['class'] ?? '');
+        $Block['element']['attributes']['class'] .= $text === $bare ? ' no-border' : '';
+        $Block['element']['attributes']['class'] .= ' docutils align-default';
+        return $Block;
+    }
+
+    protected function blockTableContinue($Line, array $Block)
+    {
+        $parent = parent::blockTableContinue($Line, $Block);
+        if ($parent === null) {
+            if (isset($Block['interrupted'])) {
+                return null;
+            }
+            $caption = $this->_tableCaption($Line['text']);
+            if ($caption) {
+                $Block['captions']['bottom'] = $caption;
+                return $Block;
+            }
+        }
+
+        return $parent;
+    }
+
+    protected function blockTableComplete($Block)
+    {
         if ($Block !== null) {
-            $Block['element']['attributes']['class'] = ($Block['element']['attributes']['class'] ?? '') . ' docutils align-default';
+            // shortcut vars
+            $cols = $Block['cols'];
+            $table = &$Block['element'];
+            $thead = &$table['elements'][0];
+            //$tbody = &$table['elements'][1];
+            $class = &$table['attributes']['class'];
+
+            // handle no-header
+            if (!array_reduce($thead['elements'][0]['elements'], fn($carry, $th) => $carry || strlen($th['handler']['argument']), false)) {
+                $class .= ' no-header';
+                $thead = [];
+            }
+
+            // handle has-colgroup
+            if (array_sum(array_column($cols, 'space')) > 0) {
+                $total = array_sum(array_column($cols, 'width'));
+                if ($total) {
+                    $class .= ' has-colgroup';
+                    array_unshift($table['elements'], [
+                        'name'     => 'colgroup',
+                        'elements' => (function () use ($cols, $total) {
+                            return array_map(fn($col) => [
+                                'name'       => 'col',
+                                'attributes' => $col['space'] > 0 ? ['style' => "width:" . ($col['width'] / $total * 100) . '%'] : [],
+                            ], $cols);
+                        })(),
+                    ]);
+                }
+            }
+
+            // handle has-caption
+            if ($Block['captions']) {
+                $vertical = array_keys($Block['captions']);
+                $class .= ' has-caption ' . implode(' ', array_map(fn($pos) => "has-{$pos}-caption", $vertical));
+                array_unshift($table['elements'], ...array_values(array_map(fn($caption, $pos) => [
+                    'name'       => 'caption',
+                    'handler'    => [
+                        'function'    => 'lineElements',
+                        'argument'    => $caption['text'],
+                        'destination' => 'elements',
+                    ],
+                    'attributes' => [
+                        'style' => implode(";", [
+                            "text-align: {$caption['align']}",
+                            "caption-side: {$pos}",
+                        ]),
+                    ],
+                ], $Block['captions'], $vertical)));
+            }
+
+            // wrap div.wy-table-responsive
+            $Block = [
+                'type'    => 'tableWrapper',
+                'element' => [
+                    'name'       => 'div',
+                    'elements'   => [$Block['element']],
+                    'attributes' => [
+                        'class' => "wy-table-responsive",
+                    ],
+                ],
+            ];
         }
         return $Block;
     }
