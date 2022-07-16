@@ -323,6 +323,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.documentElement.style.setProperty('--side-width', `min(${$('#tocWidth').getValue()}px, ${$('#tocVisible').checked ? 9999 : 0}px)`);
         document.documentElement.style.setProperty('--font-family', $('#fontFamily').getValue());
         document.documentElement.style.setProperty('--font-size', font_size.getValue());
+        document.documentElement.style.setProperty('--section-indent', $('#sectionIndent').getValue());
     };
     controlPanel.save = function () {
         const savedata = {};
@@ -390,7 +391,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     },
                     children: [
                         {
-                            a: {
+                            b: {
                                 class: 'toggler icon',
                             },
                             span: {
@@ -493,7 +494,7 @@ document.addEventListener('DOMContentLoaded', function () {
     outline.on('mouseleave', 'a.toc-h', function (e) {
         e.target.dataset.state = '';
     }, true);
-    outline.on('click', 'a.toggler', function (e) {
+    outline.on('click', 'b.toggler', function (e) {
         const toch = e.target.parentElement;
         if (toch.dataset.state === 'open') {
             toch.dataset.state = 'close';

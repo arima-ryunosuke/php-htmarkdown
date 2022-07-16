@@ -4,14 +4,21 @@
     --side-width: 300px;
     --font-family: serif;
     --font-size: 16;
+    --main-padding: 32px;
+    --section-indent: 0;
 }
 
 html {
     font-size: calc(var(--font-size) * 1px);
 }
 
-h1, h2, h3, h4, h5, h6 {
-    border-bottom: 1px solid #E1E4E5;
+@media screen {
+    h1, h2, h3, h4, h5, h6 {
+        background-color: #e1e4e5;
+        margin-left: calc(-1 * var(--main-padding));
+        margin-right: calc(-1 * var(--main-padding));
+        padding: 0.3em var(--main-padding);
+    }
 }
 
 h2, h3, h4, h5, h6 {
@@ -23,6 +30,11 @@ p {
     line-height: 1.5;
 }
 
+small {
+    font-weight: normal;
+    font-size: 80%;
+}
+
 .caption {
     display: block;
     font-weight: bold;
@@ -30,6 +42,7 @@ p {
 }
 
 .wy-nav-content {
+    padding: 1.618em var(--main-padding);
     max-width: 100%;
     height: unset;
 }
@@ -334,6 +347,8 @@ p {
 
 .rst-footer-buttons {
     display: flex;
+    width: 100%;
+    margin-top: 32px;
 }
 
 .rst-footer-buttons:before, .rst-footer-buttons:after {
@@ -358,7 +373,10 @@ p {
 }
 
 .rst-versions .rst-other-versions dd {
-    display: block;
+    display: grid;
+    grid-template-columns: max-content auto;
+    gap: 0 8px;
+    margin-top: 4px;
 }
 
 @media screen and (max-width: 768px) {
@@ -510,7 +528,7 @@ a.toc-h<?= $n ?> {
     padding-left: <?= ($n - 1) + 1.35 ?>rem;
 }
 
-a.toc-h<?= $n ?> a.toggler {
+a.toc-h<?= $n ?> b.toggler {
     left: <?= ($n - 2) + 1.1 ?>rem;
 }
 
@@ -543,7 +561,7 @@ a.toc-h<?= $n ?> a.toggler {
     background: #343131;
 }
 
-a.toggler {
+b.toggler {
     position: absolute;
     top: 0;
     left: 0;
@@ -553,24 +571,24 @@ a.toggler {
     text-align: center;
 }
 
-a.toggler:before {
+b.toggler:before {
     line-height: inherit;
     opacity: 0.7;
 }
 
-a.toggler:hover:before {
+b.toggler:hover:before {
     opacity: 1;
 }
 
-[data-state=""] a.toggler:before {
+[data-state=""] b.toggler:before {
     content: "";
 }
 
-[data-state="open"] a.toggler:before {
+[data-state="open"] b.toggler:before {
     content: "";
 }
 
-[data-state="close"] a.toggler:before {
+[data-state="close"] b.toggler:before {
     content: "";
 }
 
@@ -593,18 +611,11 @@ small.metadata {
 }
 
 <?php foreach(range(1, 6) as $n): ?>
-<?php foreach(range(1, 6) as $m): ?>
-
-[data-section-indent="<?= $n ?>"] section[data-section-level="<?= $m ?>"] {
-    padding-left: <?= ($m) * $n ?>rem;
+section[data-section-level="<?= $n ?>"] {
+    padding-left: calc(var(--section-indent) * <?= $n ?>rem);
 }
 
 <?php endforeach ?>
-<?php endforeach ?>
-
-html:not([data-section-indent="0"]) section[data-section-level] .section-header {
-    margin-left: -1rem;
-}
 
 [data-break-line="false"] br.break-line {
     display: none;
@@ -794,6 +805,7 @@ div.cascade .shape-item.group-4 {
 @media print {
     * {
         overflow: visible !important;
+        word-break: break-all !important;
     }
 
     body {
@@ -815,14 +827,14 @@ div.cascade .shape-item.group-4 {
 
     h1.main-header {
         background: transparent;
-        color: #333333 ;
+        color: #333333;
         font-size: 320%;
         text-align: center;
     }
 
     h2.sub-header {
         background: transparent;
-        color: #333333 ;
+        color: #333333;
         font-size: 220%;
         text-align: center;
     }
@@ -899,13 +911,11 @@ input[type="search"]::-webkit-search-cancel-button {
 
 .option-title {
     color: #fcfcfc;
-    display: inline-block;
-    width: 210px;
+    width: 17em;
 }
 
 .option-input {
-    display: inline-block;
-    height: 18px;
+    height: 1.5em;
     vertical-align: text-bottom;
     padding: 0;
 }
