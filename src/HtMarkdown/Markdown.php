@@ -26,7 +26,7 @@ class Markdown extends Parsedown
         $newBlockTypes = [
             '<' => ['Here'],
             '"' => ['Note'],
-            '/' => ['Side'],
+            '/' => ['Side', 'LineComment'],
             '.' => ['Detail'],
         ];
         foreach ($newBlockTypes as $char => $block) {
@@ -263,6 +263,17 @@ class Markdown extends Parsedown
     protected function blockSideComplete($Block)
     {
         return $this->_commonBlockComplete($Block);
+    }
+
+    protected function blockLineComment($Line, $Block = null)
+    {
+        if ($Block !== null && strpos($Line['text'], '//') === 0 && substr($Line['text'], 2, 1) !== '/') {
+            return [
+                'element' => [
+                    'rawHtml' => '<!-- ' . ltrim($Line['body'], '/') . ' -->',
+                ],
+            ];
+        }
     }
 
     protected function blockDetail($Line)

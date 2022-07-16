@@ -210,6 +210,27 @@ class MarkdownTest extends \ryunosuke\Test\AbstractTestCase
         ]);
     }
 
+    function test_blockLineComment()
+    {
+        that(Markdown::render(<<<MD
+            plain1
+            //this is comment
+            plain2
+            MD
+            , []))->containsAll([
+            '<p>plain1</p>',
+            '<!-- this is comment -->',
+            '<p>plain2</p>',
+        ]);
+
+        that(Markdown::render(<<<MD
+            plain1 //this is comment plain2
+            MD
+            , []))->containsAll([
+            '<p>plain1 //this is comment plain2</p>',
+        ]);
+    }
+
     function test_blockDetail()
     {
         that(Markdown::render(<<<MD
