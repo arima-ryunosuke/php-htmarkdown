@@ -411,12 +411,16 @@ class MarkdownTest extends \ryunosuke\Test\AbstractTestCase
         that(Markdown::render(<<<MD
             - listA
             - listB
-              1. number1
-              2. number2
+                1. number1
+                2. number2
+                    + root1
+                        + node1
+                        + node2
             MD
             , []))->containsAll([
             '<ul class=" simple">',
-            '<ol>',
+            '<ol class="">',
+            '<ul class=" simple tree">',
         ]);
     }
 }

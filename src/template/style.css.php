@@ -142,6 +142,12 @@ p {
     clear: both;
 }
 
+.rst-content .section ol p,
+.rst-content .section ul p,
+.rst-content .section dl p {
+    margin-bottom: 0;
+}
+
 .rst-content .section ol li > *,
 .rst-content .section ul li > *,
 .rst-content .section dl dd > * {
@@ -158,6 +164,49 @@ p {
 .rst-content .section dl dd > ul,
 .rst-content .section dl dd > dl {
     margin-bottom: 0;
+}
+
+.rst-content .section ul.tree {
+    --tree-font-size: 1rem;
+    --tree-line-height: 1.5;
+    --tree-border-width: calc(var(--tree-font-size) * var(--tree-line-height) / 2);
+
+    font-size: var(--tree-font-size);
+    line-height: var(--tree-line-height);
+}
+
+.rst-content .section ul.tree li.leaf {
+    position: relative;
+    list-style: none;
+    margin-left: calc(0.5em + var(--tree-border-width));
+    padding-left: 4px;
+}
+
+.rst-content .section ul.tree li.leaf:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: calc(-1 * var(--tree-border-width));
+    height: 100%;
+    border-left: 1px solid #aaa;
+}
+
+.rst-content .section ul.tree li.leaf:last-child:before {
+    height: var(--tree-border-width);
+}
+
+.rst-content .section > ul.tree > li.leaf:first-child:last-child:before {
+    top: var(--tree-border-width);
+    height: 0;
+}
+
+.rst-content .section ul.tree li.leaf:after {
+    content: "";
+    position: absolute;
+    top: var(--tree-border-width);
+    left: calc(-1 * var(--tree-border-width));
+    width: var(--tree-border-width);
+    border-bottom: 1px solid #aaa;
 }
 
 .rst-content table.docutils {

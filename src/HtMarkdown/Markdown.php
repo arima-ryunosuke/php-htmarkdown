@@ -380,8 +380,14 @@ class Markdown extends Parsedown
     protected function blockList($Line, array $CurrentBlock = null)
     {
         $Block = parent::blockList($Line, $CurrentBlock);
-        if ($Block !== null && $Block['element']['name'] === 'ul') {
-            $Block['element']['attributes']['class'] = ($Block['element']['attributes']['class'] ?? '') . ' simple';
+        if ($Block !== null) {
+            $Block['element']['attributes']['class'] = $Block['element']['attributes']['class'] ?? '';
+            if ($Block['element']['name'] === 'ul') {
+                $Block['element']['attributes']['class'] .= ' simple';
+            }
+            if ($Block['data']['markerType'] === '+') {
+                $Block['element']['attributes']['class'] .= ' tree';
+            }
         }
         return $Block;
     }
@@ -394,6 +400,10 @@ class Markdown extends Parsedown
             $Block['element']['elements'] = [];
 
             foreach ($elements as $element) {
+                if ($Block['data']['markerType'] === '+' && $element['name'] === 'li') {
+                    $element['attributes']['class'] = ($element['attributes']['class'] ?? '') . ' leaf';
+                }
+
                 if (isset($element['handler']['argument'][0])) {
                     $regex = '(?:`(?:\\\\(?:\\\\|`)|[^`])*+`?|[^`:])*+(?:\z(*SKIP)(*FAIL)|\K:)';
                     $argument = preg_split("#$regex#", $element['handler']['argument'][0], 2);
