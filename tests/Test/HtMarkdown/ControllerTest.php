@@ -112,9 +112,7 @@ class ControllerTest extends \ryunosuke\Test\AbstractTestCase
         $controller = new Controller([
             'DOCUMENT_ROOT' => realpath($dir),
             'REQUEST_URI'   => '/',
-        ], [
-            'soft_limit' => 1,
-        ]);
+        ], []);
         ob_start();
         @$controller->handleHttp();
         $contents = ob_get_clean();
@@ -124,8 +122,7 @@ class ControllerTest extends \ryunosuke\Test\AbstractTestCase
             'DOCUMENT_ROOT' => realpath($dir),
             'REQUEST_URI'   => '/',
         ], [
-            'soft_limit' => 1,
-            'raw'        => true,
+            'raw' => true,
         ]);
         ob_start();
         @$controller->handleHttp();
@@ -136,8 +133,7 @@ class ControllerTest extends \ryunosuke\Test\AbstractTestCase
             'DOCUMENT_ROOT' => realpath($dir),
             'REQUEST_URI'   => '/',
         ], [
-            'soft_limit' => 1,
-            'dl'         => true,
+            'dl' => true,
         ]);
         ob_start();
         @$controller->handleHttp();

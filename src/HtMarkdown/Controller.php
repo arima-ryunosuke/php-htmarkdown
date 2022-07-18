@@ -12,7 +12,6 @@ class Controller
         'css_file'    => null,
         'locale'      => 'en',
         'list_length' => 320,
-        'soft_limit'  => 200,
         'hard_limit'  => 500,
         'ignore_path' => [
             'vendor',

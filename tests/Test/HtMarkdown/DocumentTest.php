@@ -87,28 +87,11 @@ class DocumentTest extends \ryunosuke\Test\AbstractTestCase
     {
         $dir = __DIR__ . '/../../stub';
 
-        $doc = new Document("$dir/sub", [
-            'soft_limit' => 0,
-        ]);
-        that($doc->isSupported())->isNull();
-
-        $doc = new Document("$dir/img/a.png", [
-            'soft_limit' => 9,
-        ]);
-        that($doc->isSupported())->isFalse();
-
-        $doc = new Document("$dir/sub/sub", [
-            'soft_limit' => 1,
-        ]);
-        that($doc->isSupported())->isNull();
-
-        $doc = new Document("$dir/sub/sub", [
-            'hard_limit' => 1,
-        ]);
-        that($doc->isSupported())->isFalse();
-
         $doc = new Document("$dir/dummy.md", []);
         that($doc->isSupported())->isTrue();
+
+        $doc = new Document("$dir/plain.txt", []);
+        that($doc->isSupported())->isFalse();
 
         $doc = new Document("$dir/.dotfile.md", []);
         that($doc->isSupported())->isFalse();
@@ -117,7 +100,7 @@ class DocumentTest extends \ryunosuke\Test\AbstractTestCase
         that($doc->isSupported())->isFalse();
 
         $doc = new Document("$dir/parent/a", []);
-        that($doc->isSupported())->isFalse();
+        that($doc->isSupported())->isTrue();
     }
 
     function test_parents()
@@ -138,13 +121,13 @@ class DocumentTest extends \ryunosuke\Test\AbstractTestCase
     {
         $dir = __DIR__ . '/../../stub';
 
-        $doc = new Document("$dir/parent/b.md", [
+        $doc = new Document("$dir/parent/a", [
             'docroot' => $dir,
         ]);
         $siblings = $doc->siblings();
         that(array_map('strval', $siblings))->is([
             -1 => null,
-            +1 => realpath("$dir/parent/d.md"),
+            +1 => realpath("$dir/parent/b.md"),
         ]);
 
         $doc = new Document("$dir/parent/d.md", [
@@ -164,6 +147,7 @@ class DocumentTest extends \ryunosuke\Test\AbstractTestCase
         $doc = new Document("$dir/parent", []);
         $children = $doc->children();
         that(array_map('strval', $children))->is([
+            realpath("$dir/parent/a"),
             realpath("$dir/parent/b.md"),
             realpath("$dir/parent/d.md"),
         ]);
@@ -173,9 +157,7 @@ class DocumentTest extends \ryunosuke\Test\AbstractTestCase
     {
         $dir = __DIR__ . '/../../stub';
 
-        $doc = new Document("$dir", [
-            'soft_limit' => 256,
-        ]);
+        $doc = new Document("$dir", []);
 
         $descendants = iterator_to_array($doc->descendants(), false);
         that(array_map('strval', $descendants))->is([
@@ -183,7 +165,11 @@ class DocumentTest extends \ryunosuke\Test\AbstractTestCase
             realpath("$dir/hogera"),
             realpath("$dir/hogera/hogera1"),
             realpath("$dir/hogera/hogera1/dummy.md"),
+            realpath("$dir/hogera/hogera2"),
+            realpath("$dir/img"),
+            realpath("$dir/img/a"),
             realpath("$dir/parent"),
+            realpath("$dir/parent/a"),
             realpath("$dir/parent/b.md"),
             realpath("$dir/parent/d.md"),
             realpath("$dir/php"),
@@ -195,7 +181,9 @@ class DocumentTest extends \ryunosuke\Test\AbstractTestCase
             realpath("$dir/sub"),
             realpath("$dir/sub/sub"),
             realpath("$dir/sub/sub/sub"),
+            realpath("$dir/sub/sub/sub/empty"),
             realpath("$dir/sub/sub/sub/hoge.md"),
+            realpath("$dir/sub/sub/sub/index"),
         ]);
     }
 
@@ -203,20 +191,18 @@ class DocumentTest extends \ryunosuke\Test\AbstractTestCase
     {
         $dir = __DIR__ . '/../../stub';
 
-        $doc = new Document("$dir", [
-            'soft_limit' => 256,
-        ]);
+        $doc = new Document("$dir", []);
         $result = iterator_to_array($doc->search('hoge'), false);
         that(array_map('strval', $result))->is([
             realpath("$dir/hogera"),
             realpath("$dir/hogera/hogera1"),
+            realpath("$dir/hogera/hogera2"),
             realpath("$dir/sub/sub/sub"),
             realpath("$dir/sub/sub/sub/hoge.md"),
         ]);
 
         $doc = new Document(realpath("$dir/sub/sub"), [
-            'soft_limit' => 256,
-            'docroot'    => realpath($dir),
+            'docroot' => realpath($dir),
         ]);
         $result = iterator_to_array($doc->search('this is hoge'), false);
         that($result)->count(1);
@@ -255,11 +241,6 @@ class DocumentTest extends \ryunosuke\Test\AbstractTestCase
     {
         $dir = __DIR__ . '/../../stub';
         $root = new Document("$dir", []);
-
-        $doc = new Document("$dir/img/a.png", [
-            'soft_limit' => 0,
-        ]);
-        that($doc->localPath($root))->is('img/a.png');
 
         $doc = new Document("$dir/index.md", []);
         that($doc->localPath($root))->is('index.md');

@@ -6,7 +6,6 @@ namespace ryunosuke\HtMarkdown;
  * @property-read bool $download
  * @property-read bool $singlefile
  * @property-read int $list_length
- * @property-read int $soft_limit
  * @property-read int $hard_limit
  */
 class Document
@@ -111,7 +110,7 @@ class Document
         return require $localefile;
     }
 
-    public function isSupported(): ?bool
+    public function isSupported(): bool
     {
         $main = function () {
             foreach ((array) $this->options['ignore_path'] as $path) {
@@ -124,22 +123,11 @@ class Document
                 return false;
             }
 
-            if ($this->soft_limit <= 0) {
-                return null;
-            }
-
-            if ($this->file->exists()) {
+            if ($this->file->exists() && $this->file->isFile()) {
                 return $this->file->extension() === 'md';
             }
 
-            if ($this->soft_limit < count(self::$cache)) {
-                return null;
-            }
-            if ($this->hard_limit < count(self::$cache)) {
-                return false;
-            }
-
-            return !!count($this->children());
+            return true;
         };
 
         $key = (string) $this;
@@ -208,7 +196,7 @@ class Document
         $children = [];
         foreach ($files as $file) {
             $child = new self($file, $this->options);
-            if (($child->isSupported() ?? true) && strcmp($this->file, $child->file) !== 0) {
+            if ($child->isSupported() && strcmp($this->file, $child->file) !== 0) {
                 $children[] = $child;
             }
         }
@@ -272,12 +260,8 @@ class Document
 
     public function localPath(self $from): string
     {
-        if ($this->isSupported() ?? true) {
+        if ($this->isSupported()) {
             $path = $this->file->relative($from->file->parent());
-            $ext = $this->file->extension();
-            if ($ext !== 'md') {
-                return $path;
-            }
             return preg_replace('#^\\./#u', '', $path->changeExtension($this->download ? '.html' : '.md'));
         }
         else {
@@ -463,7 +447,6 @@ class Document
 
     public function archive(): File
     {
-        $this->options['soft_limit'] = $this->hard_limit;
         $this->options['docroot'] = $this->file->parent();
         $this->options['singlefile'] = $this->file->exists();
 
@@ -541,14 +524,11 @@ class Document
         $items = strlen($query) ? $this->search($query) : $this->children();
         foreach ($items as $item) {
             $count++;
-
             if (!$item->file->exists()) {
-                if (count($item->children())) {
-                    $summary = $item->summary($this, $query);
-                    $contents .= "## [{$link($item)}]({$item->localPath($this)})\n\n";
-                    $contents .= $metadata(count($item->children()), 'item', $item->file->parent()->mtime());
-                    $contents .= $summary . "\n";
-                }
+                $summary = $item->summary($this, $query);
+                $contents .= "## [{$link($item)}]({$item->localPath($this)})\n\n";
+                $contents .= $metadata(count($item->children()), 'item', $item->file->parent()->mtime());
+                $contents .= $summary . "\n";
             }
             else {
                 $summary = $item->summary($this, $query);
