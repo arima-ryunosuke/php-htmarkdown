@@ -112,7 +112,7 @@ class Document
 
     public function isSupported(): bool
     {
-        $main = function () {
+        return self::$cache[(string) $this][__METHOD__] ??= (function () {
             foreach ((array) $this->options['ignore_path'] as $path) {
                 if ($this->file->match($path)) {
                     return false;
@@ -128,10 +128,7 @@ class Document
             }
 
             return true;
-        };
-
-        $key = (string) $this;
-        return self::$cache[$key] ?? self::$cache[$key] = $main();
+        })();
     }
 
     public function isDirectoryIndex(): bool
@@ -144,16 +141,18 @@ class Document
      */
     public function parents(): array
     {
-        $dirname = $this->file->dirname($this->isDirectoryIndex() ? 2 : 1);
-        $parents = [];
-        for ($i = 1; $i < 128; $i++) {
-            if (strlen($dirname) < strlen($this->options['docroot']) || in_array($dirname, [$this->options['docroot'], '.', '/'], true)) {
-                break;
+        return self::$cache[(string) $this][__METHOD__] ??= (function () {
+            $dirname = $this->file->dirname($this->isDirectoryIndex() ? 2 : 1);
+            $parents = [];
+            for ($i = 1; $i < 128; $i++) {
+                if (strlen($dirname) < strlen($this->options['docroot']) || in_array($dirname, [$this->options['docroot'], '.', '/'], true)) {
+                    break;
+                }
+                $parents[] = new self($dirname, $this->options);
+                $dirname = dirname($dirname);
             }
-            $parents[] = new self($dirname, $this->options);
-            $dirname = dirname($dirname);
-        }
-        return $parents;
+            return $parents;
+        })();
     }
 
     /**
@@ -161,25 +160,27 @@ class Document
      */
     public function siblings(): array
     {
-        $siblings = [
-            -1 => null,
-            +1 => null,
-        ];
+        return self::$cache[(string) $this][__METHOD__] ??= (function () {
+            $siblings = [
+                -1 => null,
+                +1 => null,
+            ];
 
-        $parent = $this->parents()[0] ?? null;
-        if (!$parent) {
-            return $siblings;
-        }
-
-        $parent_children = $parent->children();
-        foreach ($parent_children as $n => $parent_child) {
-            if (strcmp($this, $parent_child) === 0) {
-                $siblings[-1] = isset($parent_children[$n - 1]) ? $parent_children[$n - 1] : null;
-                $siblings[+1] = isset($parent_children[$n + 1]) ? $parent_children[$n + 1] : null;
-                break;
+            $parent = $this->parents()[0] ?? null;
+            if (!$parent) {
+                return $siblings;
             }
-        }
-        return $siblings;
+
+            $parent_children = $parent->children();
+            foreach ($parent_children as $n => $parent_child) {
+                if (strcmp($this, $parent_child) === 0) {
+                    $siblings[-1] = isset($parent_children[$n - 1]) ? $parent_children[$n - 1] : null;
+                    $siblings[+1] = isset($parent_children[$n + 1]) ? $parent_children[$n + 1] : null;
+                    break;
+                }
+            }
+            return $siblings;
+        })();
     }
 
     /**
@@ -187,20 +188,22 @@ class Document
      */
     public function children(): array
     {
-        if (!$this->isDirectoryIndex()) {
-            return [];
-        }
-
-        $files = glob("{$this->file->dirname()}/*");
-        sort($files);
-        $children = [];
-        foreach ($files as $file) {
-            $child = new self($file, $this->options);
-            if ($child->isSupported() && strcmp($this->file, $child->file) !== 0) {
-                $children[] = $child;
+        return self::$cache[(string) $this][__METHOD__] ??= (function () {
+            if (!$this->isDirectoryIndex()) {
+                return [];
             }
-        }
-        return $children;
+
+            $files = glob("{$this->file->dirname()}/*");
+            sort($files);
+            $children = [];
+            foreach ($files as $file) {
+                $child = new self($file, $this->options);
+                if ($child->isSupported() && strcmp($this->file, $child->file) !== 0) {
+                    $children[] = $child;
+                }
+            }
+            return $children;
+        })();
     }
 
     /**
