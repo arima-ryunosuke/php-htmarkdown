@@ -267,6 +267,31 @@ class DocumentTest extends \ryunosuke\Test\AbstractTestCase
         that($doc->localPath($root))->is('sub/index.md');
     }
 
+    function test_title()
+    {
+        $dir = __DIR__ . '/../../stub';
+
+        $doc = new Document("$dir/hogera/hogera1/dummy.md");
+        that($doc->title(false))->is('dummy.md');
+        that($doc->title(true))->is('dummy.md');
+
+        $doc = new Document("$dir/plain.txt");
+        that($doc->title(false))->is('plain.txt');
+        that($doc->title(true))->is('plain.txt');
+
+        $doc = new Document("$dir/dummy.md");
+        that($doc->title(false))->is('dummy.md');
+        that($doc->title(true))->is('dummy.md (this is markdown file)');
+
+        $doc = new Document("$dir");
+        that($doc->title(false))->is('stub/');
+        that($doc->title(true))->is('stub/ (7 items)');
+
+        $doc = new Document("$dir/sub/sub/sub");
+        that($doc->title(false))->is('sub/');
+        that($doc->title(true))->is('sub/ (this is hoge)');
+    }
+
     function test_summary()
     {
         $dir = __DIR__ . '/../../stub';

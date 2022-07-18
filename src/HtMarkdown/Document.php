@@ -272,6 +272,23 @@ class Document
         }
     }
 
+    public function title(bool $parentheses): string
+    {
+        $localname = $this->localName();
+        if ($this->file->exists() && $this->file->extension() === 'md') {
+            foreach ($this->file->lines(256) as $line) {
+                if (strlen($line)) {
+                    return $localname . ($parentheses ? " (" . trim(ltrim($line, '#')) . ")" : '');
+                }
+            }
+            return $localname;
+        }
+        if ($this->isDirectoryIndex()) {
+            return $localname . ($parentheses ? " (" . count($this->children()) . " items)" : '');
+        }
+        return $localname;
+    }
+
     public function summary(self $parent, string $query): string
     {
         $list_length = $this->options['list_length'];
@@ -281,7 +298,7 @@ class Document
         if (!$this->file->exists()) {
             foreach ($this->children() as $child) {
                 if ($child->match($query)) {
-                    $summary .= "- [{$child->localName()}]({$child->localPath($parent)})\n";
+                    $summary .= "- [{$child->title(true)}]({$child->localPath($parent)})\n";
                 }
             }
             return $summary;
@@ -504,7 +521,7 @@ class Document
 
         $link = function (self $item) use ($query) {
             if (!strlen($query)) {
-                return $item->localName();
+                return $item->title(false);
             }
 
             $link = $item->localPath($this);
