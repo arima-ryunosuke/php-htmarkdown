@@ -305,8 +305,9 @@ h2, h3, h4, h5, h6 {
     padding-bottom: .4045em;
 }
 
-.toc-h.visible:before,
-.toc-h.visible:after {
+.toc-h:before,
+.toc-h:after {
+    line-height: 1;
     color: #aaaaaa;
     font-size: 90%;
 }
@@ -328,6 +329,7 @@ h2, h3, h4, h5, h6 {
 [data-toc-level="5"] .toc-h6.visible:not([data-first-above="0"]):before {
     content: "(" attr(data-first-above) " more sections)";
     padding-bottom: 0.809em;
+    margin-left: 0px;
     display: block;
 }
 
@@ -348,6 +350,7 @@ h2, h3, h4, h5, h6 {
 [data-toc-level="5"] .toc-h6.visible:not([data-last-below="0"]):after {
     content: "(" attr(data-last-below) " more sections)";
     padding-top: 0.809em;
+    margin-left: 0px;
     display: block;
 }
 
@@ -359,6 +362,11 @@ h2, h3, h4, h5, h6 {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+}
+
+[data-toc-child="true"] .toc-h:not([data-child-count="0"]):after {
+    content: "(" attr(data-child-count) ")";
+    margin-left: 2px;
 }
 
 :root .toc-h:not([data-section-count="0"]) {

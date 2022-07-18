@@ -19,6 +19,7 @@ return [
     'toc_level'      => 'TOC level',
     'toc_sticky'     => 'TOC sticky',
     'toc_number'     => 'TOC number',
+    'toc_child'      => 'TOC child count',
     'toc_follow'     => 'TOC follow',
     'toc_active'     => 'alway visible active level',
     'section_number' => 'section number',

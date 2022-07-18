@@ -147,6 +147,10 @@ $siblings = $this->siblings();
                     <input id="tocNumber" class="option-input savedata" data-default-value="true" type="checkbox" value="1">
                 </dd>
                 <dd>
+                    <label class="option-title" for="toc_child"><?= $h($locale['toc_child']) ?></label>
+                    <input id="tocChild" class="option-input savedata" data-default-value="true" type="checkbox" value="1">
+                </dd>
+                <dd>
                     <label class="option-title" for="toc_follow"><?= $h($locale['toc_follow']) ?></label>
                     <input id="tocFollow" class="option-input savedata" data-default-value="true" type="checkbox" value="1">
                 </dd>

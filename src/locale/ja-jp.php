@@ -19,6 +19,7 @@ return [
     'toc_level'      => '見出し表示レベル',
     'toc_sticky'     => '見出し固定レベル',
     'toc_number'     => '見出し番号を表示する',
+    'toc_child'      => '子見出し数を表示する',
     'toc_follow'     => '見出しメニューを追従する',
     'toc_active'     => 'アクティブなレベルは常に表示する',
     'section_number' => 'セクション番号を表示する',
