@@ -8,6 +8,7 @@ return [
     'export_file'    => 'Export',
     'control_panel'  => 'Control Panel',
     'font_family'    => 'font',
+    'font_size'      => 'font size',
     'list_length'    => 'listing length',
     'soft_limit'     => 'soft limit',
     'hard_limit'     => 'hard limit',

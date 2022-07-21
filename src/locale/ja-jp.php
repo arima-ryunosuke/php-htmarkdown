@@ -8,6 +8,7 @@ return [
     'export_file'    => 'エクスポート',
     'control_panel'  => 'コントロールパネル',
     'font_family'    => 'フォント',
+    'font_size'      => 'フォントサイズ',
     'list_length'    => 'リスティング文字数',
     'soft_limit'     => 'ソフトリミット',
     'hard_limit'     => 'ハードリミット',

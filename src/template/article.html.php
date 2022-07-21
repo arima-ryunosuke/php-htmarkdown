@@ -126,6 +126,13 @@ $siblings = $this->siblings();
                     </datalist>
                 </dd>
                 <dd>
+                    <label class="option-title" for="font_size"><?= $h($locale['font_size']) ?></label>
+                    <span>
+                        <input id="fontSize" class="option-input savedata" data-default-value="16" type="range" min="10" max="24">
+                        <output for="fontSize"></output>
+                    </span>
+                </dd>
+                <dd>
                     <label class="option-title" for="toc_visible"><?= $h($locale['toc_visible']) ?></label>
                     <input id="tocVisible" class="option-input savedata" data-default-value="true" type="checkbox" value="1">
                 </dd>

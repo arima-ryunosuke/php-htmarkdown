@@ -3,6 +3,11 @@
     --initial-animation-ms: 0ms;
     --side-width: 300px;
     --font-family: serif;
+    --font-size: 16;
+}
+
+html {
+    font-size: calc(var(--font-size) * 1px);
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -11,6 +16,11 @@ h1, h2, h3, h4, h5, h6 {
 
 h2, h3, h4, h5, h6 {
     margin-top: 20px;
+}
+
+p {
+    font-size: inherit;
+    line-height: 1.5;
 }
 
 .caption {
@@ -116,7 +126,8 @@ h2, h3, h4, h5, h6 {
 }
 
 .rst-content table.docutils {
-    width: 100%
+    width: 100%;
+    font-size: 1rem;
 }
 
 .rst-content table.docutils:not(.field-list) tr th {
@@ -715,6 +726,14 @@ input[type="search"]::-webkit-search-cancel-button {
 
 [type="search"].option-input {
     width: 120px;
+}
+
+[type="range"].option-input {
+    width: 90px;
+}
+
+output {
+    color: #ccc;
 }
 
 select.option-input {

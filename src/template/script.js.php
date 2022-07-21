@@ -287,6 +287,16 @@ document.addEventListener('DOMContentLoaded', function () {
     const SAVENAME = 'ht-setting';
     const alldata = html.matches('[data-exported]') ? {} : JSON.parse(localStorage.getItem(SAVENAME) ?? '{}');
     const directory = location.pathname.split('/').slice(0, -1).join('/');
+    controlPanel.on('input', function (e) {
+        if (!e.target.validity.valid) {
+            return;
+        }
+        if (!e.target.matches('.savedata')) {
+            return;
+        }
+        const font_size = $('#fontSize');
+        $(`[for=${font_size.id}]`).textContent = font_size.getValue() + 'px';
+    });
     controlPanel.on('change', function (e) {
         if (!e.target.validity.valid) {
             return;
@@ -301,10 +311,13 @@ document.addEventListener('DOMContentLoaded', function () {
         this.$$('.savedata').forEach(function (input) {
             html.dataset[input.id] = input.getValue();
         });
+        const font_size = $('#fontSize');
+        $(`[for=${font_size.id}]`).textContent = font_size.getValue() + 'px';
         const highlight_style = $('#highlight_style');
         highlight_style.href = highlight_style.dataset.cdnUrl + $('#highlightCss').getValue() + '.min.css';
         document.documentElement.style.setProperty('--side-width', `min(${$('#tocWidth').getValue()}px, ${$('#tocVisible').checked ? 9999 : 0}px)`);
         document.documentElement.style.setProperty('--font-family', $('#fontFamily').getValue());
+        document.documentElement.style.setProperty('--font-size', font_size.getValue());
     };
     controlPanel.save = function () {
         const savedata = {};
