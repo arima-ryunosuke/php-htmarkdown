@@ -189,6 +189,11 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         else {
             hljs.highlightBlock(element);
+            const lines = element.innerHTML.split('\n');
+            if (lines.length > 1) {
+                element.classList.add('row-numbers', `digit${lines.length.toString().length}`);
+                element.innerHTML = lines.map(line => `<span class="row-number"></span>${line}`).join('\n');
+            }
         }
     };
 

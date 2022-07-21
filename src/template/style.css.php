@@ -94,13 +94,48 @@ p {
 }
 
 .rst-content pre div.code {
+    counter-reset: rowNumber;
     padding: 8px 12px;
-    line-height: 16px;
+    line-height: 1.5;
     max-width: 100%;
     border: solid 1px #e1e4e5;
     font-size: 90%;
     font-family: monospace;
     overflow-x: auto;
+}
+
+.rst-content pre div.code span.row-number {
+    counter-increment: rowNumber;
+}
+
+.rst-content pre div.code span.row-number::before {
+    content: counter(rowNumber);
+    display: inline-block;
+    color: #aaa;
+    text-align: right;
+    margin-right: 1rem;
+    border-right: #888 solid 1px;
+    padding-right: 0.5rem;
+}
+
+.rst-content pre div.code.digit1 span.row-number::before {
+    width: 0.5rem;
+}
+
+.rst-content pre div.code.digit2 span.row-number::before {
+    width: 1.0rem;
+}
+
+.rst-content pre div.code.digit3 span.row-number::before {
+    width: 1.5rem;
+}
+
+.rst-content pre div.code.digit4 span.row-number::before {
+    width: 2.0rem;
+}
+
+.rst-content pre div.code.digit5 span.row-number::before {
+    width: 2.5rem;
 }
 
 .rst-content .section {
