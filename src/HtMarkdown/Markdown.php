@@ -15,22 +15,22 @@ class Markdown extends Parsedown
         $this->setSafeMode(!!($options['safe_mode'] ?? false));
 
         $newInlineTypes = [
-            '=' => 'Marker',
-            '{' => 'Badge',
+            '=' => ['Marker'],
+            '{' => ['Badge'],
         ];
         foreach ($newInlineTypes as $char => $inline) {
-            $this->InlineTypes[$char] = array_merge($this->InlineTypes[$char] ?? [], [$inline]);
+            $this->InlineTypes[$char] = array_merge($this->InlineTypes[$char] ?? [], $inline);
         }
         $this->inlineMarkerList = implode('', array_keys($this->InlineTypes));
 
         $newBlockTypes = [
-            '<' => 'Here',
-            '"' => 'Note',
-            '/' => 'Side',
-            '.' => 'Detail',
+            '<' => ['Here'],
+            '"' => ['Note'],
+            '/' => ['Side'],
+            '.' => ['Detail'],
         ];
         foreach ($newBlockTypes as $char => $block) {
-            $this->BlockTypes[$char] = array_merge($this->BlockTypes[$char] ?? [], [$block]);
+            $this->BlockTypes[$char] = array_merge($this->BlockTypes[$char] ?? [], $block);
         }
     }
 
@@ -298,49 +298,6 @@ class Markdown extends Parsedown
         return $this->_commonBlockComplete($Block);
     }
 
-    protected function blockListComplete(array $Block)
-    {
-        $Block = parent::blockListComplete($Block);
-        if ($Block !== null) {
-            $elements = $Block['element']['elements'];
-            $Block['element']['elements'] = [];
-
-            foreach ($elements as $element) {
-                if (isset($element['handler']['argument'][0])) {
-                    $regex = '(?:`(?:\\\\(?:\\\\|`)|[^`])*+`?|[^`:])*+(?:\z(*SKIP)(*FAIL)|\K:)';
-                    $argument = preg_split("#$regex#", $element['handler']['argument'][0], 2);
-                    if (isset($argument[1]) && (strlen($argument[1]) === 0 || $argument[1][0] === ' ')) {
-                        $Block['element']['name'] = 'dl';
-                        $Block['element']['attributes']['class'] = strlen($argument[1]) ? 'docutils field-list' : 'docutils';
-
-                        $element['name'] = 'dd';
-                        $element['handler']['argument'][0] = trim($argument[1]);
-
-                        $Block['element']['elements'][] = [
-                            'name'       => 'div',
-                            'attributes' => [
-                                'class' => 'dtdd-container',
-                            ],
-                            'elements'   => [
-                                [
-                                    'name'    => 'dt',
-                                    'text'    => $argument[0],
-                                    'handler' => 'line',
-                                ],
-                                $element,
-                            ],
-                        ];
-
-                        continue;
-                    }
-                }
-
-                $Block['element']['elements'][] = $element;
-            }
-        }
-        return $Block;
-    }
-
     protected function blockFencedCode($Line)
     {
         $Block = parent::blockFencedCode($Line);
@@ -410,6 +367,49 @@ class Markdown extends Parsedown
         $Block = parent::blockList($Line, $CurrentBlock);
         if ($Block !== null && $Block['element']['name'] === 'ul') {
             $Block['element']['attributes']['class'] = ($Block['element']['attributes']['class'] ?? '') . ' simple';
+        }
+        return $Block;
+    }
+
+    protected function blockListComplete(array $Block)
+    {
+        $Block = parent::blockListComplete($Block);
+        if ($Block !== null) {
+            $elements = $Block['element']['elements'];
+            $Block['element']['elements'] = [];
+
+            foreach ($elements as $element) {
+                if (isset($element['handler']['argument'][0])) {
+                    $regex = '(?:`(?:\\\\(?:\\\\|`)|[^`])*+`?|[^`:])*+(?:\z(*SKIP)(*FAIL)|\K:)';
+                    $argument = preg_split("#$regex#", $element['handler']['argument'][0], 2);
+                    if (isset($argument[1]) && (strlen($argument[1]) === 0 || $argument[1][0] === ' ')) {
+                        $Block['element']['name'] = 'dl';
+                        $Block['element']['attributes']['class'] = strlen($argument[1]) ? 'docutils field-list' : 'docutils';
+
+                        $element['name'] = 'dd';
+                        $element['handler']['argument'][0] = trim($argument[1]);
+
+                        $Block['element']['elements'][] = [
+                            'name'       => 'div',
+                            'attributes' => [
+                                'class' => 'dtdd-container',
+                            ],
+                            'elements'   => [
+                                [
+                                    'name'    => 'dt',
+                                    'text'    => $argument[0],
+                                    'handler' => 'line',
+                                ],
+                                $element,
+                            ],
+                        ];
+
+                        continue;
+                    }
+                }
+
+                $Block['element']['elements'][] = $element;
+            }
         }
         return $Block;
     }
