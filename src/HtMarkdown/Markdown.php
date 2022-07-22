@@ -300,19 +300,23 @@ class Markdown extends Parsedown
 
     protected function blockFencedCode($Line)
     {
-        $Block = parent::blockFencedCode($Line);
+        $Block = $this->_commonBlock($Line, []);
         if ($Block !== null) {
-            $Block['element']['element']['name'] = 'div';
-
-            $class = $Block['element']['element']['attributes']['class'] ?? '';
-            [, $infostring] = explode('language-', $class, 2) + [1 => ''];
-
-            if (strlen($infostring)) {
-                [$lang, $label] = explode(':', $infostring, 2) + [1 => ''];
-                $class .= ' ' . $lang;
-                $Block['element']['attributes']['data-label'] = $label;
+            $Block['element'] = [
+                'name'    => 'pre',
+                'element' => [
+                    'name'       => 'div',
+                    'text'       => '',
+                    'attributes' => [
+                        'class' => 'code',
+                    ],
+                ],
+            ];
+            if (strlen($Block['infoString'])) {
+                $language = substr($Block['infoString'], 0, strcspn($Block['infoString'], " \t\n\f\r"));
+                $Block['element']['element']['attributes']['class'] .= " language-$language $language";
             }
-            $Block['element']['element']['attributes']['class'] = $class . ' code';
+            $Block['element']['attributes']['data-label'] = explode(':', $Block['infoString'], 2)[1] ?? '';
         }
         return $Block;
     }

@@ -235,7 +235,7 @@ class MarkdownTest extends \ryunosuke\Test\AbstractTestCase
             MD
             , []))->containsAll([
             '<li>A</li>',
-            '<pre><div class=" code">// code',
+            '<pre data-label=""><div class="code">// code',
         ])->notContainsAll([
             '<summary',
         ]);
