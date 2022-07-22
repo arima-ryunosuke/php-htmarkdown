@@ -116,6 +116,48 @@ class MarkdownTest extends \ryunosuke\Test\AbstractTestCase
         ]);
     }
 
+    function test_blockAlias()
+    {
+        that(Markdown::render(<<<'MD'
+            <<block1
+            1
+            $block3
+            block1
+            
+            <<block2
+            2
+            $block1
+            block2
+            
+            <<block3
+            3
+            $block2
+            block3
+            
+            - $block1
+            - $block2
+            - $block3
+            MD
+            , []))->containsAll([
+            "<div class='block1'><p>1",
+            "<div class='block2'><p>2",
+            "<div class='block3'><p>3",
+        ]);
+
+        that(Markdown::render(<<<MD
+            <<<
+            *not em*
+            **not strong**
+            
+            - not list
+            <<<
+            MD
+            , []))->containsAll([
+            '*not em*',
+            '**not strong**',
+            '- not list',
+        ]);
+    }
 
     function test_blockHere()
     {

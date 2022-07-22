@@ -6,6 +6,8 @@ use Parsedown;
 
 class Markdown extends Parsedown
 {
+    private $aliases = [];
+
     public function __construct($options)
     {
         $this->setMarkupEscaped(false);
@@ -17,6 +19,7 @@ class Markdown extends Parsedown
         $newInlineTypes = [
             '=' => ['Marker'],
             '{' => ['Badge'],
+            '$' => ['Alias'],
         ];
         foreach ($newInlineTypes as $char => $inline) {
             $this->InlineTypes[$char] = array_merge($this->InlineTypes[$char] ?? [], $inline);
@@ -24,7 +27,7 @@ class Markdown extends Parsedown
         $this->inlineMarkerList = implode('', array_keys($this->InlineTypes));
 
         $newBlockTypes = [
-            '<' => ['Here'],
+            '<' => ['Alias', 'Here'],
             '"' => ['Note'],
             '/' => ['Side', 'LineComment'],
             '.' => ['Detail'],
@@ -111,13 +114,35 @@ class Markdown extends Parsedown
         }
     }
 
-    protected function _commonBlock($Line, $Element)
+    protected function inlineAlias($Excerpt)
+    {
+        if (preg_match('#\\$([_a-z][_a-z0-9]*)#ui', $Excerpt['text'], $match)) {
+            $alias = $match[1];
+            if (isset($this->aliases[$alias])) {
+                return [
+                    'extent'  => strlen($alias) + 1,
+                    'element' => [
+                        'rawHtml' => $this->aliases[$alias],
+                    ],
+                ];
+            }
+        }
+    }
+
+    protected function _commonBlock($Line, $Element, $Opener = null)
     {
         $marker = $Line['text'][0];
 
-        $openerLength = strspn($Line['text'], $marker);
-        if ($openerLength < 3) {
-            return;
+        $Opener ??= 3;
+        if (is_int($Opener)) {
+            $openerLength = strspn($Line['text'], $marker);
+            if ($openerLength < $Opener) {
+                return;
+            }
+            $Opener = substr($Line['text'], 0, $openerLength);
+        }
+        else {
+            $openerLength = strlen($Opener);
         }
 
         $infostring = trim(substr($Line['text'], $openerLength), "\t ");
@@ -126,6 +151,7 @@ class Markdown extends Parsedown
         }
 
         $Block = [
+            'opener'       => $Opener,
             'char'         => $marker,
             'openerLength' => $openerLength,
             'infoString'   => $infostring,
@@ -147,7 +173,7 @@ class Markdown extends Parsedown
         return $Block;
     }
 
-    protected function _commonBlockContinue($Line, $Block, &$Ref)
+    protected function _commonBlockContinue($Line, $Block, &$Ref, $Closer = null)
     {
         if (isset($Block['complete'])) {
             return;
@@ -158,7 +184,10 @@ class Markdown extends Parsedown
             unset($Block['interrupted']);
         }
 
-        if (($len = strspn($Line['text'], $Block['char'])) >= $Block['openerLength'] and chop(substr($Line['text'], $len), ' ') === '') {
+        if (false
+            || ($Closer === null && (($len = strspn($Line['text'], $Block['char'])) >= $Block['openerLength'] and chop(substr($Line['text'], $len), ' ') === ''))
+            || ($Closer === $Line['text'])
+        ) {
             $Ref = substr($Ref, 1);
             $Block['complete'] = true;
 
@@ -173,6 +202,29 @@ class Markdown extends Parsedown
     protected function _commonBlockComplete($Block)
     {
         return $Block;
+    }
+
+    protected function blockAlias($Line)
+    {
+        $Block = $this->_commonBlock($Line, [], 2);
+        if ($Block !== null) {
+            if (!preg_match('#^([_a-z][_a-z0-9]*)$#ui', $Block['infoString'])) {
+                $Block = null;
+            }
+        }
+        return $Block;
+    }
+
+    protected function blockAliasContinue($Line, $Block)
+    {
+        $Ref = &$Block['element']['text'];
+        return $this->_commonBlockContinue($Line, $Block, $Ref, $Block['infoString']);
+    }
+
+    protected function blockAliasComplete($Block)
+    {
+        $this->aliases[$Block['infoString']] = "<div class='{$Block['infoString']}'>{$this->text($Block['element']['text'])}</div>";
+        return null;
     }
 
     protected function blockHere($Line)
