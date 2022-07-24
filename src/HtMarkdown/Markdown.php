@@ -33,6 +33,7 @@ class Markdown extends Parsedown
             '/' => ['Side', 'LineComment'],
             '.' => ['Detail'],
             '-' => ['Div'],
+            '^' => ['Cascade'],
         ];
         foreach ($newBlockTypes as $char => $block) {
             $this->BlockTypes[$char] = array_merge($this->BlockTypes[$char] ?? [], $block);
@@ -283,6 +284,69 @@ class Markdown extends Parsedown
 
     protected function blockHereComplete($Block)
     {
+        return $this->_commonBlockComplete($Block);
+    }
+
+    protected function blockCascade($Line)
+    {
+        $Block = $this->_commonBlock($Line, []);
+        if ($Block !== null) {
+            [$x, $y] = [0, 0];
+            if (preg_match('#\((-?\d+),\s*(-?\d+)\)#', $Block['infoString'], $matches)) {
+                [, $x, $y] = $matches;
+            }
+            $Block['element'] = [
+                'name'       => 'div',
+                'rawHtml'    => "",
+                'attributes' => [
+                    'class' => 'cascade',
+                    'style' => "padding-left:{$x}px; padding-top:{$y}px;",
+                ],
+
+            ];
+        }
+        return $Block;
+    }
+
+    protected function blockCascadeContinue($Line, $Block)
+    {
+        $Ref = &$Block['element']['rawHtml'];
+        return $this->_commonBlockContinue($Line, $Block, $Ref);
+    }
+
+    protected function blockCascadeComplete($Block)
+    {
+        $DIGIT = '-?\\d+';
+        $COMMA = '\\s*,\\s*';
+        $group = 1;
+        $index = 0;
+        $Block['element']['rawHtml'] = preg_replace_callback("#\(((?<x>$DIGIT)?$COMMA(?<y>$DIGIT)?)?(:?\s*(?<content>.+?))?\)#", function ($matches) use ($DIGIT, $COMMA, &$group, &$index) {
+            $x = $matches['x'] ?: 0;
+            $y = $matches['y'] ?: 0;
+
+            if (preg_match("#$COMMA(?<w>$DIGIT)$COMMA(?<h>$DIGIT)#", $matches['content'], $m)) {
+                [$w, $h] = [$m['w'] ?: 0, $m['h'] ?: 0];
+                return "<span style='left:{$x}px; top:{$y}px; width:{$w}px; height:{$h}px;' class='cascade-item shape-item group-$group'></span>";
+            }
+
+            $content = htmlspecialchars($matches['content'], ENT_QUOTES);
+            $class = 'cascade-item';
+
+            if ($content === 'n') {
+                $content = ++$index;
+                $class .= " number-item group-$group";
+            }
+            elseif (ctype_digit("$content")) {
+                $group++;
+                $index = (int) $content;
+                $class .= " number-item group-$group";
+            }
+            else {
+                $index++;
+                $class .= " text-item group-$group";
+            }
+            return "<span style='left:{$x}px; top:{$y}px;' class='$class index-$index'>$content</span>";
+        }, $Block['element']['rawHtml']);
         return $this->_commonBlockComplete($Block);
     }
 

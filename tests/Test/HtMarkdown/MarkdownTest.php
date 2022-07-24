@@ -204,6 +204,29 @@ class MarkdownTest extends \ryunosuke\Test\AbstractTestCase
         ]);
     }
 
+    function test_blockCascade()
+    {
+        that(Markdown::render(<<<MD
+            ^^^(1,2)
+            (n)(n)
+              (1)(n)
+            (-1, -2, 3, 4)
+            (-1, -2:n)
+            (-1, -2: text)
+            ^^^
+            MD
+            , []))->containsAll([
+            '<div class="cascade" style="padding-left:1px; padding-top:2px;">',
+            "<span style='left:0px; top:0px;' class='cascade-item number-item group-1 index-1'>1</span>",
+            "<span style='left:0px; top:0px;' class='cascade-item number-item group-1 index-2'>2</span>",
+            "<span style='left:0px; top:0px;' class='cascade-item number-item group-2 index-1'>1</span>",
+            "<span style='left:0px; top:0px;' class='cascade-item number-item group-2 index-2'>2</span>",
+            "<span style='left:-1px; top:-2px; width:3px; height:4px;' class='cascade-item shape-item group-2'></span>",
+            "<span style='left:-1px; top:-2px;' class='cascade-item number-item group-2 index-3'>3</span>",
+            "<span style='left:-1px; top:-2px;' class='cascade-item text-item group-2 index-4'>text</span>",
+        ]);
+    }
+
     function test_blockNote()
     {
         that(Markdown::render(<<<MD

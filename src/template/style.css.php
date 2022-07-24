@@ -655,6 +655,84 @@ pre[data-label]:not([data-label=""]) div.code {
     padding-top: 32px
 }
 
+div.cascade {
+    --group1-color: #fff;
+    --group2-color: #fdd;
+    --group3-color: #dfd;
+    --group4-color: #ddf;
+
+    position: absolute;
+    font-family: sans-serif;
+    color: #ffffff;
+    background: transparent;
+    white-space: pre-wrap;
+    margin: 0;
+    line-height: calc(1rem + 3px + 3px + 1px + 1px); /* height + padding-top + padding-bottom + border-top + border-bottom*/
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 51;
+}
+
+div.cascade .cascade-item {
+    position: relative;
+    display: inline-block;
+    line-height: 1;
+    vertical-align: top;
+}
+
+div.cascade .number-item {
+    color: #333;
+    text-align: center;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    padding: 3px;
+    border: 1px solid currentColor;
+    box-sizing: content-box;
+}
+
+div.cascade .number-item.group-1 {
+    background: var(--group1-color);
+}
+
+div.cascade .number-item.group-2 {
+    background: var(--group2-color);
+}
+
+div.cascade .number-item.group-3 {
+    background: var(--group3-color);
+}
+
+div.cascade .number-item.group-4 {
+    background: var(--group4-color);
+}
+
+div.cascade .text-item {
+    background: #fcfcfc;
+    color: #404040;
+}
+
+div.cascade .shape-item {
+    background: transparent;
+    border: 1px dotted #fff;
+}
+
+div.cascade .shape-item.group-1 {
+    border-color: var(--group1-color);
+}
+
+div.cascade .shape-item.group-2 {
+    border-color: var(--group2-color);
+}
+
+div.cascade .shape-item.group-3 {
+    border-color: var(--group3-color);
+}
+
+div.cascade .shape-item.group-4 {
+    border-color: var(--group4-color);
+}
+
 .badge {
     margin-right: 5px;
     padding: 3px 6px 3px 0;
