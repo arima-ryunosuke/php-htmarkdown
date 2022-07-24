@@ -352,6 +352,9 @@ class DocumentTest extends \ryunosuke\Test\AbstractTestCase
             'href="/plain.md"',
             'href="http://example.com"',
             'href="unknown"',
+            '<strong class="append" style="color:red">text</strong>',
+            '<del class="replace" style="color:red">text</del>',
+            '<ul class=" simple" attrname="hoge" style="color:red">',
         ]);
     }
 

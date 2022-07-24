@@ -9,3 +9,10 @@ this is fuga
 - [fullpath](/plain)
 - [external](http://example.com)
 - [unknown](unknown)
+
+[class=" append"]{color:red}**text**
+[class="replace"]{color:red}~~text~~
+
+{color:red}[attrname=hoge]
+- a
+- b

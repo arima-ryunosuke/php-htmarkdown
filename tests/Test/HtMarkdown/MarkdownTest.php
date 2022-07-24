@@ -89,6 +89,14 @@ class MarkdownTest extends \ryunosuke\Test\AbstractTestCase
             '<span class="badge alert" data-badge-title="">badge</span>',
             '<span class="badge alert" data-badge-title="title">badge</span>',
         ]);
+
+        that(Markdown::render(<<<MD
+            {undefined:title|badge}
+            MD
+            , []))->notContainsAll([
+            '<span class="badge',
+        ]);
+
         that(Markdown::render(<<<MD
             {badge1
             MD
@@ -113,6 +121,17 @@ class MarkdownTest extends \ryunosuke\Test\AbstractTestCase
             MD
             , []))->containsAll([
             'interrupt',
+        ]);
+    }
+
+    function test_paragraphContinue()
+    {
+        that(Markdown::render(<<<MD
+            [attr=value]{color:red}
+            plain text
+            MD
+            , []))->containsAll([
+            '<p><x-attrs attr="value" style="color:red" /></p>',
         ]);
     }
 
@@ -215,6 +234,45 @@ class MarkdownTest extends \ryunosuke\Test\AbstractTestCase
             , []))->containsAll([
             'note',
             '>label</p>',
+        ]);
+    }
+
+    function test_blockDiv()
+    {
+        that(Markdown::render(<<<MD
+            --
+            block
+            --
+            MD
+            , []))->containsAll([
+            '<div class="block">',
+        ]);
+
+        that(Markdown::render(<<<MD
+            --section
+            block
+            --
+            MD
+            , []))->containsAll([
+            '<section class="block">',
+        ]);
+
+        that(Markdown::render(<<<MD
+            --section#id.class[attr=value]{color:#eee;margin:1.1em;}
+            block
+            --
+            MD
+            , []))->containsAll([
+            '<section id="id" class="class" attr="value" style="color:#eee;margin:1.1em;">',
+        ]);
+
+        that(Markdown::render(<<<MD
+            --section#id.class[attr1=value attr2="x y z" attr3=\\"]{color:#eee;margin:1.1em;}
+            block
+            --
+            MD
+            , []))->containsAll([
+            '<section id="id" class="class" attr1="value" attr2="x y z" attr3="&quot;" style="color:#eee;margin:1.1em;">',
         ]);
     }
 

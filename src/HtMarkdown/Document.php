@@ -429,6 +429,35 @@ class Document
             }
         }
 
+        $targeting = function (\DOMNode $node) use (&$targeting) {
+            $target = $node->nextSibling;
+            while ($target !== null) {
+                if ($target instanceof \DOMElement) {
+                    return $target;
+                }
+                $target = $target->nextSibling;
+            }
+            $target = $node->parentNode;
+            if ($target->tagName === 'p') {
+                $target = $targeting($target);
+            }
+            return $target;
+        };
+        foreach ($xpath->query('//x-attrs') as $meta) {
+            /** @var \DOMElement $meta */
+            $target = $targeting($meta);
+            foreach ($meta->attributes as $name => $value) {
+                if ($name === 'class' && ($value->value[0] ?? '') === ' ') {
+                    $current = $target->getAttribute($name);
+                    $target->setAttribute($name, trim("$current{$value->value}"));
+                }
+                else {
+                    $target->setAttribute($name, $value->value);
+                }
+            }
+            $meta->parentNode->removeChild($meta);
+        }
+
         return $this->dom;
     }
 

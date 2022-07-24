@@ -18,8 +18,9 @@ class Markdown extends Parsedown
 
         $newInlineTypes = [
             '=' => ['Marker'],
-            '{' => ['Badge'],
+            '{' => ['Badge', 'Attribute'],
             '$' => ['Alias'],
+            '[' => ['Attribute'],
         ];
         foreach ($newInlineTypes as $char => $inline) {
             $this->InlineTypes[$char] = array_merge($this->InlineTypes[$char] ?? [], $inline);
@@ -31,6 +32,7 @@ class Markdown extends Parsedown
             '"' => ['Note'],
             '/' => ['Side', 'LineComment'],
             '.' => ['Detail'],
+            '-' => ['Div'],
         ];
         foreach ($newBlockTypes as $char => $block) {
             $this->BlockTypes[$char] = array_merge($this->BlockTypes[$char] ?? [], $block);
@@ -60,6 +62,23 @@ class Markdown extends Parsedown
             $Inline['element']['attributes']['class'] = 'link-url';
         }
         return $Inline;
+    }
+
+    protected function inlineAttribute($Excerpt)
+    {
+        if (preg_match('/^([\[{][ ]*[_\-a-z0-9]+[=:][^{}\[\]]+?[]}])+/is', $Excerpt['text'], $matches)) {
+            $attrs = $this->selector($matches[0]);
+            if ($attrs) {
+                return [
+                    'extent'  => strlen($matches[0]),
+                    'element' => [
+                        'name'       => 'x-attrs',
+                        'attributes' => $attrs,
+                    ],
+                ];
+            }
+        }
+        return null;
     }
 
     protected function inlineMarker($Excerpt)
@@ -98,6 +117,10 @@ class Markdown extends Parsedown
                 [$type, $title, $text] = $match;
             }
             else {
+                return;
+            }
+
+            if (!in_array($type, ['', 'alert', 'info', 'caution', 'danger', 'error', 'hint', 'important', 'note', 'success', 'tip', 'warning'], true)) {
                 return;
             }
             return [
@@ -142,7 +165,8 @@ class Markdown extends Parsedown
             $Opener = substr($Line['text'], 0, $openerLength);
         }
         else {
-            $openerLength = strlen($Opener);
+            // @todo
+            // $openerLength = strlen($Opener);
         }
 
         $infostring = trim(substr($Line['text'], $openerLength), "\t ");
@@ -202,6 +226,15 @@ class Markdown extends Parsedown
     protected function _commonBlockComplete($Block)
     {
         return $Block;
+    }
+
+    protected function paragraphContinue($Line, array $Block)
+    {
+        $attribute = $this->inlineAttribute(['text' => $Block['element']['handler']['argument']]);
+        if ($attribute && $attribute['extent'] === strlen($Block['element']['handler']['argument'])) {
+            return;
+        }
+        return parent::paragraphContinue($Line, $Block);
     }
 
     protected function blockAlias($Line)
@@ -281,6 +314,34 @@ class Markdown extends Parsedown
     }
 
     protected function blockNoteComplete($Block)
+    {
+        return $this->_commonBlockComplete($Block);
+    }
+
+    protected function blockDiv($Line)
+    {
+        $Block = $this->_commonBlock($Line, [
+            'name' => 'div',
+        ], 2);
+        if ($Block !== null) {
+            $attrs = $this->selector($Block['infoString']);
+            $attrs['class'] ??= 'block';
+            $tag = $attrs[''] ?? 'div';
+            unset($attrs['']);
+
+            $Block['element']['name'] = $tag;
+            $Block['element']['attributes'] = $attrs;
+        }
+        return $Block;
+    }
+
+    protected function blockDivContinue($Line, $Block)
+    {
+        $Ref = &$Block['element']['elements'][1]['handler']['argument'];
+        return $this->_commonBlockContinue($Line, $Block, $Ref);
+    }
+
+    protected function blockDivComplete($Block)
     {
         return $this->_commonBlockComplete($Block);
     }
@@ -625,5 +686,107 @@ class Markdown extends Parsedown
             }
         }
         return $Block;
+    }
+
+    private function selector($selector)
+    {
+        $tag = '';
+        $id = '';
+        $classes = [];
+        $styles = [];
+        $attrs = [];
+
+        $context = null;
+        $escaping = false;
+        $chars = preg_split('##u', $selector, -1, PREG_SPLIT_NO_EMPTY);
+        for ($i = 0, $l = count($chars); $i < $l; $i++) {
+            $char = $chars[$i];
+            if ($char === '"') {
+                $escaping = !$escaping;
+            }
+
+            if (!$escaping) {
+                if ($context !== '{' && $char === '#') {
+                    $context = $char;
+                    continue;
+                }
+                if ($context !== '{' && $char === '.') {
+                    $context = $char;
+                    $classes[] = '';
+                    continue;
+                }
+                if ($char === '{') {
+                    $context = $char;
+                    $styles[] = '';
+                    continue;
+                }
+                if ($char === ';') {
+                    $styles[] = '';
+                    continue;
+                }
+                if ($char === '}') {
+                    $context = null;
+                    continue;
+                }
+                if ($char === '[') {
+                    $context = $char;
+                    $attrs[] = '';
+                    continue;
+                }
+                if ($context === '[' && $char === ' ') {
+                    $attrs[] = '';
+                    continue;
+                }
+                if ($char === ']') {
+                    $context = null;
+                    continue;
+                }
+            }
+
+            if ($char === '\\') {
+                $char = $chars[++$i];
+            }
+
+            if ($context === null) {
+                $tag .= $char;
+                continue;
+            }
+            if ($context === '#') {
+                $id .= $char;
+                continue;
+            }
+            if ($context === '.') {
+                $classes[count($classes) - 1] .= $char;
+                continue;
+            }
+            if ($context === '{') {
+                $styles[count($styles) - 1] .= $char;
+                continue;
+            }
+            if ($context === '[') {
+                $attrs[count($attrs) - 1] .= $char;
+                continue;
+            }
+        }
+
+        $attrkv = [];
+        if (strlen($tag)) {
+            $attrkv[''] = $tag;
+        }
+        if (strlen($id)) {
+            $attrkv['id'] = $id;
+        }
+        if ($classes) {
+            $attrkv['class'] = implode(' ', $classes);
+        }
+        foreach ($attrs as $attr) {
+            [$k, $v] = explode('=', $attr, 2) + [1 => $attr];
+            $attrkv[$k] = is_string($v) ? json_decode($v) ?? $v : $v;
+        }
+        if ($styles) {
+            $attrkv['style'] = implode(';', $styles);
+        }
+
+        return $attrkv;
     }
 }
