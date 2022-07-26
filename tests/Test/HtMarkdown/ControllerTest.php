@@ -51,10 +51,7 @@ class ControllerTest extends \ryunosuke\Test\AbstractTestCase
         $controller->content('aa', false);
         $controller->content('bb', false);
 
-        ob_start();
-        @$controller->response();
-        $contents = ob_get_clean();
-        that($contents)->is('bb');
+        @that($controller)->response(...[])->outputEquals('bb');
     }
 
     function test_handleCli()
@@ -68,13 +65,10 @@ class ControllerTest extends \ryunosuke\Test\AbstractTestCase
         $controller = new Controller([
 
         ], [null, "$dir/plain.md"]);
-        ob_start();
-        $controller->handleCli();
-        $contents = ob_get_clean();
-        that($contents)->stringStartsWith('<html');
+        that($controller)->handleCli(...[])->outputStartsWith('<html');
 
         $controller = new Controller([], [null, "$dir/notfound"]);
-        that($controller)->try('handleCli')->wasThrown('is not found');
+        that($controller)->handleCli()->wasThrown('is not found');
     }
 
     function test_handleHttp()
@@ -85,38 +79,26 @@ class ControllerTest extends \ryunosuke\Test\AbstractTestCase
             'DOCUMENT_ROOT' => realpath($dir),
             'REQUEST_URI'   => '/notfound',
         ], []);
-        ob_start();
-        @$controller->handleHttp();
-        $contents = ob_get_clean();
-        that($contents)->is('');
+        @that($controller)->handleHttp(...[])->outputEquals('');
 
         $controller = new Controller([
             'DOCUMENT_ROOT'          => realpath($dir),
             'REQUEST_URI'            => '/dummy.md',
             'HTTP_IF_MODIFIED_SINCE' => date('r', strtotime('2037/12/24 12:34:56')),
         ], []);
-        ob_start();
-        @$controller->handleHttp();
-        $contents = ob_get_clean();
-        that($contents)->is('');
+        @that($controller)->handleHttp(...[])->outputEquals('');
 
         $controller = new Controller([
             'DOCUMENT_ROOT' => realpath($dir),
             'REQUEST_URI'   => '/sub/sub/dummy.txt',
         ], []);
-        ob_start();
-        @$controller->handleHttp();
-        $contents = ob_get_clean();
-        that($contents)->is('dummy');
+        @that($controller)->handleHttp(...[])->outputEquals('dummy');
 
         $controller = new Controller([
             'DOCUMENT_ROOT' => realpath($dir),
             'REQUEST_URI'   => '/',
         ], []);
-        ob_start();
-        @$controller->handleHttp();
-        $contents = ob_get_clean();
-        that($contents)->stringStartsWith('<html');
+        @that($controller)->handleHttp(...[])->outputStartsWith('<html');
 
         $controller = new Controller([
             'DOCUMENT_ROOT' => realpath($dir),
@@ -124,10 +106,7 @@ class ControllerTest extends \ryunosuke\Test\AbstractTestCase
         ], [
             'raw' => true,
         ]);
-        ob_start();
-        @$controller->handleHttp();
-        $contents = ob_get_clean();
-        that($contents)->stringStartsWith('# Index of');
+        @that($controller)->handleHttp(...[])->outputStartsWith('# Index of');
 
         $controller = new Controller([
             'DOCUMENT_ROOT' => realpath($dir),
@@ -135,9 +114,6 @@ class ControllerTest extends \ryunosuke\Test\AbstractTestCase
         ], [
             'dl' => true,
         ]);
-        ob_start();
-        @$controller->handleHttp();
-        $contents = ob_get_clean();
-        that($contents)->stringStartsWith('PK');
+        @that($controller)->handleHttp()->final('stdout')->stringStartsWith('PK');
     }
 }

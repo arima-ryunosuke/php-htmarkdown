@@ -71,7 +71,7 @@ class FileTest extends \ryunosuke\Test\AbstractTestCase
         that($file->normalize())->is('/path/file');
 
         $file = new File('../path');
-        that($file)->try('normalize')->wasThrown('invalid as path');
+        that($file)->normalize()->wasThrown('invalid as path');
     }
 
     function test_realpath()
