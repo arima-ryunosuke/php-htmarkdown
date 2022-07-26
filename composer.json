@@ -53,7 +53,7 @@
     "docs": [
       "rm -rf docs",
       "mkdir docs",
-      "@php htmarkdown.phar README.md > docs/index.html"
+      "@php htmarkdown.phar README.md docs"
     ]
   }
 }

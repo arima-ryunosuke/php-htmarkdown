@@ -13,14 +13,36 @@
     --initial-animation-ms: 0ms;
     --side-width: 300px;
     --font-family: serif;
+    --font-size: 16;
+    --main-padding: 32px;
+    --section-indent: 0;
 }
 
-h1, h2, h3, h4, h5, h6 {
-    border-bottom: 1px solid #E1E4E5;
+html {
+    font-size: calc(var(--font-size) * 1px);
+}
+
+@media screen {
+    h1, h2, h3, h4, h5, h6 {
+        background-color: #e1e4e5;
+        margin-left: calc(-1 * var(--main-padding));
+        margin-right: calc(-1 * var(--main-padding));
+        padding: 0.3em var(--main-padding);
+    }
 }
 
 h2, h3, h4, h5, h6 {
     margin-top: 20px;
+}
+
+p {
+    font-size: inherit;
+    line-height: 1.5;
+}
+
+small {
+    font-weight: normal;
+    font-size: 80%;
 }
 
 .caption {
@@ -30,6 +52,7 @@ h2, h3, h4, h5, h6 {
 }
 
 .wy-nav-content {
+    padding: 1.618em var(--main-padding);
     max-width: 100%;
     height: unset;
 }
@@ -53,6 +76,11 @@ h2, h3, h4, h5, h6 {
 
 .wy-nav-content-wrap {
     margin-left: var(--side-width);
+}
+
+.wy-table-responsive table td,
+.wy-table-responsive table th {
+    white-space: normal;
 }
 
 .rst-versions {
@@ -94,8 +122,9 @@ h2, h3, h4, h5, h6 {
 }
 
 .rst-content pre div.code {
+    counter-reset: rowNumber;
     padding: 8px 12px;
-    line-height: 16px;
+    line-height: 1.5;
     max-width: 100%;
     border: solid 1px #e1e4e5;
     font-size: 90%;
@@ -103,8 +132,48 @@ h2, h3, h4, h5, h6 {
     overflow-x: auto;
 }
 
+.rst-content pre div.code span.row-number {
+    counter-increment: rowNumber;
+}
+
+.rst-content pre div.code span.row-number::before {
+    content: counter(rowNumber);
+    display: inline-block;
+    color: #aaa;
+    text-align: right;
+    margin-right: 1rem;
+    border-right: #888 solid 1px;
+    padding-right: 0.5rem;
+}
+
+.rst-content pre div.code.digit1 span.row-number::before {
+    width: 0.5rem;
+}
+
+.rst-content pre div.code.digit2 span.row-number::before {
+    width: 1.0rem;
+}
+
+.rst-content pre div.code.digit3 span.row-number::before {
+    width: 1.5rem;
+}
+
+.rst-content pre div.code.digit4 span.row-number::before {
+    width: 2.0rem;
+}
+
+.rst-content pre div.code.digit5 span.row-number::before {
+    width: 2.5rem;
+}
+
 .rst-content .section {
     clear: both;
+}
+
+.rst-content .section ol p,
+.rst-content .section ul p,
+.rst-content .section dl p {
+    margin-bottom: 0;
 }
 
 .rst-content .section ol li > *,
@@ -125,12 +194,85 @@ h2, h3, h4, h5, h6 {
     margin-bottom: 0;
 }
 
+.rst-content .section ul.tree {
+    --tree-font-size: 1rem;
+    --tree-line-height: 1.5;
+    --tree-border-width: calc(var(--tree-font-size) * var(--tree-line-height) / 2);
+
+    font-size: var(--tree-font-size);
+    line-height: var(--tree-line-height);
+}
+
+.rst-content .section ul.tree li.leaf {
+    position: relative;
+    list-style: none;
+    margin-left: calc(0.5em + var(--tree-border-width));
+    padding-left: 4px;
+}
+
+.rst-content .section ul.tree li.leaf:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: calc(-1 * var(--tree-border-width));
+    height: 100%;
+    border-left: 1px solid #aaa;
+}
+
+.rst-content .section ul.tree li.leaf:last-child:before {
+    height: var(--tree-border-width);
+}
+
+.rst-content .section > ul.tree > li.leaf:first-child:last-child:before {
+    top: var(--tree-border-width);
+    height: 0;
+}
+
+.rst-content .section ul.tree li.leaf:after {
+    content: "";
+    position: absolute;
+    top: var(--tree-border-width);
+    left: calc(-1 * var(--tree-border-width));
+    width: var(--tree-border-width);
+    border-bottom: 1px solid #aaa;
+}
+
 .rst-content table.docutils {
-    width: 100%
+    width: 100%;
+    font-size: 1rem;
+}
+
+.rst-content table.docutils tr {
+    border-bottom: 1px solid #e1e4e5;
+}
+
+.rst-content table.docutils:not(.field-list) caption {
+    font: revert;
+    font-weight: bold;
+    text-align: left;
+    padding: 8px 0;
 }
 
 .rst-content table.docutils:not(.field-list) tr th {
     background: #e1e4e5;
+}
+
+.rst-content table.has-colgroup:not(.field-list) {
+    table-layout: fixed;
+    word-break: break-all;
+}
+
+.rst-content table.no-border:not(.field-list) {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+}
+
+.rst-content table.no-border:not(.field-list) tr th,
+.rst-content table.no-border:not(.field-list) tr td:nth-child(n) {
+    background: none;
+    border-left: none;
+    border-right: none;
 }
 
 .rst-content dl dt {
@@ -215,6 +357,8 @@ h2, h3, h4, h5, h6 {
 
 .rst-footer-buttons {
     display: flex;
+    width: 100%;
+    margin-top: 32px;
 }
 
 .rst-footer-buttons:before, .rst-footer-buttons:after {
@@ -239,7 +383,10 @@ h2, h3, h4, h5, h6 {
 }
 
 .rst-versions .rst-other-versions dd {
-    display: block;
+    display: grid;
+    grid-template-columns: max-content auto;
+    gap: 0 8px;
+    margin-top: 4px;
 }
 
 @media screen and (max-width: 768px) {
@@ -270,9 +417,20 @@ h2, h3, h4, h5, h6 {
     font-family: var(--font-family);
 }
 
-[data-toc-number="true"] [data-block-id]:before {
-    content: attr(data-block-id) ' ';
-    color: #999999;
+[data-toc-number] {
+    color: #aaaaaa;
+}
+
+[data-section-number] {
+    color: #888888;
+}
+
+[data-toc-number="true"] [data-toc-number]:before {
+    content: attr(data-toc-number) ' ';
+}
+
+[data-section-number="true"] [data-section-number]:before {
+    content: attr(data-section-number) ' ';
 }
 
 [data-toc-level="1"] .toc-h2,
@@ -299,9 +457,58 @@ h2, h3, h4, h5, h6 {
 .toc-h.visible,
 .toc-h.forced-visible {
     visibility: visible;
-    max-height: 36px;
+    max-height: unset;
     padding-top: .4045em;
     padding-bottom: .4045em;
+}
+
+.toc-h:before,
+.toc-h:after {
+    line-height: 1;
+    color: #aaaaaa;
+    font-size: 90%;
+}
+
+[data-toc-level="1"] .toc-h2.visible:not([data-first-above="0"]):before,
+[data-toc-level="1"] .toc-h3.visible:not([data-first-above="0"]):before,
+[data-toc-level="1"] .toc-h4.visible:not([data-first-above="0"]):before,
+[data-toc-level="1"] .toc-h5.visible:not([data-first-above="0"]):before,
+[data-toc-level="1"] .toc-h6.visible:not([data-first-above="0"]):before,
+[data-toc-level="2"] .toc-h3.visible:not([data-first-above="0"]):before,
+[data-toc-level="2"] .toc-h4.visible:not([data-first-above="0"]):before,
+[data-toc-level="2"] .toc-h5.visible:not([data-first-above="0"]):before,
+[data-toc-level="2"] .toc-h6.visible:not([data-first-above="0"]):before,
+[data-toc-level="3"] .toc-h4.visible:not([data-first-above="0"]):before,
+[data-toc-level="3"] .toc-h5.visible:not([data-first-above="0"]):before,
+[data-toc-level="3"] .toc-h6.visible:not([data-first-above="0"]):before,
+[data-toc-level="4"] .toc-h5.visible:not([data-first-above="0"]):before,
+[data-toc-level="4"] .toc-h6.visible:not([data-first-above="0"]):before,
+[data-toc-level="5"] .toc-h6.visible:not([data-first-above="0"]):before {
+    content: "(" attr(data-first-above) " more sections)";
+    padding-bottom: 0.809em;
+    margin-left: 0px;
+    display: block;
+}
+
+[data-toc-level="1"] .toc-h2.visible:not([data-last-below="0"]):after,
+[data-toc-level="1"] .toc-h3.visible:not([data-last-below="0"]):after,
+[data-toc-level="1"] .toc-h4.visible:not([data-last-below="0"]):after,
+[data-toc-level="1"] .toc-h5.visible:not([data-last-below="0"]):after,
+[data-toc-level="1"] .toc-h6.visible:not([data-last-below="0"]):after,
+[data-toc-level="2"] .toc-h3.visible:not([data-last-below="0"]):after,
+[data-toc-level="2"] .toc-h4.visible:not([data-last-below="0"]):after,
+[data-toc-level="2"] .toc-h5.visible:not([data-last-below="0"]):after,
+[data-toc-level="2"] .toc-h6.visible:not([data-last-below="0"]):after,
+[data-toc-level="3"] .toc-h4.visible:not([data-last-below="0"]):after,
+[data-toc-level="3"] .toc-h5.visible:not([data-last-below="0"]):after,
+[data-toc-level="3"] .toc-h6.visible:not([data-last-below="0"]):after,
+[data-toc-level="4"] .toc-h5.visible:not([data-last-below="0"]):after,
+[data-toc-level="4"] .toc-h6.visible:not([data-last-below="0"]):after,
+[data-toc-level="5"] .toc-h6.visible:not([data-last-below="0"]):after {
+    content: "(" attr(data-last-below) " more sections)";
+    padding-top: 0.809em;
+    margin-left: 0px;
+    display: block;
 }
 
 .toc-h {
@@ -314,7 +521,12 @@ h2, h3, h4, h5, h6 {
     overflow: hidden;
 }
 
-.toc-h:not([data-section-count="0"]) {
+[data-toc-child="true"] .toc-h:not([data-child-count="0"]):after {
+    content: "(" attr(data-child-count) ")";
+    margin-left: 2px;
+}
+
+:root .toc-h:not([data-section-count="0"]) {
     font-weight: bold;
     background-color: #4e4a4a;
 }
@@ -325,7 +537,7 @@ a.toc-h1 {
     padding-left: 1.35rem;
 }
 
-a.toc-h1 a.toggler {
+a.toc-h1 b.toggler {
     left: 0.1rem;
 }
 
@@ -335,7 +547,7 @@ a.toc-h2 {
     padding-left: 2.35rem;
 }
 
-a.toc-h2 a.toggler {
+a.toc-h2 b.toggler {
     left: 1.1rem;
 }
 
@@ -345,7 +557,7 @@ a.toc-h3 {
     padding-left: 3.35rem;
 }
 
-a.toc-h3 a.toggler {
+a.toc-h3 b.toggler {
     left: 2.1rem;
 }
 
@@ -355,7 +567,7 @@ a.toc-h4 {
     padding-left: 4.35rem;
 }
 
-a.toc-h4 a.toggler {
+a.toc-h4 b.toggler {
     left: 3.1rem;
 }
 
@@ -365,7 +577,7 @@ a.toc-h5 {
     padding-left: 5.35rem;
 }
 
-a.toc-h5 a.toggler {
+a.toc-h5 b.toggler {
     left: 4.1rem;
 }
 
@@ -375,12 +587,39 @@ a.toc-h6 {
     padding-left: 6.35rem;
 }
 
-a.toc-h6 a.toggler {
+a.toc-h6 b.toggler {
     left: 5.1rem;
 }
 
 
-a.toggler {
+[data-toc-sticky="1"] .toc-h1,
+[data-toc-sticky="2"] .toc-h1,
+[data-toc-sticky="2"] .toc-h2,
+[data-toc-sticky="3"] .toc-h1,
+[data-toc-sticky="3"] .toc-h2,
+[data-toc-sticky="3"] .toc-h3,
+[data-toc-sticky="4"] .toc-h1,
+[data-toc-sticky="4"] .toc-h2,
+[data-toc-sticky="4"] .toc-h3,
+[data-toc-sticky="4"] .toc-h4,
+[data-toc-sticky="5"] .toc-h1,
+[data-toc-sticky="5"] .toc-h2,
+[data-toc-sticky="5"] .toc-h3,
+[data-toc-sticky="5"] .toc-h4,
+[data-toc-sticky="5"] .toc-h5,
+[data-toc-sticky="6"] .toc-h1,
+[data-toc-sticky="6"] .toc-h2,
+[data-toc-sticky="6"] .toc-h3,
+[data-toc-sticky="6"] .toc-h4,
+[data-toc-sticky="6"] .toc-h5,
+[data-toc-sticky="6"] .toc-h6 {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: #343131;
+}
+
+b.toggler {
     position: absolute;
     top: 0;
     left: 0;
@@ -390,24 +629,24 @@ a.toggler {
     text-align: center;
 }
 
-a.toggler:before {
+b.toggler:before {
     line-height: inherit;
     opacity: 0.7;
 }
 
-a.toggler:hover:before {
+b.toggler:hover:before {
     opacity: 1;
 }
 
-[data-state=""] a.toggler:before {
+[data-state=""] b.toggler:before {
     content: "";
 }
 
-[data-state="open"] a.toggler:before {
+[data-state="open"] b.toggler:before {
     content: "";
 }
 
-[data-state="close"] a.toggler:before {
+[data-state="close"] b.toggler:before {
     content: "";
 }
 
@@ -429,190 +668,30 @@ small.metadata {
     margin-top: -2.7rem;
 }
 
-
-[data-section-indent="1"] section[data-section-level="1"] {
-    padding-left: 1rem;
+section[data-section-level="1"] {
+    padding-left: calc(var(--section-indent) * 1rem);
 }
 
-
-[data-section-indent="1"] section[data-section-level="2"] {
-    padding-left: 2rem;
+section[data-section-level="2"] {
+    padding-left: calc(var(--section-indent) * 2rem);
 }
 
-
-[data-section-indent="1"] section[data-section-level="3"] {
-    padding-left: 3rem;
+section[data-section-level="3"] {
+    padding-left: calc(var(--section-indent) * 3rem);
 }
 
-
-[data-section-indent="1"] section[data-section-level="4"] {
-    padding-left: 4rem;
+section[data-section-level="4"] {
+    padding-left: calc(var(--section-indent) * 4rem);
 }
 
-
-[data-section-indent="1"] section[data-section-level="5"] {
-    padding-left: 5rem;
+section[data-section-level="5"] {
+    padding-left: calc(var(--section-indent) * 5rem);
 }
 
-
-[data-section-indent="1"] section[data-section-level="6"] {
-    padding-left: 6rem;
+section[data-section-level="6"] {
+    padding-left: calc(var(--section-indent) * 6rem);
 }
 
-
-[data-section-indent="2"] section[data-section-level="1"] {
-    padding-left: 2rem;
-}
-
-
-[data-section-indent="2"] section[data-section-level="2"] {
-    padding-left: 4rem;
-}
-
-
-[data-section-indent="2"] section[data-section-level="3"] {
-    padding-left: 6rem;
-}
-
-
-[data-section-indent="2"] section[data-section-level="4"] {
-    padding-left: 8rem;
-}
-
-
-[data-section-indent="2"] section[data-section-level="5"] {
-    padding-left: 10rem;
-}
-
-
-[data-section-indent="2"] section[data-section-level="6"] {
-    padding-left: 12rem;
-}
-
-
-[data-section-indent="3"] section[data-section-level="1"] {
-    padding-left: 3rem;
-}
-
-
-[data-section-indent="3"] section[data-section-level="2"] {
-    padding-left: 6rem;
-}
-
-
-[data-section-indent="3"] section[data-section-level="3"] {
-    padding-left: 9rem;
-}
-
-
-[data-section-indent="3"] section[data-section-level="4"] {
-    padding-left: 12rem;
-}
-
-
-[data-section-indent="3"] section[data-section-level="5"] {
-    padding-left: 15rem;
-}
-
-
-[data-section-indent="3"] section[data-section-level="6"] {
-    padding-left: 18rem;
-}
-
-
-[data-section-indent="4"] section[data-section-level="1"] {
-    padding-left: 4rem;
-}
-
-
-[data-section-indent="4"] section[data-section-level="2"] {
-    padding-left: 8rem;
-}
-
-
-[data-section-indent="4"] section[data-section-level="3"] {
-    padding-left: 12rem;
-}
-
-
-[data-section-indent="4"] section[data-section-level="4"] {
-    padding-left: 16rem;
-}
-
-
-[data-section-indent="4"] section[data-section-level="5"] {
-    padding-left: 20rem;
-}
-
-
-[data-section-indent="4"] section[data-section-level="6"] {
-    padding-left: 24rem;
-}
-
-
-[data-section-indent="5"] section[data-section-level="1"] {
-    padding-left: 5rem;
-}
-
-
-[data-section-indent="5"] section[data-section-level="2"] {
-    padding-left: 10rem;
-}
-
-
-[data-section-indent="5"] section[data-section-level="3"] {
-    padding-left: 15rem;
-}
-
-
-[data-section-indent="5"] section[data-section-level="4"] {
-    padding-left: 20rem;
-}
-
-
-[data-section-indent="5"] section[data-section-level="5"] {
-    padding-left: 25rem;
-}
-
-
-[data-section-indent="5"] section[data-section-level="6"] {
-    padding-left: 30rem;
-}
-
-
-[data-section-indent="6"] section[data-section-level="1"] {
-    padding-left: 6rem;
-}
-
-
-[data-section-indent="6"] section[data-section-level="2"] {
-    padding-left: 12rem;
-}
-
-
-[data-section-indent="6"] section[data-section-level="3"] {
-    padding-left: 18rem;
-}
-
-
-[data-section-indent="6"] section[data-section-level="4"] {
-    padding-left: 24rem;
-}
-
-
-[data-section-indent="6"] section[data-section-level="5"] {
-    padding-left: 30rem;
-}
-
-
-[data-section-indent="6"] section[data-section-level="6"] {
-    padding-left: 36rem;
-}
-
-
-html:not([data-section-indent="0"]) section[data-section-level] .section-header {
-    margin-left: -1rem;
-}
 
 [data-break-line="false"] br.break-line {
     display: none;
@@ -661,6 +740,84 @@ pre[data-label]:not([data-label=""]):before {
 
 pre[data-label]:not([data-label=""]) div.code {
     padding-top: 32px
+}
+
+div.cascade {
+    --group1-color: #fff;
+    --group2-color: #fdd;
+    --group3-color: #dfd;
+    --group4-color: #ddf;
+
+    position: absolute;
+    font-family: sans-serif;
+    color: #ffffff;
+    background: transparent;
+    white-space: pre-wrap;
+    margin: 0;
+    line-height: calc(1rem + 3px + 3px + 1px + 1px); /* height + padding-top + padding-bottom + border-top + border-bottom*/
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 51;
+}
+
+div.cascade .cascade-item {
+    position: relative;
+    display: inline-block;
+    line-height: 1;
+    vertical-align: top;
+}
+
+div.cascade .number-item {
+    color: #333;
+    text-align: center;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    padding: 3px;
+    border: 1px solid currentColor;
+    box-sizing: content-box;
+}
+
+div.cascade .number-item.group-1 {
+    background: var(--group1-color);
+}
+
+div.cascade .number-item.group-2 {
+    background: var(--group2-color);
+}
+
+div.cascade .number-item.group-3 {
+    background: var(--group3-color);
+}
+
+div.cascade .number-item.group-4 {
+    background: var(--group4-color);
+}
+
+div.cascade .text-item {
+    background: #fcfcfc;
+    color: #404040;
+}
+
+div.cascade .shape-item {
+    background: transparent;
+    border: 1px dotted #fff;
+}
+
+div.cascade .shape-item.group-1 {
+    border-color: var(--group1-color);
+}
+
+div.cascade .shape-item.group-2 {
+    border-color: var(--group2-color);
+}
+
+div.cascade .shape-item.group-3 {
+    border-color: var(--group3-color);
+}
+
+div.cascade .shape-item.group-4 {
+    border-color: var(--group4-color);
 }
 
 .badge {
@@ -724,6 +881,7 @@ pre[data-label]:not([data-label=""]) div.code {
 @media print {
     * {
         overflow: visible !important;
+        word-break: break-all !important;
     }
 
     body {
@@ -745,14 +903,14 @@ pre[data-label]:not([data-label=""]) div.code {
 
     h1.main-header {
         background: transparent;
-        color: #333333 ;
+        color: #333333;
         font-size: 320%;
         text-align: center;
     }
 
     h2.sub-header {
         background: transparent;
-        color: #333333 ;
+        color: #333333;
         font-size: 220%;
         text-align: center;
     }
@@ -769,6 +927,11 @@ pre[data-label]:not([data-label=""]) div.code {
         color: #eeeeee;
         padding: 5px;
         border: none;
+    }
+
+    h1 [data-section-number],
+    h2 [data-section-number] {
+        color: #cccccc;
     }
 
     h3 {
@@ -824,13 +987,11 @@ input[type="search"]::-webkit-search-cancel-button {
 
 .option-title {
     color: #fcfcfc;
-    display: inline-block;
-    width: 210px;
+    width: 17em;
 }
 
 .option-input {
-    display: inline-block;
-    height: 18px;
+    height: 1.5em;
     vertical-align: text-bottom;
     padding: 0;
 }
@@ -847,6 +1008,14 @@ input[type="search"]::-webkit-search-cancel-button {
 
 [type="search"].option-input {
     width: 120px;
+}
+
+[type="range"].option-input {
+    width: 90px;
+}
+
+output {
+    color: #ccc;
 }
 
 select.option-input {
@@ -908,9 +1077,14 @@ a.disabled {
     };
     Element.prototype.$ = Element.prototype.querySelector;
     Element.prototype.$$ = Element.prototype.querySelectorAll;
+    Element.prototype.prependChildren = function (nodes) {
+        const children = document.createElements(nodes);
+        children.forEach(child => this.prepend(child));
+        return children;
+    };
     Element.prototype.appendChildren = function (nodes) {
         const children = document.createElements(nodes);
-        children.forEach(child => this.appendChild(child));
+        children.forEach(child => this.append(child));
         return children;
     };
     Document.prototype.createElements = function (nodes) {
@@ -1057,6 +1231,11 @@ a.disabled {
         }
         else {
             hljs.highlightBlock(element);
+            const lines = element.innerHTML.split('\n');
+            if (lines.length > 1) {
+                element.classList.add('row-numbers', `digit${lines.length.toString().length}`);
+                element.innerHTML = lines.map(line => `<span class="row-number"></span>${line}`).join('\n');
+            }
         }
     };
 
@@ -1155,6 +1334,16 @@ a.disabled {
     const SAVENAME = 'ht-setting';
     const alldata = html.matches('[data-exported]') ? {} : JSON.parse(localStorage.getItem(SAVENAME) ?? '{}');
     const directory = location.pathname.split('/').slice(0, -1).join('/');
+    controlPanel.on('input', function (e) {
+        if (!e.target.validity.valid) {
+            return;
+        }
+        if (!e.target.matches('.savedata')) {
+            return;
+        }
+        const font_size = $('#fontSize');
+        $(`[for=${font_size.id}]`).textContent = font_size.getValue() + 'px';
+    });
     controlPanel.on('change', function (e) {
         if (!e.target.validity.valid) {
             return;
@@ -1169,10 +1358,14 @@ a.disabled {
         this.$$('.savedata').forEach(function (input) {
             html.dataset[input.id] = input.getValue();
         });
+        const font_size = $('#fontSize');
+        $(`[for=${font_size.id}]`).textContent = font_size.getValue() + 'px';
         const highlight_style = $('#highlight_style');
         highlight_style.href = highlight_style.dataset.cdnUrl + $('#highlightCss').getValue() + '.min.css';
         document.documentElement.style.setProperty('--side-width', `min(${$('#tocWidth').getValue()}px, ${$('#tocVisible').checked ? 9999 : 0}px)`);
         document.documentElement.style.setProperty('--font-family', $('#fontFamily').getValue());
+        document.documentElement.style.setProperty('--font-size', font_size.getValue());
+        document.documentElement.style.setProperty('--section-indent', $('#sectionIndent').getValue());
     };
     controlPanel.save = function () {
         const savedata = {};
@@ -1210,7 +1403,13 @@ a.disabled {
             const currentLevels = levels.slice(leading, trailing + 1);
             const blockId = currentLevels.join('.');
             const parentId = currentLevels.slice(0, -1).join('.');
-            section.firstChild.dataset.blockId = blockId;
+            section.firstChild.prependChildren({
+                span: {
+                    dataset: {
+                        sectionNumber: blockId,
+                    }
+                }
+            });
 
             idmap[blockId] = sectionId;
             const parent = document.getElementById(idmap[parentId]);
@@ -1233,12 +1432,17 @@ a.disabled {
                         state: '',
                     },
                     children: [
-                        sectionTitle,
                         {
-                            a: {
+                            b: {
                                 class: 'toggler icon',
+                            },
+                            span: {
+                                dataset: {
+                                    tocNumber: blockId,
+                                }
                             }
-                        }
+                        },
+                        sectionTitle
                     ],
                 },
             });
@@ -1289,6 +1493,18 @@ a.disabled {
                 toch.classList.remove('visible');
             }
         });
+        tochs.forEach(function (toch, i) {
+            toch.dataset.firstAbove = '0';
+            toch.dataset.lastBelow = '0';
+            if (i === min) {
+                const brother = Array.from(outline.$$(`[data-parent-block-id="${toch.dataset.parentBlockId}"]`));
+                toch.dataset.firstAbove = brother.slice(0, brother.indexOf(toch)).filter(node => !node.matches('.visible,.forced-visible')).length;
+            }
+            if (i === max) {
+                const brother = Array.from(outline.$$(`[data-parent-block-id="${toch.dataset.parentBlockId}"]`));
+                toch.dataset.lastBelow = brother.slice(brother.indexOf(toch)).filter(node => !node.matches('.visible,.forced-visible')).length;
+            }
+        });
     });
     outline.on('mutate', '[data-section-count]', function (e) {
         if (e.attributeName === 'data-section-count' && html.dataset.tocActive === 'true') {
@@ -1320,11 +1536,15 @@ a.disabled {
     outline.on('mouseleave', 'a.toc-h', function (e) {
         e.target.dataset.state = '';
     }, true);
-    outline.on('click', 'a.toggler', function (e) {
+    outline.on('click', 'b.toggler', function (e) {
         const toch = e.target.parentElement;
         if (toch.dataset.state === 'open') {
             toch.dataset.state = 'close';
-            outline.$$(`[data-parent-block-id="${toch.dataset.blockId}"]`).forEach(e => e.classList.add('forced-visible', 'visible'));
+            outline.$$(`[data-parent-block-id="${toch.dataset.blockId}"]`).forEach(e => {
+                e.classList.add('forced-visible', 'visible');
+                e.dataset.firstAbove = '0';
+                e.dataset.lastBelow = '0';
+            });
         }
         else {
             toch.dataset.state = 'open';
@@ -1405,7 +1625,7 @@ a.disabled {
             <div class="wy-side-nav-search">
                 <a href="" class="icon icon-home"> README.md</a>
                 <div class="version">
-                    Last Modified 2022/07/06 23:24:12                </div>
+                    Last Modified 2022/08/17 16:26:30                </div>
                 <div role="search">
                     <form id="rtd-search-form" class="wy-form hidden-download" method="get">
                         <input type="text" name="query" placeholder="Search directory" value="">
@@ -1445,7 +1665,7 @@ a.disabled {
 ざっくり言えば要するに docsify の php 版のようなものです。</p>
 <p>デザインは Read The Docs のものを使用しています。</p>
 <ul class=" simple">
-<li><a href="https://arima-ryunosuke.github.io/php-htmarkdown/">Demo</a></li>
+<li><a href="https://arima-ryunosuke.github.io/php-htmarkdown/README.html">Demo</a></li>
 </ul>
 </section><section id="_0bb18642b70b9f8a9c12ccf39487328f306b8e19-1" class="section section-level-h2" data-section-level="2"><h2 class="section-header">Usage</h2>
 <p>下記の3つの使い方があります。<br class="break-line">
@@ -1453,22 +1673,23 @@ a.disabled {
 さらに <code>.php.md</code> の場合は php が実行されます。</p>
 </section><section id="_454d783b07841da1d1409e2ec34ec5cfe22e35dc-1" class="section section-level-h3" data-section-level="3"><h3 class="section-header">Rewrite Mode</h3>
 <p>下記のように web サーバを設定します。</p>
-<pre data-label="apacheの場合"><div class="language-plaintext:apacheの場合 plaintext code">RewriteRule \.md$ htmarkdown.phar [QSA,L]</div></pre>
-<pre data-label="nginxの場合"><div class="language-plaintext:nginxの場合 plaintext code">rewrite \.md$ htmarkdown.phar;</div></pre>
+<pre data-label="apacheの場合"><div class="code language-plaintext:apacheの場合 plaintext:apacheの場合">RewriteRule \.md$ htmarkdown.phar [QSA,L]</div></pre>
+<pre data-label="nginxの場合"><div class="code language-plaintext:nginxの場合 plaintext:nginxの場合">rewrite \.md$ htmarkdown.phar;</div></pre>
 <p>説明はほぼ不要ですが、拡張子 md を rewrite して phar に委譲されるようにします。<br class="break-line">
 <code>-d</code> オプションを加えれば Directory Index としても機能します。</p>
 <p>※ 環境によっては <code>security.limit_extensions</code> や <code>SetHandler</code> 等の設定が必要です</p>
 </section><section id="_b6116e0a38445828e0b32bcde97c58843cf50feb-1" class="section section-level-h3" data-section-level="3"><h3 class="section-header">Built in Server Mode</h3>
 <p>下記のようにして built in server で起動します。</p>
-<pre data-label=""><div class="language-bash bash code">php -S 0.0.0.0:8000 htmarkdown.phar</div></pre>
+<pre data-label=""><div class="code language-bash bash">php -S 0.0.0.0:8000 htmarkdown.phar</div></pre>
 <p>これも説明は不要でしょう。通常の built in server です。<br class="break-line">
 phar がルーターの役割も持っているので、起動したカレントディレクトリ（もちろん <code>-t</code> も有効です）をドキュメントルートとして web サーバが起動します。</p>
 <p>docsify の使い方に近いです。</p>
 </section><section id="_1d787de16a8d98dec52d81dfb9c3691e3ed35031-1" class="section section-level-h3" data-section-level="3"><h3 class="section-header">Command Line Mode</h3>
-<p>下記のように引数を渡すと引数が html に変換されます。</p>
-<pre data-label=""><div class="language-bash bash code">php htmarkdown.phar /path/to/markdown.md &gt; /path/to/markdown.html</div></pre>
-<p>出力は標準出力です。なので上記のようにリダイレクトは必須です。<br class="break-line">
-また、ディレクトリを渡すと zip のバイナリが出力されます。</p>
+<p>下記のように引数を渡すと引数が zip に変換されます。</p>
+<pre data-label=""><div class="code language-bash bash">php htmarkdown.phar /path/to/markdown.md &gt; /path/to/markdown.html</div></pre>
+<p>出力は標準出力です。なので上記のようにリダイレクトは必須です。</p>
+<p>第2引数にディレクトリを渡すとエクスポートされます。</p>
+<pre data-label=""><div class="code language-bash bash">php htmarkdown.phar /path/to/markdown.md /path/to/directory</div></pre>
 <p>ただし、この機能は現時点ではおまけです。<br class="break-line">
 この機能は後述の semver の互換性保持には含まれません。</p>
 </section><section id="_ad565d9d01d0e0bf91fd6a8532f6d81613338901-1" class="section section-level-h2" data-section-level="2"><h2 class="section-header">Feature</h2>
@@ -1485,12 +1706,12 @@ phar がルーターの役割も持っているので、起動したカレント
 <p>標準の markdown に加えて下記の拡張構文があります。</p>
 </section><section id="_786bef306de28bcb51bdc4b38b2e8c73649db338-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">マーカー</h4>
 <p><code>==マーカー文字==</code> とするとマーカーが引かれます。</p>
-<pre data-label="マーカー"><div class="language-markdown:マーカー markdown code">これは==マーカー==文字です。</div></pre>
+<pre data-label="マーカー"><div class="code language-markdown:マーカー markdown:マーカー">これは==マーカー==文字です。</div></pre>
 <p>上記のようにすると下記のようになります。</p>
 <p>これは<marker class="highlighted">マーカー</marker>文字です。</p>
 </section><section id="_b91239427b984fe34e6b631d9b525c23fd14375e-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">バッジ</h4>
 <p><code>{タイプ:タイトル|テキスト}</code> とするとバッジになります。</p>
-<pre data-label="バッジの例"><div class="language-markdown:バッジの例 markdown code">- 単純なバッジ {this is badge}
+<pre data-label="バッジの例"><div class="code language-markdown:バッジの例 markdown:バッジの例">- 単純なバッジ {this is badge}
 - success バッジ {success:テキスト}
 - タイトル付きalert バッジ {alert:タイトル|テキスト}</div></pre>
 <p>上記のようにすると下記のようになります。</p>
@@ -1503,7 +1724,7 @@ phar がルーターの役割も持っているので、起動したカレント
 タイプは <code>info</code> <code>success</code> <code>notice</code> <code>alert</code> が使えます。</p>
 </section><section id="_6f403327f49dbb27440c972025889cf019a40adc-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">キャプション</h4>
 <p>ヘッダーのように <code>####### Caption</code> と <code>#</code> を7個並べるとキャプションになります。</p>
-<pre data-label="キャプション"><div class="language-markdown:キャプション markdown code">####### This Is Caption
+<pre data-label="キャプション"><div class="code language-markdown:キャプション markdown:キャプション">####### This Is Caption
 
 内容</div></pre>
 <p>上記のようにすると下記のようになります。</p>
@@ -1513,9 +1734,16 @@ phar がルーターの役割も持っているので、起動したカレント
 実態は <code>em</code> ですが、変更される可能性があります。<br class="break-line">
 また、意図的に下部パディングを小さめにしています。</p>
 <p>セクション内のちょっとした区切りやアクセントとして使用します。</p>
+</section><section id="_41a632efa3083516bb9e81d9dffccbdb332fa8a6-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">コメント</h4>
+<p><code>//</code> で html コメントになります。</p>
+<pre data-label="html コメント"><div class="code language-markdown:html markdown:html">この下にコメントがあります。
+// これは html コメントです
+この上にコメントがあります。</div></pre>
+<p>上記のようにすると下記のようになります。</p>
+<p>この下にコメントがあります。</p><!--  これは html コメントです --><p>この上にコメントがあります。</p>
 </section><section id="_ac3e6d2e7121b2918cd5d40f68a6c79241452fba-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">ノート</h4>
 <p>コードブロックと同じように <code>"""</code> で囲むと注意書きブロックが生成されます。</p>
-<pre data-label="注意書きの例"><div class="language-markdown:注意書きの例 markdown code">"""note:title
+<pre data-label="注意書きの例"><div class="code language-markdown:注意書きの例 markdown:注意書きの例">"""note:title
 これは注意書きです。
 """</div></pre>
 <p>上記のようにすると下記のようになります。</p>
@@ -1527,7 +1755,7 @@ phar がルーターの役割も持っているので、起動したカレント
 <p>title の部分はただのラベルになります。</p>
 </section><section id="_2438d25193d3fde549bb92ce4a6f9e931ad3361d-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">サイドバー</h4>
 <p>コードブロックと同じように <code>///</code> で囲むとサイドバーブロックが生成されます。</p>
-<pre data-label="サイドバーの例"><div class="language-markdown:サイドバーの例 markdown code">///note:title
+<pre data-label="サイドバーの例"><div class="code language-markdown:サイドバーの例 markdown:サイドバーの例">///note:title
 これはサイドバーです。
 ///</div></pre>
 <p>上記のようにすると下記のようになります。</p>
@@ -1538,16 +1766,79 @@ phar がルーターの役割も持っているので、起動したカレント
 <p>note の部分はほぼ飾りです。 Read The Docs 本家にスタイルがなかったため、埋め込まれはしますがスタイルは変わりません。<br class="break-line">
 title の部分はただのラベルになります。</p>
 <p>ただし <code>right</code> を指定した場合のみ無装飾で右上に配置されます。</p>
-<pre data-label="right"><div class="language-markdown:right markdown code">///right
+<pre data-label="right"><div class="code language-markdown:right markdown:right">///right
 これは右側に配置されます。
 ///</div></pre>
 <div class="right sidebar">
 <p class="sidebar-title"></p>
 <p>これは右側に配置されます。</p>
 </div>
+</section><section id="_a97b789c272153f800f217ae4053b75a4aa164e7-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">ツリーリスト</h4>
+<p><code>+</code> でリスト記法を記述すると木構造になります。</p>
+<pre data-label="木構造"><div class="code language-markdown:木構造 markdown:木構造">####### root
+
++ directory1
+    + file1A
+    + file1B
+    + directory11
+        + file11A
+    + directory12
+        - file12A
+    - normal items
+        - item1
+        - item2
++ directory2
+    + file2A
+
+// くっつき防止
+
++ root
+    + item1
+        + item2</div></pre>
+<p>上記のようにすると下記のようになります。</p>
+<em class="caption">root</em>
+<ul class=" simple tree">
+<li class=" leaf">directory1<ul class=" simple tree">
+<li class=" leaf">file1A</li>
+<li class=" leaf">file1B</li>
+<li class=" leaf">directory11<ul class=" simple tree">
+<li class=" leaf">file11A</li>
+</ul>
+</li>
+<li class=" leaf">directory12<ul class=" simple tree">
+<li class=" leaf">file12A</li>
+</ul>
+</li>
+</ul>
+<ul class=" simple">
+<li>normal items<ul class=" simple">
+<li>item1</li>
+<li>item2</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class=" leaf">directory2<ul class=" simple tree">
+<li class=" leaf">file2A</li>
+</ul>
+</li>
+</ul><!--  くっつき防止 --><ul class=" simple tree">
+<li class=" leaf">root<ul class=" simple tree">
+<li class=" leaf">item1<ul class=" simple tree">
+<li class=" leaf">item2</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>すべてが葉要素になるため、1つ目はキャプション記法を利用してルートっぽくなるようにしています。<br class="break-line">
+ただし、2つ目のように最上位のアイテムが1つの場合はその項目だけ縦線は引かれません。</p>
+<p>また、ツリー内はすべて <code>+</code> で記述する必要があります。<br class="break-line">
+逆に言えば <code>+</code> を使わなければ normal items のように通常リストを混在させることも可能です。<br class="break-line">
+単に「<code>+</code> を使うとちょっと変わった list-style になる」と言った方が分かりやすいかもしれません。</p>
 </section><section id="_dc813bf775a6b910b13f1445a27fde368e5b5177-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">定義リスト</h4>
 <p><code>-</code> や <code>*</code> などのリスト記法に続けて、<code>:</code>（コロンスペース）があると定義リストが生成されます。</p>
-<pre data-label="横並び定義リストの例"><div class="language-markdown:横並び定義リストの例 markdown code">- りんご: 赤いです
+<pre data-label="横並び定義リストの例"><div class="code language-markdown:横並び定義リストの例 markdown:横並び定義リストの例">- りんご: 赤いです
 - みかん: 黄色いです</div></pre>
 <p>上記のようにすると下記のようになります。</p>
 <dl class="docutils field-list">
@@ -1561,7 +1852,7 @@ title の部分はただのラベルになります。</p>
 </div>
 </dl>
 <p>コロンの直後に改行すると横並びではなくスタンダードな定義リストになります。</p>
-<pre data-label="縦並び定義リストの例"><div class="language-markdown:縦並び定義リストの例 markdown code">- りんご:
+<pre data-label="縦並び定義リストの例"><div class="code language-markdown:縦並び定義リストの例 markdown:縦並び定義リストの例">- りんご:
 赤いです
 美味しいです
 - みかん:
@@ -1586,7 +1877,7 @@ title の部分はただのラベルになります。</p>
 </dl>
 <p>コロンの直後にスペースを含めて改行すると横並びで詳細を記載する機会が与えられます。<br class="break-line">
 つまり、定義リストのネストや他の記法が使えることになります。</p>
-<pre data-label="横並びネスト定義リストの例"><div class="language-markdown:横並びネスト定義リストの例 markdown code">- 果物: 
+<pre data-label="横並びネスト定義リストの例"><div class="code language-markdown:横並びネスト定義リストの例 markdown:横並びネスト定義リストの例">- 果物: 
     - りんご: これはネストされた箇条書きリストです
         - 赤いです
         - 美味しいです
@@ -1630,7 +1921,7 @@ title の部分はただのラベルになります。</p>
 <div class="dtdd-container">
 <dt>いちご</dt>
 <dd>
-<pre data-label=""><div class="language-php php code">// これはネスト中のコードブロックです
+<pre data-label=""><div class="code language-php php">// これはネスト中のコードブロックです
 echo 1;
 echo 2;</div></pre>
 </dd>
@@ -1664,7 +1955,7 @@ echo 2;</div></pre>
 </div>
 </section><section id="_58284ace71c2e08e9d914750844e1f73dcb11e14-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">折りたたみ</h4>
 <p>コードブロックと同じように <code>...</code> で囲むと折りたたみとなります。</p>
-<pre><div class=" code">...ここは summary になります
+<pre data-label=""><div class="code">...ここは summary になります
 ここが折りたたみの中身になります
 ...</div></pre>
 <p>上記のようにすると下記のようになります。</p>
@@ -1674,9 +1965,237 @@ echo 2;</div></pre>
 </details>
 <p>summary 部分を省略すると summary タグは生成されません。<br class="break-line">
 その場合ブラウザのデフォルトになります（「省略」など）。</p>
+</section><section id="_9ee41198fa16304a56f1a575a1af05a6b5ec50fa-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">幅指定テーブル</h4>
+<p>テーブル記法で2行目に空白を含めると <code>-</code> の数が列の幅になります。</p>
+<pre data-label="幅指定テーブルの例"><div class="code language-markdown:幅指定テーブルの例 markdown:幅指定テーブルの例">| 連番 | 名前 | 日付                |
+|----: |:-----|:---:                |
+|    1 | Hoge | 2014/12/24 12:34:56 |
+|    2 | Fuga | 2015/12/24 12:34:56 |
+|    3 | Piyo | 2014/12/24 12:34:56 |</div></pre>
+<p>上記のようにすると下記のようになります。</p>
+<div class="wy-table-responsive">
+<table class=" docutils align-default has-colgroup">
+<colgroup>
+<col style="width:5.5555555555556%">
+<col>
+<col style="width:83.333333333333%">
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: right;">連番</th>
+<th style="text-align: left;">名前</th>
+<th style="text-align: center;">日付</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Hoge</td>
+<td style="text-align: center;">2014/12/24 12:34:56</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Fuga</td>
+<td style="text-align: center;">2015/12/24 12:34:56</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">Piyo</td>
+<td style="text-align: center;">2014/12/24 12:34:56</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>「連番」の幅が狭く、「日付」の幅が広くなっています。<br class="break-line">
+「名前」は空白が含まれていないので width が指定されていません。</p>
+<p>値としては「列のハイフンの数 / 全体ハイフンの数 * 100」% が指定されます。<br class="break-line">
+要するにハイフンの数の全体を占める割合になります。</p>
+<p>このとき、table に <code>table-layout: fixed; word-break: break-all;</code> が設定されます。</p>
+</section><section id="_44d8bdcb09ebddc75636d5f96b2e6c8a38b5ebba-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">罫線なしテーブル</h4>
+<p>テーブル記法で両端の <code>|</code> を省略すると縦罫線のないテーブルになります。</p>
+<pre data-label="罫線なしテーブルの例"><div class="code language-markdown:罫線なしテーブルの例 markdown:罫線なしテーブルの例"> 連番 | 名前 | 日付               
+-----:|:-----|:------------------:
+    1 | Hoge | 2014/12/24 12:34:56
+    2 | Fuga | 2015/12/24 12:34:56
+    3 | Piyo | 2014/12/24 12:34:56</div></pre>
+<p>上記のようにすると下記のようになります。</p>
+<div class="wy-table-responsive">
+<table class=" no-border docutils align-default">
+<thead>
+<tr>
+<th style="text-align: right;">連番</th>
+<th style="text-align: left;">名前</th>
+<th style="text-align: center;">日付</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Hoge</td>
+<td style="text-align: center;">2014/12/24 12:34:56</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Fuga</td>
+<td style="text-align: center;">2015/12/24 12:34:56</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">Piyo</td>
+<td style="text-align: center;">2014/12/24 12:34:56</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>生成される html はほぼ変わりません。 table に <code>no-border</code> が付くか付かないかです。表示は css が担っています。<br class="break-line">
+現在のところ、縦罫線に加えて背景色も消えます。これはリスティングを主目的としているため（＋作者が stripe が嫌いなため）です。</p>
+</section><section id="_9c61f456082d3eaa26c2417b962018c885a75433-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">ヘッダなしテーブル</h4>
+<p>テーブル記法ですべてのヘッダを空白にするとヘッダなしのテーブルになります。</p>
+<pre data-label="ヘッダなしテーブルの例"><div class="code language-markdown:ヘッダなしテーブルの例 markdown:ヘッダなしテーブルの例">|      |      |                     |
+|-----:|:-----|:-------------------:|
+|    1 | Hoge | 2014/12/24 12:34:56 |
+|    2 | Fuga | 2015/12/24 12:34:56 |
+|    3 | Piyo | 2014/12/24 12:34:56 |</div></pre>
+<p>上記のようにすると下記のようになります。</p>
+<div class="wy-table-responsive">
+<table class=" docutils align-default no-header">
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Hoge</td>
+<td style="text-align: center;">2014/12/24 12:34:56</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Fuga</td>
+<td style="text-align: center;">2015/12/24 12:34:56</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">Piyo</td>
+<td style="text-align: center;">2014/12/24 12:34:56</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>現在のところ、「空でも良いのでヘッダを出したい」という動作はありません。</p>
+</section><section id="_4a3c7f7679297ba32d5f0340a34d7842b256f830-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">キャプションつきテーブル</h4>
+<p>テーブル記法の上下に <code>:キャプション:</code> があるとそれは caption になります。<br class="break-line">
+上にある場合は上側、下にある場合は下側に配置されます。</p>
+<pre data-label="キャプションつきテーブルの例"><div class="code language-markdown:キャプションつきテーブルの例 markdown:キャプションつきテーブルの例">:これは左上 caption です
+| 連番 | 名前 | 日付                |
+|-----:|:-----|:-------------------:|
+|    1 | Hoge | 2014/12/24 12:34:56 |
+|    2 | Fuga | 2015/12/24 12:34:56 |
+|    3 | Piyo | 2014/12/24 12:34:56 |
+
+| 連番 | 名前 | 日付                |
+|-----:|:-----|:-------------------:|
+|    1 | Hoge | 2014/12/24 12:34:56 |
+|    2 | Fuga | 2015/12/24 12:34:56 |
+|    3 | Piyo | 2014/12/24 12:34:56 |
+これは右下 caption です:
+
+:これは中央上 caption です:
+| 連番 | 名前 | 日付                |
+|-----:|:-----|:-------------------:|
+|    1 | Hoge | 2014/12/24 12:34:56 |
+|    2 | Fuga | 2015/12/24 12:34:56 |
+|    3 | Piyo | 2014/12/24 12:34:56 |
+:これは中央下 caption です:</div></pre>
+<p>上記のようにすると下記のようになります。</p>
+<div class="wy-table-responsive">
+<table class=" docutils align-default has-caption has-top-caption">
+<caption style="text-align: left;caption-side: top">これは左上 caption です</caption>
+<thead>
+<tr>
+<th style="text-align: right;">連番</th>
+<th style="text-align: left;">名前</th>
+<th style="text-align: center;">日付</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Hoge</td>
+<td style="text-align: center;">2014/12/24 12:34:56</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Fuga</td>
+<td style="text-align: center;">2015/12/24 12:34:56</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">Piyo</td>
+<td style="text-align: center;">2014/12/24 12:34:56</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="wy-table-responsive">
+<table class=" docutils align-default has-caption has-bottom-caption">
+<caption style="text-align: right;caption-side: bottom">これは右下 caption です</caption>
+<thead>
+<tr>
+<th style="text-align: right;">連番</th>
+<th style="text-align: left;">名前</th>
+<th style="text-align: center;">日付</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Hoge</td>
+<td style="text-align: center;">2014/12/24 12:34:56</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Fuga</td>
+<td style="text-align: center;">2015/12/24 12:34:56</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">Piyo</td>
+<td style="text-align: center;">2014/12/24 12:34:56</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="wy-table-responsive">
+<table class=" docutils align-default has-caption has-top-caption has-bottom-caption">
+<caption style="text-align: center;caption-side: top">これは中央上 caption です</caption>
+<caption style="text-align: center;caption-side: bottom">これは中央下 caption です</caption>
+<thead>
+<tr>
+<th style="text-align: right;">連番</th>
+<th style="text-align: left;">名前</th>
+<th style="text-align: center;">日付</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Hoge</td>
+<td style="text-align: center;">2014/12/24 12:34:56</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Fuga</td>
+<td style="text-align: center;">2015/12/24 12:34:56</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">Piyo</td>
+<td style="text-align: center;">2014/12/24 12:34:56</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>左右・中央の指定は2行目と同じルールですが、 <code>:</code> を省略することはできません。</p>
 </section><section id="_bc7b3654354011bf0bb614fb2601b17e3428a324-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">ヒアドキュメント</h4>
 <p>コードブロックと同じように <code>&lt;&lt;&lt;</code> で囲むとヒアドキュメントとなります。</p>
-<pre data-label="ヒアドキュメントの例"><div class="language-markdown:ヒアドキュメントの例 markdown code">&lt;&lt;&lt;
+<pre data-label="ヒアドキュメントの例"><div class="code language-markdown:ヒアドキュメントの例 markdown:ヒアドキュメントの例">&lt;&lt;&lt;
 これはヒアドキュメントです。
 この中では**一切の markdown 記法や html は無効**になります。
 
@@ -1698,9 +2217,92 @@ echo 2;</div></pre>
 <p>コードブロックと似ていますが、シンタックスハイライトはされません。<br class="break-line">
 あくまで、「マークダウンのエスケープが不要なヒアドキュメント」となります。<br class="break-line">
 使う機会はそう多くないでしょう。</p>
+</section><section id="_c03609af9ebd1c7983a8f47fbb10faa2c84ed8e5-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">絶対配置</h4>
+<p>コードブロックと同じように <code>^^^</code> で囲むと絶対配置（position:absolute）になります。</p>
+<p>ブロック内で <code>(x,y:content)</code> を記述すると相対座標 (x,y) に content を配置できます。<br class="break-line">
+content を n あるいは数字にすると丸数字になります。<br class="break-line">
+n の場合は数値は自動増加します。数字にするとその数値から始まり、内部的なグループが変更されます。</p>
+<p>さらに <code>(x,y,w,h)</code> を記述するとその座標（相対）に矩形を配置できます。</p>
+<p>基本的に画像への注釈のような使い方を想定しています。</p>
+<pre data-label="絶対配置の例"><div class="code language-markdown:絶対配置の例 markdown:絶対配置の例">^^^
+
+              (n)
+     (n)
+(11)
+
+
+(n)
+  (21)                 (0,12:これは plain text です)
+
+(56,16,128,26)
+^^^
+
+![](fig1.png)
+
+| No  | 名称     | 説明
+|----:|:---------|:-----
+| 1   | 文書名   | 文書名です
+| 2   | 更新日時 | 更新日時です
+| 11  | 検索     | 文書内を検索します
+| 12  | 目次     | テーブルオブコンテンツです
+| 21  | ヘッダー | ヘッダー名です</div></pre>
+<p>上記のようにすると下記のようになります。</p>
+<div class="cascade" style="padding-left:0px; padding-top:0px;">
+              <span style="left:0px; top:0px;" class="cascade-item number-item group-1 index-1">1</span>
+     <span style="left:0px; top:0px;" class="cascade-item number-item group-1 index-2">2</span>
+<span style="left:0px; top:0px;" class="cascade-item number-item group-2 index-11">11</span>
+
+
+<span style="left:0px; top:0px;" class="cascade-item number-item group-2 index-12">12</span>
+  <span style="left:0px; top:0px;" class="cascade-item number-item group-3 index-21">21</span>                 <span style="left:0px; top:12px;" class="cascade-item text-item group-3 index-22">これは plain text です</span>
+
+<span style="left:56px; top:16px; width:128px; height:26px;" class="cascade-item shape-item group-3"></span></div>
+<p><img src="fig1.png" alt=""></p>
+<div class="wy-table-responsive">
+<table class=" docutils align-default">
+<thead>
+<tr>
+<th style="text-align: right;">No</th>
+<th style="text-align: left;">名称</th>
+<th style="text-align: left;">説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">文書名</td>
+<td style="text-align: left;">文書名です</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">更新日時</td>
+<td style="text-align: left;">更新日時です</td>
+</tr>
+<tr>
+<td style="text-align: right;">11</td>
+<td style="text-align: left;">検索</td>
+<td style="text-align: left;">文書内を検索します</td>
+</tr>
+<tr>
+<td style="text-align: right;">12</td>
+<td style="text-align: left;">目次</td>
+<td style="text-align: left;">テーブルオブコンテンツです</td>
+</tr>
+<tr>
+<td style="text-align: right;">21</td>
+<td style="text-align: left;">ヘッダー</td>
+<td style="text-align: left;">ヘッダー名です</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>絶対配置内は pre 表示されるため、文字・行ベースで位置を合わせ、次の要素（img）と重ね合わせることで実現します。よほどの微調整が要求されない限りそれで十分です。<br class="break-line">
+微調整が要求されたら <code>(0,-7:n)</code> のようにy座標を調整します。</p>
+<p>かなりニッチな機能で、作者が必要に迫られて実装したものです。<br class="break-line">
+この記法は後方互換性に含まれません。</p>
 </section><section id="_77e6a9baa61f1e1b165eea0638b94468985c9671-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">mermaid</h4>
 <p>コードブロックで mermaid を明示すると mermaid 記法になります。</p>
-<pre data-label="mermaid"><div class="language-markdown:mermaid markdown code">```mermaid
+<pre data-label="mermaid の例"><div class="code language-markdown:mermaid markdown:mermaid">```mermaid
 sequenceDiagram
     participant Alice
     participant Bob
@@ -1714,7 +2316,7 @@ sequenceDiagram
     Bob--&gt;&gt;John: Jolly good!
 ```</div></pre>
 <p>上記のようにすると下記のようになります。</p>
-<pre data-label=""><div class="language-mermaid mermaid code">sequenceDiagram
+<pre data-label=""><div class="code language-mermaid mermaid">sequenceDiagram
     participant Alice
     participant Bob
     Alice-&gt;&gt;John: Hello John, how are you?
@@ -1726,6 +2328,143 @@ sequenceDiagram
     John-&gt;&gt;Bob: How about you?
     Bob--&gt;&gt;John: Jolly good!</div></pre>
 <p>単に mermaid.js を呼んでいるだけであり、特別なことはしていません。</p>
+</section><section id="_72291d2b77a8e0a83d0452decffb3a6cbd3e559d-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">div ブロック</h4>
+<p><code>--</code> で囲むと div ブロックとなります。</p>
+<pre data-label="divブロック"><div class="code language-markdown:divブロック markdown:divブロック">--
+この中は div で囲まれています。
+--
+
+--section#thisisid.thisisclass[attr=value]{color:red;background:#eee}
+この中は section で囲まれています。
+--</div></pre>
+<p>上記のようにすると下記のようになります。</p>
+<div class="block">
+<p>この中は div で囲まれています。</p>
+</div>
+<section id="thisisid" class="thisisclass" attr="value" style="color:red;background:#eee">
+<p>この中は section で囲まれています。</p>
+</section>
+<p>見ての通り css 記法を使用して id, class, 属性, スタイルを個別に当てることも可能です。<br class="break-line">
+何も指定しなかった場合、<code>div.block</code> になります。</p>
+</section><section id="_7d3c35c29be1de8ba8a6f6264e192a7af157dc29-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">属性</h4>
+<p><code>[attr=value]</code> のようにセレクタライクな記法で直後のノードに属性を振ることができます。<br class="break-line">
+さらに <code>{color:red}</code> のように中括弧で囲むとスタイル属性となります。<br class="break-line">
+直後にテキストノード以外のノードが存在しない場合は親ノードに適用されます。</p>
+<p>この記法だけは特別扱いされており、ブロック記法の直前に空行なしで記述してもブロック構造が壊れたりしません。</p>
+<pre data-label="属性"><div class="code language-markdown:属性 markdown:属性">[target=_blank][このリンクは target=_blank が指定されています](https://example.com)
+[hoge=hoge fuga=fuga piyo=piyo]**この太字は hoge fuga piyo が指定されています**
+[id=hoge]{color:red}`このインラインコードは id が指定されてスタイルが効いています`
+
+- {color:red}li自体にスタイルが適用されています
+
+[class=" hint"]
+"""
+このノートは .hint が付与されています。
+"""</div></pre>
+<p>上記のようにすると下記のようになります。</p>
+<p><a href="https://example.com" target="_blank">このリンクは target=_blank が指定されています</a><br class="break-line">
+<strong hoge="hoge" fuga="fuga" piyo="piyo">この太字は hoge fuga piyo が指定されています</strong><br class="break-line">
+<code id="hoge" style="color:red">このインラインコードは id が指定されてスタイルが効いています</code></p>
+<ul class=" simple">
+<li style="color:red">li自体にスタイルが適用されています</li>
+</ul>
+<p></p>
+<div class="admonition hint">
+<p class="admonition-title"></p>
+<p>このノートは .hint が付与されています。</p>
+</div>
+<p>class 属性だけは特別扱いされており、先頭が空白だと追加を意味します。<br class="break-line">
+空白がないと class 属性自体も完全に置換されます。</p>
+<p>例えば下記の1つ目は <code>+</code> を使用しているのにツリー構造になりません。<br class="break-line">
+2つ目のように空白で始めて「追加である」ことを明示する必要があります。</p>
+<pre data-label="属性"><div class="code language-markdown:属性 markdown:属性">[class=hoge]
++ A
++ B
+
+[class=" hoge"]
++ A
++ B</div></pre>
+<p></p>
+<ul class="hoge">
+<li class=" leaf">A</li>
+<li class=" leaf">B</li>
+</ul>
+<p></p>
+<ul class="simple tree hoge">
+<li class=" leaf">A</li>
+<li class=" leaf">B</li>
+</ul>
+</section><section id="_1e3f03243aa7d7602cb96598fa4700ae8669063e-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">参照ブロック</h4>
+<p><code>&lt;&lt;</code> でラベルをつけると後から参照できるブロックを定義できます。</p>
+<pre data-label=""><div class="code">&lt;&lt;BLOCK1
+ここは BLOCK1 です。
+
+"""note:title
+test
+"""
+BLOCK1
+
+&lt;&lt;BLOCK2
+ここは BLOCK2 です。
+
+$BLOCK1
+BLOCK2
+
+&lt;&lt;BLOCK3
+...ここは BLOCK3 です
+$BLOCK1
+$BLOCK2
+$BLOCK3
+...
+BLOCK3
+
+- BLOCK1: $BLOCK1
+- BLOCK2: $BLOCK2
+- BLOCK3: $BLOCK3</div></pre>
+<p>上記のようにすると下記のようになります。</p>
+<dl class="docutils field-list">
+<div class="dtdd-container">
+<dt>BLOCK1</dt>
+<dd><div class="BLOCK1"><p>ここは BLOCK1 です。</p>
+<div class="note admonition">
+<p class="admonition-title">title</p>
+<p>test</p>
+</div></div></dd>
+</div>
+<div class="dtdd-container">
+<dt>BLOCK2</dt>
+<dd><div class="BLOCK2"><p>ここは BLOCK2 です。</p>
+<p></p><div class="BLOCK1"><p>ここは BLOCK1 です。</p>
+<div class="note admonition">
+<p class="admonition-title">title</p>
+<p>test</p>
+</div></div></div></dd>
+</div>
+<div class="dtdd-container">
+<dt>BLOCK3</dt>
+<dd><div class="BLOCK3"><details>
+<summary class="">ここは BLOCK3 です</summary>
+<p></p><div class="BLOCK1"><p>ここは BLOCK1 です。</p>
+<div class="note admonition">
+<p class="admonition-title">title</p>
+<p>test</p>
+</div></div><br class="break-line">
+<div class="BLOCK2"><p>ここは BLOCK2 です。</p>
+<p></p><div class="BLOCK1"><p>ここは BLOCK1 です。</p>
+<div class="note admonition">
+<p class="admonition-title">title</p>
+<p>test</p>
+</div></div></div><br class="break-line">
+$BLOCK3
+</details></div></dd>
+</div>
+</dl>
+<p>定義されたブロックは表示されません。<br class="break-line">
+その代わり <code>$blockName</code> で参照することでその箇所に埋め込むことができます。</p>
+<p>定義ブロック内でブロックを参照することもできます（上記の BLOCK2）。<br class="break-line">
+ただし循環参照があると打ち切られてブロックが埋め込まれません（上記の BLOCK3）。</p>
+<p>識別子に使える文字は <code>[_a-zA-Z][_a-zA-Z0-9]*</code> です。大文字小文字を区別します。</p>
+<p>リストやテーブル内にブロックを埋め込む場合、書式が非常にややこしくなってしまいますが、この方法を使うとベタ書き感覚でブロックを埋め込むことができます。</p>
 </section><section id="_3229609e15436ec51bcf00818a69a84dbc58a0c2-1" class="section section-level-h2" data-section-level="2"><h2 class="section-header">License</h2>
 <p>MIT</p>
 </section><section id="_d41f56cea1ac933d25c57aebc6522e2b6c58eb87-1" class="section section-level-h2" data-section-level="2"><h2 class="section-header">Release</h2>
@@ -1746,6 +2485,29 @@ semver 準拠はあくまで下記だけです。</p>
 <li>POST で更新する？</li>
 <li>静的ファイルは全部 CDN に逃したい</li>
 <li>markdown に include 機能を持たせたい</li>
+</ul>
+</section><section id="_4acc7d8ff2a07c5724b61e524ae1a2782dc80e96-1" class="section section-level-h3" data-section-level="3"><h3 class="section-header">1.2.0</h3>
+<ul class=" simple">
+<li>[change] デザイン変更</li>
+<li>[change] 出力ディレクトリ指定機能</li>
+<li>[feature] 擬似的な docroot である navroot を追加</li>
+<li>[change] インデックスでファイル名だけでなくタイトルも表示</li>
+<li>[refactor] キャッシュの変更</li>
+<li>[change] soft_limit の撤廃</li>
+<li>[feature] 絶対配置ブロック</li>
+<li>[feature] divブロックと属性指示子</li>
+<li>[feature] 参照ブロック</li>
+<li>[feature] テーブル記法の拡張</li>
+<li>[feature] + でのツリーリスト構文</li>
+<li>[feature] コメント機能</li>
+<li>[fixbug] コードブロックのスペース以降のラベルが消失していた不具合を修正</li>
+<li>[refactor] コード修正</li>
+<li>[feature] コードブロックの行番号表示</li>
+<li>[feature] フォントサイズ変更機能</li>
+<li>[feature] 子セクションの要素数を表示</li>
+<li>[feature] 自動非表示機能で隠れている要素数を表示</li>
+<li>[feature] 見出しの sticky 機能</li>
+<li>[feature] 見出し番号の表示を head/body に分離</li>
 </ul>
 </section><section id="_270ab9fbc267c8db129c34d079aeb2a92f7b9f42-1" class="section section-level-h3" data-section-level="3"><h3 class="section-header">1.1.3</h3>
 <ul class=" simple">
@@ -1802,7 +2564,7 @@ semver 準拠はあくまで下記だけです。</p>
                                                             <a href="index.html" class="btn btn-neutral" accesskey="u" rel="up"><span class="fa fa-arrow-circle-up" aria-hidden="true"></span> php-markdown/</a>
                                                     </div>
                         <div>
-                                                            <a href="tests/index.html" class="btn btn-neutral" accesskey="n" rel="next">tests/ <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+                                                            <a href="bin/index.html" class="btn btn-neutral" accesskey="n" rel="next">bin/ <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
                                                     </div>
                     </div>
                     <hr>
@@ -1837,6 +2599,13 @@ semver 準拠はあくまで下記だけです。</p>
                                             </datalist>
                 </dd>
                 <dd>
+                    <label class="option-title" for="font_size">font size</label>
+                    <span>
+                        <input id="fontSize" class="option-input savedata" data-default-value="16" type="range" min="10" max="24">
+                        <output for="fontSize"></output>
+                    </span>
+                </dd>
+                <dd>
                     <label class="option-title" for="toc_visible">TOC visible</label>
                     <input id="tocVisible" class="option-input savedata" data-default-value="true" type="checkbox" value="1">
                 </dd>
@@ -1850,8 +2619,16 @@ semver 準拠はあくまで下記だけです。</p>
                     <input id="tocLevel" class="option-input savedata" data-default-value="5" type="number" min="1" max="6">
                 </dd>
                 <dd>
+                    <label class="option-title" for="toc_sticky">TOC sticky</label>
+                    <input id="tocSticky" class="option-input savedata" data-default-value="3" type="number" min="0" max="6">
+                </dd>
+                <dd>
                     <label class="option-title" for="toc_number">TOC number</label>
                     <input id="tocNumber" class="option-input savedata" data-default-value="true" type="checkbox" value="1">
+                </dd>
+                <dd>
+                    <label class="option-title" for="toc_child">TOC child count</label>
+                    <input id="tocChild" class="option-input savedata" data-default-value="true" type="checkbox" value="1">
                 </dd>
                 <dd>
                     <label class="option-title" for="toc_follow">TOC follow</label>
@@ -1874,6 +2651,10 @@ semver 準拠はあくまで下記だけです。</p>
                                                     <option value="github">github</option>
                                                     <option value="vs">vs</option>
                                             </select>
+                </dd>
+                <dd>
+                    <label class="option-title" for="section_number">section number</label>
+                    <input id="sectionNumber" class="option-input savedata" data-default-value="true" type="checkbox" value="1">
                 </dd>
                 <dd>
                     <label class="option-title" for="link_url">url link</label>
