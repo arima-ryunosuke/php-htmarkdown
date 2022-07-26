@@ -109,11 +109,11 @@ class DocumentTest extends \ryunosuke\Test\AbstractTestCase
 
         $doc = new Document("$dir/sub/sub/sub/index.md", [
             'docroot' => $dir,
+            'navroot' => "$dir/sub/sub",
         ]);
         $parents = $doc->parents();
         that(array_map('strval', $parents))->is([
             realpath("$dir/sub/sub"),
-            realpath("$dir/sub"),
         ]);
     }
 

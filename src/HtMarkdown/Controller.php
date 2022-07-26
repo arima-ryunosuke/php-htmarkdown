@@ -119,6 +119,7 @@ class Controller
     public function handleHttp(): bool
     {
         $options = [
+            'navroot'  => null,
             'docroot'  => null,
             'download' => $this->isDownload(),
             'locale'   => locale_accept_from_http($this->server['HTTP_ACCEPT_LANGUAGE']),
@@ -130,6 +131,13 @@ class Controller
         $filename = rtrim($docroot . $reqfile, '/');
         $filename = strlen($this->request['query'] ?? '') && !is_dir($filename) ? dirname($filename) : $filename;
         $options['docroot'] = $docroot;
+
+        $scriptfile = $this->server['SCRIPT_FILENAME'] ?: $docroot;
+        $commons = array_intersect_assoc(mb_str_split($filename), mb_str_split($scriptfile));
+        $n = 0;
+        $navroot = implode('', array_filter($commons, function ($i) use (&$n) { return $i === $n++; }, ARRAY_FILTER_USE_KEY));
+        $options['navroot'] = dirname("{$navroot}dummy");
+
         $document = new Document($filename, $options);
 
         ob_start();

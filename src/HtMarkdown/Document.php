@@ -38,6 +38,7 @@ class Document
 
         $this->options = array_replace(Controller::SPECIFIABLE_OPTIONS, [
             'docroot' => $this->file->dirname(),
+            'navroot' => '',
         ], $options);
     }
 
@@ -146,6 +147,9 @@ class Document
             $parents = [];
             for ($i = 1; $i < 128; $i++) {
                 if (strlen($dirname) < strlen($this->options['docroot']) || in_array($dirname, [$this->options['docroot'], '.', '/'], true)) {
+                    break;
+                }
+                if ($dirname === dirname($this->options['navroot'])) {
                     break;
                 }
                 $parents[] = new self($dirname, $this->options);
