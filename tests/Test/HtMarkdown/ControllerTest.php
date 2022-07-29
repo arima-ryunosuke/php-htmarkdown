@@ -62,10 +62,12 @@ class ControllerTest extends \ryunosuke\Test\AbstractTestCase
             $this->markTestSkipped();
         }
 
-        $controller = new Controller([
+        $controller = new Controller([], [null, "$dir/plain.md"]);
+        that($controller)->handleCli(...[])->outputMatches("#^PK#");
 
-        ], [null, "$dir/plain.md"]);
-        that($controller)->handleCli(...[])->outputStartsWith('<html');
+        $controller = new Controller([], [null, "$dir/plain.md", sys_get_temp_dir() . 'htt']);
+        that($controller)->handleCli(...[])->outputEquals("");
+        $this->assertCount(1, glob(sys_get_temp_dir() . 'htt'));
 
         $controller = new Controller([], [null, "$dir/notfound"]);
         that($controller)->handleCli()->wasThrown('is not found');

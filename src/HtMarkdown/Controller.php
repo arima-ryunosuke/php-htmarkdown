@@ -112,6 +112,16 @@ class Controller
         }
 
         $document = new Document($filename, $options);
+
+        $output = $this->request[$rest_index + 1] ?? null;
+        if ($output !== null) {
+            foreach ($document->generate() as $name => $contents) {
+                @mkdir(dirname("$output/$name"), 0777, true);
+                file_put_contents("$output/$name", $contents);
+            }
+            return true;
+        }
+
         readfile($document->archive()->realpath());
         return true;
     }

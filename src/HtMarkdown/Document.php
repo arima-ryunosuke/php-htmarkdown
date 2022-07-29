@@ -469,52 +469,42 @@ class Document
         return $this->dom;
     }
 
-    public function archive(): File
+    public function generate(): \Generator
     {
         $this->options['docroot'] = $this->file->parent();
         $this->options['singlefile'] = $this->file->exists();
 
-        $alias = pathinfo($this, PATHINFO_FILENAME);
+        foreach ($this->contents() as $file) {
+            yield $file->relative($this->file->parent()) => $file->contents();
+        }
+
+        foreach ($this->descendants() as $it) {
+            foreach ($it->contents() as $file) {
+                yield $file->relative($this->file->parent()) => $file->contents();
+            }
+        }
+    }
+
+    public function archive(): File
+    {
         $tmpdir = sys_get_temp_dir() . '/htmarkdown';
         @mkdir($tmpdir);
         $basename = tempnam($tmpdir, 'hmd');
         register_shutdown_function('unlink', $basename);
 
-        $addContents = function (\ZipArchive $zip, File $from, array $files) {
-            foreach ($files as $file) {
-                /** @var File $file */
-                $zip->addFromString($file->relative($from->parent()), $file->contents());
+        $zip = new \ZipArchive();
+        $zip->open($basename, \ZipArchive::OVERWRITE);
+        foreach ($this->generate() as $name => $contents) {
+            if ($zip->numFiles >= $this->hard_limit) {
+                $zip->addFromString('archive.log', "too many entries limitation by hard limit ({$this->hard_limit})");
+                break;
             }
-        };
-
-        if ($this->file->exists()) {
-            $contents = $this->contents();
-            if (count($contents) === 1) {
-                file_put_contents($basename, reset($contents)->contents());
-                return (new File($basename))->alias("$alias.html");
-            }
-
-            $zip = new \ZipArchive();
-            $zip->open($basename, \ZipArchive::OVERWRITE);
-            $addContents($zip, $this->file, $contents);
-            $zip->close();
-            return (new File($basename))->alias("$alias.zip");
+            $zip->addFromString($name, $contents);
         }
-        else {
-            $zip = new \ZipArchive();
-            $zip->open($basename, \ZipArchive::OVERWRITE);
+        $zip->close();
 
-            $addContents($zip, $this->file, $this->contents());
-            foreach ($this->descendants() as $it) {
-                if ($zip->numFiles >= $this->hard_limit) {
-                    $zip->addFromString('archive.log', "too many entries limitation by hard limit ({$this->hard_limit})");
-                    break;
-                }
-                $addContents($zip, $this->file, $it->contents());
-            }
-            $zip->close();
-            return (new File($basename))->alias("$alias.zip");
-        }
+        $alias = pathinfo($this, PATHINFO_FILENAME);
+        return (new File($basename))->alias("$alias.zip");
     }
 
     public function plain(string $query): string

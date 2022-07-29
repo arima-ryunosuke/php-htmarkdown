@@ -364,12 +364,30 @@ class DocumentTest extends \ryunosuke\Test\AbstractTestCase
         ]);
     }
 
-    function test_archive()
+    function test_generate()
     {
         $dir = __DIR__ . '/../../stub';
 
-        $doc = new Document("$dir/plain.md", []);
-        that(strval($doc->archive()))->stringEndsWith("plain.html");
+        $doc = new Document("$dir", []);
+
+        $expected = [
+            'index.html'          => '',
+            'img/a.png'           => '',
+            'img/a/b.jpg'         => '',
+            'parent/index.html'   => '',
+            'parent/a/index.html' => '',
+            'parent/b.html'       => '',
+        ];
+        $actual = [];
+        foreach ($doc->generate() as $name => $contents) {
+            $actual["$name"] = '';
+        }
+        that($actual)->subsetEquals($expected);
+    }
+
+    function test_archive()
+    {
+        $dir = __DIR__ . '/../../stub';
 
         $doc = new Document("$dir/dummy.md", []);
         that(strval($doc->archive()))->stringEndsWith("dummy.zip");
