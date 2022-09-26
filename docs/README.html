@@ -693,8 +693,16 @@ section[data-section-level="6"] {
 }
 
 
-[data-break-line="false"] br.break-line {
+[data-break-line="ignore"] .implicit-br {
     display: none;
+}
+
+[data-break-line="break"] .implicit-br {
+    white-space: pre-line;
+}
+
+[data-break-line="space"] .implicit-br {
+    white-space: normal;
 }
 
 [data-link-url="false"] a.link-url {
@@ -1175,7 +1183,7 @@ a.disabled {
     };
     HTMLInputElement.prototype.getValue = HTMLSelectElement.prototype.getValue = function () {
         if (this.tagName === 'SELECT') {
-            return this.$('option:checked').value;
+            return this.$('option:checked')?.value ?? this.dataset.defaultValue;
         }
         else if (this.type === 'checkbox') {
             return '' + this.checked;
@@ -1186,7 +1194,10 @@ a.disabled {
     };
     HTMLInputElement.prototype.setValue = HTMLSelectElement.prototype.setValue = function (value) {
         if (this.tagName === 'SELECT') {
-            this.$(`option[value="${value}"]`).selected = true;
+            const selected = this.$(`option[value="${value}"]`);
+            if (selected) {
+                selected.selected = true;
+            }
         }
         else if (this.type === 'checkbox') {
             this.checked = value === 'true';
@@ -1625,7 +1636,7 @@ a.disabled {
             <div class="wy-side-nav-search">
                 <a href="" class="icon icon-home"> README.md</a>
                 <div class="version">
-                    Last Modified 2022/08/17 16:26:30                </div>
+                    Last Modified 2022/10/11 11:15:14                </div>
                 <div role="search">
                     <form id="rtd-search-form" class="wy-form hidden-download" method="get">
                         <input type="text" name="query" placeholder="Search directory" value="">
@@ -1661,28 +1672,28 @@ a.disabled {
                     <article><section id="_a1ea035e51bd155b85c882ccf36ecd85554081c8-1" class="main-section"><h1 class="main-header section-header">Markdown viewer for web</h1>
 </section><section id="_9e1516648f1127f9153f91a5a931fd7c7dcfd37f-1" class="sub-section"><h2 class="sub-header section-header">This is sub header</h2>
 </section><section id="_55f8ebc805e65b5b71ddafdae390e3be2bcd69af-1" class="section section-level-h2" data-section-level="2"><h2 class="section-header">Description</h2>
-<p>markdown を良い感じに表示する phar です。<br class="break-line">
-ざっくり言えば要するに docsify の php 版のようなものです。</p>
+<p>markdown を良い感じに表示する phar です。<span class="implicit-br">
+</span>ざっくり言えば要するに docsify の php 版のようなものです。</p>
 <p>デザインは Read The Docs のものを使用しています。</p>
 <ul class=" simple">
 <li><a href="https://arima-ryunosuke.github.io/php-htmarkdown/README.html">Demo</a></li>
 </ul>
 </section><section id="_0bb18642b70b9f8a9c12ccf39487328f306b8e19-1" class="section section-level-h2" data-section-level="2"><h2 class="section-header">Usage</h2>
-<p>下記の3つの使い方があります。<br class="break-line">
-いずれも <code>.md</code> <code>.php.md</code> の拡張子を対象にナビゲーションリンクが生成されます。<br class="break-line">
-さらに <code>.php.md</code> の場合は php が実行されます。</p>
+<p>下記の3つの使い方があります。<span class="implicit-br">
+</span>いずれも <code>.md</code> <code>.php.md</code> の拡張子を対象にナビゲーションリンクが生成されます。<span class="implicit-br">
+</span>さらに <code>.php.md</code> の場合は php が実行されます。</p>
 </section><section id="_454d783b07841da1d1409e2ec34ec5cfe22e35dc-1" class="section section-level-h3" data-section-level="3"><h3 class="section-header">Rewrite Mode</h3>
 <p>下記のように web サーバを設定します。</p>
 <pre data-label="apacheの場合"><div class="code language-plaintext:apacheの場合 plaintext:apacheの場合">RewriteRule \.md$ htmarkdown.phar [QSA,L]</div></pre>
 <pre data-label="nginxの場合"><div class="code language-plaintext:nginxの場合 plaintext:nginxの場合">rewrite \.md$ htmarkdown.phar;</div></pre>
-<p>説明はほぼ不要ですが、拡張子 md を rewrite して phar に委譲されるようにします。<br class="break-line">
-<code>-d</code> オプションを加えれば Directory Index としても機能します。</p>
+<p>説明はほぼ不要ですが、拡張子 md を rewrite して phar に委譲されるようにします。<span class="implicit-br">
+</span><code>-d</code> オプションを加えれば Directory Index としても機能します。</p>
 <p>※ 環境によっては <code>security.limit_extensions</code> や <code>SetHandler</code> 等の設定が必要です</p>
 </section><section id="_b6116e0a38445828e0b32bcde97c58843cf50feb-1" class="section section-level-h3" data-section-level="3"><h3 class="section-header">Built in Server Mode</h3>
 <p>下記のようにして built in server で起動します。</p>
 <pre data-label=""><div class="code language-bash bash">php -S 0.0.0.0:8000 htmarkdown.phar</div></pre>
-<p>これも説明は不要でしょう。通常の built in server です。<br class="break-line">
-phar がルーターの役割も持っているので、起動したカレントディレクトリ（もちろん <code>-t</code> も有効です）をドキュメントルートとして web サーバが起動します。</p>
+<p>これも説明は不要でしょう。通常の built in server です。<span class="implicit-br">
+</span>phar がルーターの役割も持っているので、起動したカレントディレクトリ（もちろん <code>-t</code> も有効です）をドキュメントルートとして web サーバが起動します。</p>
 <p>docsify の使い方に近いです。</p>
 </section><section id="_1d787de16a8d98dec52d81dfb9c3691e3ed35031-1" class="section section-level-h3" data-section-level="3"><h3 class="section-header">Command Line Mode</h3>
 <p>下記のように引数を渡すと引数が zip に変換されます。</p>
@@ -1690,8 +1701,8 @@ phar がルーターの役割も持っているので、起動したカレント
 <p>出力は標準出力です。なので上記のようにリダイレクトは必須です。</p>
 <p>第2引数にディレクトリを渡すとエクスポートされます。</p>
 <pre data-label=""><div class="code language-bash bash">php htmarkdown.phar /path/to/markdown.md /path/to/directory</div></pre>
-<p>ただし、この機能は現時点ではおまけです。<br class="break-line">
-この機能は後述の semver の互換性保持には含まれません。</p>
+<p>ただし、この機能は現時点ではおまけです。<span class="implicit-br">
+</span>この機能は後述の semver の互換性保持には含まれません。</p>
 </section><section id="_ad565d9d01d0e0bf91fd6a8532f6d81613338901-1" class="section section-level-h2" data-section-level="2"><h2 class="section-header">Feature</h2>
 <p>基本的には機能決め打ちのただの markdown viewer です。</p>
 <ul class=" simple">
@@ -1700,8 +1711,8 @@ phar がルーターの役割も持っているので、起動したカレント
 <li>ダウンロード機能</li>
 <li>一部の設定の画面操作</li>
 </ul>
-<p>などがありますが、おまけです。<br class="break-line">
-ドキュメントルートに配置して、 markdown を踏んだときにそれらしく見やすくするのが主目的です。</p>
+<p>などがありますが、おまけです。<span class="implicit-br">
+</span>ドキュメントルートに配置して、 markdown を踏んだときにそれらしく見やすくするのが主目的です。</p>
 </section><section id="_657459612ddba668524487766c36a883cd7728aa-1" class="section section-level-h3" data-section-level="3"><h3 class="section-header">拡張構文</h3>
 <p>標準の markdown に加えて下記の拡張構文があります。</p>
 </section><section id="_786bef306de28bcb51bdc4b38b2e8c73649db338-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">マーカー</h4>
@@ -1720,8 +1731,8 @@ phar がルーターの役割も持っているので、起動したカレント
 <li>success バッジ <span class="badge success" data-badge-title="">テキスト</span></li>
 <li>タイトル付きalert バッジ <span class="badge alert" data-badge-title="タイトル">テキスト</span></li>
 </ul>
-<p>上記のようにタイプ,タイトル,テキストはある程度省略できます。<br class="break-line">
-タイプは <code>info</code> <code>success</code> <code>notice</code> <code>alert</code> が使えます。</p>
+<p>上記のようにタイプ,タイトル,テキストはある程度省略できます。<span class="implicit-br">
+</span>タイプは <code>info</code> <code>success</code> <code>notice</code> <code>alert</code> が使えます。</p>
 </section><section id="_6f403327f49dbb27440c972025889cf019a40adc-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">キャプション</h4>
 <p>ヘッダーのように <code>####### Caption</code> と <code>#</code> を7個並べるとキャプションになります。</p>
 <pre data-label="キャプション"><div class="code language-markdown:キャプション markdown:キャプション">####### This Is Caption
@@ -1730,10 +1741,23 @@ phar がルーターの役割も持っているので、起動したカレント
 <p>上記のようにすると下記のようになります。</p>
 <em class="caption">This Is Caption</em>
 <p>内容</p>
-<p>キャプションはブロック要素となり <code>p</code> で囲われません。さらに見出しとして検出されません。<br class="break-line">
-実態は <code>em</code> ですが、変更される可能性があります。<br class="break-line">
-また、意図的に下部パディングを小さめにしています。</p>
+<p>キャプションはブロック要素となり <code>p</code> で囲われません。さらに見出しとして検出されません。<span class="implicit-br">
+</span>実態は <code>em</code> ですが、変更される可能性があります。<span class="implicit-br">
+</span>また、意図的に下部パディングを小さめにしています。</p>
 <p>セクション内のちょっとした区切りやアクセントとして使用します。</p>
+</section><section id="_115afc658c2caa64437521625036a71f2709bd69-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">拡張リンク</h4>
+<p>通常のリンク記法（<code>[text](url)</code>）に加えて属性が指定可能です。<span class="implicit-br">
+</span>画像記法（<code>![alt](url)</code>）にも適用されます。</p>
+<pre data-label="拡張リンク"><div class="code language-markdown:拡張リンク markdown:拡張リンク">これは[普通のリンク](https://example.com)です。
+これは[別タブで開くリンク](https://example.com target=_blank)です。
+これは[id, class が指定されたリンク](https://example.com id="link" class="c1 c2")です。
+
+![](fig1.png width="24px")これはwidth指定された画像です。</div></pre>
+<p>上記のようにすると下記のようになります。</p>
+<p>これは<a href="https://example.com">普通のリンク</a>です。<span class="implicit-br">
+</span>これは<a href="https://example.com" target="_blank">別タブで開くリンク</a>です。<span class="implicit-br">
+</span>これは<a href="https://example.com" id="link" class="c1 c2">id, class が指定されたリンク</a>です。</p>
+<p><img src="fig1.png" alt="" width="24px">これはwidth指定された画像です。</p>
 </section><section id="_41a632efa3083516bb9e81d9dffccbdb332fa8a6-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">コメント</h4>
 <p><code>//</code> で html コメントになります。</p>
 <pre data-label="html コメント"><div class="code language-markdown:html markdown:html">この下にコメントがあります。
@@ -1763,8 +1787,8 @@ phar がルーターの役割も持っているので、起動したカレント
 <p class="sidebar-title">title</p>
 <p>これはサイドバーです。</p>
 </div>
-<p>note の部分はほぼ飾りです。 Read The Docs 本家にスタイルがなかったため、埋め込まれはしますがスタイルは変わりません。<br class="break-line">
-title の部分はただのラベルになります。</p>
+<p>note の部分はほぼ飾りです。 Read The Docs 本家にスタイルがなかったため、埋め込まれはしますがスタイルは変わりません。<span class="implicit-br">
+</span>title の部分はただのラベルになります。</p>
 <p>ただし <code>right</code> を指定した場合のみ無装飾で右上に配置されます。</p>
 <pre data-label="right"><div class="code language-markdown:right markdown:right">///right
 これは右側に配置されます。
@@ -1831,11 +1855,11 @@ title の部分はただのラベルになります。</p>
 </ul>
 </li>
 </ul>
-<p>すべてが葉要素になるため、1つ目はキャプション記法を利用してルートっぽくなるようにしています。<br class="break-line">
-ただし、2つ目のように最上位のアイテムが1つの場合はその項目だけ縦線は引かれません。</p>
-<p>また、ツリー内はすべて <code>+</code> で記述する必要があります。<br class="break-line">
-逆に言えば <code>+</code> を使わなければ normal items のように通常リストを混在させることも可能です。<br class="break-line">
-単に「<code>+</code> を使うとちょっと変わった list-style になる」と言った方が分かりやすいかもしれません。</p>
+<p>すべてが葉要素になるため、1つ目はキャプション記法を利用してルートっぽくなるようにしています。<span class="implicit-br">
+</span>ただし、2つ目のように最上位のアイテムが1つの場合はその項目だけ縦線は引かれません。</p>
+<p>また、ツリー内はすべて <code>+</code> で記述する必要があります。<span class="implicit-br">
+</span>逆に言えば <code>+</code> を使わなければ normal items のように通常リストを混在させることも可能です。<span class="implicit-br">
+</span>単に「<code>+</code> を使うとちょっと変わった list-style になる」と言った方が分かりやすいかもしれません。</p>
 </section><section id="_dc813bf775a6b910b13f1445a27fde368e5b5177-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">定義リスト</h4>
 <p><code>-</code> や <code>*</code> などのリスト記法に続けて、<code>:</code>（コロンスペース）があると定義リストが生成されます。</p>
 <pre data-label="横並び定義リストの例"><div class="code language-markdown:横並び定義リストの例 markdown:横並び定義リストの例">- りんご: 赤いです
@@ -1863,20 +1887,20 @@ title の部分はただのラベルになります。</p>
 <div class="dtdd-container">
 <dt>りんご</dt>
 <dd>
-<p>赤いです<br class="break-line">
-美味しいです</p>
+<p>赤いです<span class="implicit-br">
+</span>美味しいです</p>
 </dd>
 </div>
 <div class="dtdd-container">
 <dt>みかん</dt>
 <dd>
-<p>黄色いです<br class="break-line">
-酸っぱいです</p>
+<p>黄色いです<span class="implicit-br">
+</span>酸っぱいです</p>
 </dd>
 </div>
 </dl>
-<p>コロンの直後にスペースを含めて改行すると横並びで詳細を記載する機会が与えられます。<br class="break-line">
-つまり、定義リストのネストや他の記法が使えることになります。</p>
+<p>コロンの直後にスペースを含めて改行すると横並びで詳細を記載する機会が与えられます。<span class="implicit-br">
+</span>つまり、定義リストのネストや他の記法が使えることになります。</p>
 <pre data-label="横並びネスト定義リストの例"><div class="code language-markdown:横並びネスト定義リストの例 markdown:横並びネスト定義リストの例">- 果物: 
     - りんご: これはネストされた箇条書きリストです
         - 赤いです
@@ -1930,10 +1954,10 @@ echo 2;</div></pre>
 </dd>
 </div>
 </dl>
-<p>標準 markdown にはなぜか定義リストがなく、結構不便なので独自に定義しています。<br class="break-line">
-上記の通り、他のあらゆる記法とは全く異なる独自ルールです。</p>
-<p>そもそも定義リストは<strong>リスト</strong>ですし、もともと markdown は「そのままのテキストでもそれっぽく見える」ような記法だったはずです。<br class="break-line">
-ので見た目（md）とマークアップ（html）があまり剥離しないこのルールは割と好きです。</p>
+<p>標準 markdown にはなぜか定義リストがなく、結構不便なので独自に定義しています。<span class="implicit-br">
+</span>上記の通り、他のあらゆる記法とは全く異なる独自ルールです。</p>
+<p>そもそも定義リストは<strong>リスト</strong>ですし、もともと markdown は「そのままのテキストでもそれっぽく見える」ような記法だったはずです。<span class="implicit-br">
+</span>ので見た目（md）とマークアップ（html）があまり剥離しないこのルールは割と好きです。</p>
 <div class="warning admonition">
 <p class="admonition-title">注意</p>
 <p>コロンスペースのスペースは必須です。でないと下記のような「URL のリスト」が定義リストと認識されてしまいます。</p>
@@ -1963,8 +1987,8 @@ echo 2;</div></pre>
 <summary class="">ここは summary になります</summary>
 <p>ここが折りたたみの中身になります</p>
 </details>
-<p>summary 部分を省略すると summary タグは生成されません。<br class="break-line">
-その場合ブラウザのデフォルトになります（「省略」など）。</p>
+<p>summary 部分を省略すると summary タグは生成されません。<span class="implicit-br">
+</span>その場合ブラウザのデフォルトになります（「省略」など）。</p>
 </section><section id="_9ee41198fa16304a56f1a575a1af05a6b5ec50fa-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">幅指定テーブル</h4>
 <p>テーブル記法で2行目に空白を含めると <code>-</code> の数が列の幅になります。</p>
 <pre data-label="幅指定テーブルの例"><div class="code language-markdown:幅指定テーブルの例 markdown:幅指定テーブルの例">| 連番 | 名前 | 日付                |
@@ -2006,10 +2030,10 @@ echo 2;</div></pre>
 </tbody>
 </table>
 </div>
-<p>「連番」の幅が狭く、「日付」の幅が広くなっています。<br class="break-line">
-「名前」は空白が含まれていないので width が指定されていません。</p>
-<p>値としては「列のハイフンの数 / 全体ハイフンの数 * 100」% が指定されます。<br class="break-line">
-要するにハイフンの数の全体を占める割合になります。</p>
+<p>「連番」の幅が狭く、「日付」の幅が広くなっています。<span class="implicit-br">
+</span>「名前」は空白が含まれていないので width が指定されていません。</p>
+<p>値としては「列のハイフンの数 / 全体ハイフンの数 * 100」% が指定されます。<span class="implicit-br">
+</span>要するにハイフンの数の全体を占める割合になります。</p>
 <p>このとき、table に <code>table-layout: fixed; word-break: break-all;</code> が設定されます。</p>
 </section><section id="_44d8bdcb09ebddc75636d5f96b2e6c8a38b5ebba-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">罫線なしテーブル</h4>
 <p>テーブル記法で両端の <code>|</code> を省略すると縦罫線のないテーブルになります。</p>
@@ -2047,8 +2071,8 @@ echo 2;</div></pre>
 </tbody>
 </table>
 </div>
-<p>生成される html はほぼ変わりません。 table に <code>no-border</code> が付くか付かないかです。表示は css が担っています。<br class="break-line">
-現在のところ、縦罫線に加えて背景色も消えます。これはリスティングを主目的としているため（＋作者が stripe が嫌いなため）です。</p>
+<p>生成される html はほぼ変わりません。 table に <code>no-border</code> が付くか付かないかです。表示は css が担っています。<span class="implicit-br">
+</span>現在のところ、縦罫線に加えて背景色も消えます。これはリスティングを主目的としているため（＋作者が stripe が嫌いなため）です。</p>
 </section><section id="_9c61f456082d3eaa26c2417b962018c885a75433-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">ヘッダなしテーブル</h4>
 <p>テーブル記法ですべてのヘッダを空白にするとヘッダなしのテーブルになります。</p>
 <pre data-label="ヘッダなしテーブルの例"><div class="code language-markdown:ヘッダなしテーブルの例 markdown:ヘッダなしテーブルの例">|      |      |                     |
@@ -2080,8 +2104,8 @@ echo 2;</div></pre>
 </div>
 <p>現在のところ、「空でも良いのでヘッダを出したい」という動作はありません。</p>
 </section><section id="_4a3c7f7679297ba32d5f0340a34d7842b256f830-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">キャプションつきテーブル</h4>
-<p>テーブル記法の上下に <code>:キャプション:</code> があるとそれは caption になります。<br class="break-line">
-上にある場合は上側、下にある場合は下側に配置されます。</p>
+<p>テーブル記法の上下に <code>:キャプション:</code> があるとそれは caption になります。<span class="implicit-br">
+</span>上にある場合は上側、下にある場合は下側に配置されます。</p>
 <pre data-label="キャプションつきテーブルの例"><div class="code language-markdown:キャプションつきテーブルの例 markdown:キャプションつきテーブルの例">:これは左上 caption です
 | 連番 | 名前 | 日付                |
 |-----:|:-----|:-------------------:|
@@ -2214,14 +2238,14 @@ echo 2;</div></pre>
 - C
 
 &lt;strong&gt;strong&lt;/strong&gt;</p></pre>
-<p>コードブロックと似ていますが、シンタックスハイライトはされません。<br class="break-line">
-あくまで、「マークダウンのエスケープが不要なヒアドキュメント」となります。<br class="break-line">
-使う機会はそう多くないでしょう。</p>
+<p>コードブロックと似ていますが、シンタックスハイライトはされません。<span class="implicit-br">
+</span>あくまで、「マークダウンのエスケープが不要なヒアドキュメント」となります。<span class="implicit-br">
+</span>使う機会はそう多くないでしょう。</p>
 </section><section id="_c03609af9ebd1c7983a8f47fbb10faa2c84ed8e5-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">絶対配置</h4>
 <p>コードブロックと同じように <code>^^^</code> で囲むと絶対配置（position:absolute）になります。</p>
-<p>ブロック内で <code>(x,y:content)</code> を記述すると相対座標 (x,y) に content を配置できます。<br class="break-line">
-content を n あるいは数字にすると丸数字になります。<br class="break-line">
-n の場合は数値は自動増加します。数字にするとその数値から始まり、内部的なグループが変更されます。</p>
+<p>ブロック内で <code>(x,y:content)</code> を記述すると相対座標 (x,y) に content を配置できます。<span class="implicit-br">
+</span>content を n あるいは数字にすると丸数字になります。<span class="implicit-br">
+</span>n の場合は数値は自動増加します。数字にするとその数値から始まり、内部的なグループが変更されます。</p>
 <p>さらに <code>(x,y,w,h)</code> を記述するとその座標（相対）に矩形を配置できます。</p>
 <p>基本的に画像への注釈のような使い方を想定しています。</p>
 <pre data-label="絶対配置の例"><div class="code language-markdown:絶対配置の例 markdown:絶対配置の例">^^^
@@ -2296,10 +2320,10 @@ n の場合は数値は自動増加します。数字にするとその数値か
 </tbody>
 </table>
 </div>
-<p>絶対配置内は pre 表示されるため、文字・行ベースで位置を合わせ、次の要素（img）と重ね合わせることで実現します。よほどの微調整が要求されない限りそれで十分です。<br class="break-line">
-微調整が要求されたら <code>(0,-7:n)</code> のようにy座標を調整します。</p>
-<p>かなりニッチな機能で、作者が必要に迫られて実装したものです。<br class="break-line">
-この記法は後方互換性に含まれません。</p>
+<p>絶対配置内は pre 表示されるため、文字・行ベースで位置を合わせ、次の要素（img）と重ね合わせることで実現します。よほどの微調整が要求されない限りそれで十分です。<span class="implicit-br">
+</span>微調整が要求されたら <code>(0,-7:n)</code> のようにy座標を調整します。</p>
+<p>かなりニッチな機能で、作者が必要に迫られて実装したものです。<span class="implicit-br">
+</span>この記法は後方互換性に含まれません。</p>
 </section><section id="_77e6a9baa61f1e1b165eea0638b94468985c9671-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">mermaid</h4>
 <p>コードブロックで mermaid を明示すると mermaid 記法になります。</p>
 <pre data-label="mermaid の例"><div class="code language-markdown:mermaid markdown:mermaid">```mermaid
@@ -2344,12 +2368,12 @@ sequenceDiagram
 <section id="thisisid" class="thisisclass" attr="value" style="color:red;background:#eee">
 <p>この中は section で囲まれています。</p>
 </section>
-<p>見ての通り css 記法を使用して id, class, 属性, スタイルを個別に当てることも可能です。<br class="break-line">
-何も指定しなかった場合、<code>div.block</code> になります。</p>
+<p>見ての通り css 記法を使用して id, class, 属性, スタイルを個別に当てることも可能です。<span class="implicit-br">
+</span>何も指定しなかった場合、<code>div.block</code> になります。</p>
 </section><section id="_7d3c35c29be1de8ba8a6f6264e192a7af157dc29-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">属性</h4>
-<p><code>[attr=value]</code> のようにセレクタライクな記法で直後のノードに属性を振ることができます。<br class="break-line">
-さらに <code>{color:red}</code> のように中括弧で囲むとスタイル属性となります。<br class="break-line">
-直後にテキストノード以外のノードが存在しない場合は親ノードに適用されます。</p>
+<p><code>[attr=value]</code> のようにセレクタライクな記法で直後のノードに属性を振ることができます。<span class="implicit-br">
+</span>さらに <code>{color:red}</code> のように中括弧で囲むとスタイル属性となります。<span class="implicit-br">
+</span>直後にテキストノード以外のノードが存在しない場合は親ノードに適用されます。</p>
 <p>この記法だけは特別扱いされており、ブロック記法の直前に空行なしで記述してもブロック構造が壊れたりしません。</p>
 <pre data-label="属性"><div class="code language-markdown:属性 markdown:属性">[target=_blank][このリンクは target=_blank が指定されています](https://example.com)
 [hoge=hoge fuga=fuga piyo=piyo]**この太字は hoge fuga piyo が指定されています**
@@ -2362,9 +2386,9 @@ sequenceDiagram
 このノートは .hint が付与されています。
 """</div></pre>
 <p>上記のようにすると下記のようになります。</p>
-<p><a href="https://example.com" target="_blank">このリンクは target=_blank が指定されています</a><br class="break-line">
-<strong hoge="hoge" fuga="fuga" piyo="piyo">この太字は hoge fuga piyo が指定されています</strong><br class="break-line">
-<code id="hoge" style="color:red">このインラインコードは id が指定されてスタイルが効いています</code></p>
+<p><a href="https://example.com" target="_blank">このリンクは target=_blank が指定されています</a><span class="implicit-br">
+</span><strong hoge="hoge" fuga="fuga" piyo="piyo">この太字は hoge fuga piyo が指定されています</strong><span class="implicit-br">
+</span><code id="hoge" style="color:red">このインラインコードは id が指定されてスタイルが効いています</code></p>
 <ul class=" simple">
 <li style="color:red">li自体にスタイルが適用されています</li>
 </ul>
@@ -2373,10 +2397,10 @@ sequenceDiagram
 <p class="admonition-title"></p>
 <p>このノートは .hint が付与されています。</p>
 </div>
-<p>class 属性だけは特別扱いされており、先頭が空白だと追加を意味します。<br class="break-line">
-空白がないと class 属性自体も完全に置換されます。</p>
-<p>例えば下記の1つ目は <code>+</code> を使用しているのにツリー構造になりません。<br class="break-line">
-2つ目のように空白で始めて「追加である」ことを明示する必要があります。</p>
+<p>class 属性だけは特別扱いされており、先頭が空白だと追加を意味します。<span class="implicit-br">
+</span>空白がないと class 属性自体も完全に置換されます。</p>
+<p>例えば下記の1つ目は <code>+</code> を使用しているのにツリー構造になりません。<span class="implicit-br">
+</span>2つ目のように空白で始めて「追加である」ことを明示する必要があります。</p>
 <pre data-label="属性"><div class="code language-markdown:属性 markdown:属性">[class=hoge]
 + A
 + B
@@ -2448,36 +2472,36 @@ BLOCK3
 <div class="note admonition">
 <p class="admonition-title">title</p>
 <p>test</p>
-</div></div><br class="break-line">
-<div class="BLOCK2"><p>ここは BLOCK2 です。</p>
+</div></div><span class="implicit-br">
+</span><div class="BLOCK2"><p>ここは BLOCK2 です。</p>
 <p></p><div class="BLOCK1"><p>ここは BLOCK1 です。</p>
 <div class="note admonition">
 <p class="admonition-title">title</p>
 <p>test</p>
-</div></div></div><br class="break-line">
-$BLOCK3
+</div></div></div><span class="implicit-br">
+</span>$BLOCK3
 </details></div></dd>
 </div>
 </dl>
-<p>定義されたブロックは表示されません。<br class="break-line">
-その代わり <code>$blockName</code> で参照することでその箇所に埋め込むことができます。</p>
-<p>定義ブロック内でブロックを参照することもできます（上記の BLOCK2）。<br class="break-line">
-ただし循環参照があると打ち切られてブロックが埋め込まれません（上記の BLOCK3）。</p>
+<p>定義されたブロックは表示されません。<span class="implicit-br">
+</span>その代わり <code>$blockName</code> で参照することでその箇所に埋め込むことができます。</p>
+<p>定義ブロック内でブロックを参照することもできます（上記の BLOCK2）。<span class="implicit-br">
+</span>ただし循環参照があると打ち切られてブロックが埋め込まれません（上記の BLOCK3）。</p>
 <p>識別子に使える文字は <code>[_a-zA-Z][_a-zA-Z0-9]*</code> です。大文字小文字を区別します。</p>
 <p>リストやテーブル内にブロックを埋め込む場合、書式が非常にややこしくなってしまいますが、この方法を使うとベタ書き感覚でブロックを埋め込むことができます。</p>
 </section><section id="_3229609e15436ec51bcf00818a69a84dbc58a0c2-1" class="section section-level-h2" data-section-level="2"><h2 class="section-header">License</h2>
 <p>MIT</p>
 </section><section id="_d41f56cea1ac933d25c57aebc6522e2b6c58eb87-1" class="section section-level-h2" data-section-level="2"><h2 class="section-header">Release</h2>
-<p>バージョニングはセマンティックバージョンに準拠します。<br class="break-line">
-が、内部的な php のコードは準拠しません。<br class="break-line">
-semver 準拠はあくまで下記だけです。</p>
+<p>バージョニングはセマンティックバージョンに準拠します。<span class="implicit-br">
+</span>が、内部的な php のコードは準拠しません。<span class="implicit-br">
+</span>semver 準拠はあくまで下記だけです。</p>
 <ul class=" simple">
 <li>phar としてのインターフェース</li>
 <li>拡張構文の互換性</li>
 </ul>
-<p>つまり、内部設計・デザイン・レンダリング結果は互換性を維持しません。<br class="break-line">
-例えば「コントールパネルから設定できる項目」「親兄弟のナビゲーション」「テキスト検索」などの機能面は予告なく追加・廃止されることがあります。<br class="break-line">
-また、 Read The Docs のテーマではなく、他のものにガラリと変わることもありえます。</p>
+<p>つまり、内部設計・デザイン・レンダリング結果は互換性を維持しません。<span class="implicit-br">
+</span>例えば「コントールパネルから設定できる項目」「親兄弟のナビゲーション」「テキスト検索」などの機能面は予告なく追加・廃止されることがあります。<span class="implicit-br">
+</span>また、 Read The Docs のテーマではなく、他のものにガラリと変わることもありえます。</p>
 <p>逆に言えば「phar の引数が変更になった」「markdown の拡張構文を廃止した」などは互換性の破壊となり、 semver 準拠（メジャーアップ）となります。</p>
 <p>今のところ phar に引数はありませんが、「POST で markdown を編集できる」のようなオプションが増えることが想定されます。</p>
 </section><section id="_b79eaeeb01f40b8e5e0a4e0467c18851e78854e4-1" class="section section-level-h3" data-section-level="3"><h3 class="section-header">x.y.z</h3>
@@ -2485,6 +2509,11 @@ semver 準拠はあくまで下記だけです。</p>
 <li>POST で更新する？</li>
 <li>静的ファイルは全部 CDN に逃したい</li>
 <li>markdown に include 機能を持たせたい</li>
+</ul>
+</section><section id="_94dcef061335413abfdb9c1ca0b391b7bf178b90-1" class="section section-level-h3" data-section-level="3"><h3 class="section-header">1.2.1</h3>
+<ul class=" simple">
+<li>[feature] リンクの属性対応</li>
+<li>[change] 改行の扱いを変更</li>
 </ul>
 </section><section id="_4acc7d8ff2a07c5724b61e524ae1a2782dc80e96-1" class="section section-level-h3" data-section-level="3"><h3 class="section-header">1.2.0</h3>
 <ul class=" simple">
@@ -2661,8 +2690,12 @@ semver 準拠はあくまで下記だけです。</p>
                     <input id="linkUrl" class="option-input savedata" data-default-value="true" type="checkbox" value="1">
                 </dd>
                 <dd>
-                    <label class="option-title" for="break_line">keep break line</label>
-                    <input id="breakLine" class="option-input savedata" data-default-value="true" type="checkbox" value="1">
+                    <label class="option-title" for="break_line">handling of break line</label>
+                    <select id="breakLine" class="option-input savedata" data-default-value="ignore">
+                                                    <option value="ignore">ignore</option>
+                                                    <option value="break">break</option>
+                                                    <option value="space">space</option>
+                                            </select>
                 </dd>
             </dl>
         </form>
