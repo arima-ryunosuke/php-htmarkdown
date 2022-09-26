@@ -12,7 +12,7 @@ class MarkdownTest extends \ryunosuke\Test\AbstractTestCase
     {
         that(Markdown::render(<<<MD
             line1
-            line2
+            line2  
             MD
             , [
                 'break_line' => true,
@@ -100,7 +100,7 @@ class MarkdownTest extends \ryunosuke\Test\AbstractTestCase
         ]);
 
         that(Markdown::render(<<<MD
-            {badge1}{badge2}
+            {badge1}{badge2}  
             {badge3}
             MD
             , []))->htmlMatchesArray([
@@ -124,9 +124,9 @@ class MarkdownTest extends \ryunosuke\Test\AbstractTestCase
         ]);
 
         that(Markdown::render(<<<MD
-            {badge}
-            {title|badge}
-            {alert:badge}
+            {badge}  
+            {title|badge}  
+            {alert:badge}  
             {alert:title|badge}
             MD
             , []))->htmlMatchesArray([
@@ -165,6 +165,52 @@ class MarkdownTest extends \ryunosuke\Test\AbstractTestCase
             {undefined:title|badge}
             MD
             , []))->notContains('<span class="badge');
+    }
+
+    function test_inlineLink()
+    {
+        that(Markdown::render(<<<MD
+            [nomatch
+            
+            [text1](url1)
+            [text2](url2 "title")
+            [text3](url3 target=_blank)
+            [text4](url4 id=hoge class="c1 c2")
+            [text5][link-x]
+            
+            [link-x]: url5
+            MD
+            , []))->htmlMatchesArray([
+            "p[1]" => [
+                "[nomatch",
+            ],
+            "p[2]" => [
+                "a[1]" => [
+                    "href" => "url1",
+                    "text1",
+                ],
+                "a[2]" => [
+                    "href"  => "url2",
+                    "title" => "title",
+                    "text2",
+                ],
+                "a[3]" => [
+                    "href"   => "url3",
+                    "target" => "_blank",
+                    "text3",
+                ],
+                "a[4]" => [
+                    "href"  => "url4",
+                    "id"    => "hoge",
+                    "class" => "c1 c2",
+                    "text4",
+                ],
+                "a[5]" => [
+                    "href" => "url5",
+                    "text5",
+                ],
+            ],
+        ]);
     }
 
     function test_commonBlock()

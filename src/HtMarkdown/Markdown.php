@@ -52,7 +52,7 @@ class Markdown extends Parsedown
             if (($element['name'] ?? '') === 'br') {
                 $Inline['element']['elements'][$n]['attributes']['class'] = 'break-line';
             }
-        }
+            }
         return $Inline;
     }
 
@@ -151,6 +151,25 @@ class Markdown extends Parsedown
                 ];
             }
         }
+    }
+
+    protected function inlineLink($Excerpt)
+    {
+        $Link = parent::inlineLink($Excerpt);
+        if ($Link !== null) {
+            return $Link;
+        }
+
+        if (preg_match('/^\[((?:[^][]++|(?R))*+)\][(]\s*+((?:[^ ()]++|[(][^ )]+[)])++)(?:[ ]+([^)]*+))?\s*+[)]/', $Excerpt['text'], $matches, PREG_OFFSET_CAPTURE) && isset($matches[3])) {
+            $Excerpt['text'] = substr_replace($Excerpt['text'], '', $matches[3][1], strlen($matches[3][0]));
+            $Link = parent::inlineLink($Excerpt);
+            if ($Link !== null) {
+                $title = $matches[3][0];
+                $Link['extent'] += strlen($title);
+                $Link['element']['attributes'] += $this->selector("[{$title}]");
+            }
+        }
+        return $Link;
     }
 
     protected function _commonBlock($Line, $Element, $Opener = null)
