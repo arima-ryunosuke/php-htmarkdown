@@ -188,7 +188,11 @@ $siblings = $this->siblings();
                 </dd>
                 <dd>
                     <label class="option-title" for="break_line"><?= $h($locale['break_line']) ?></label>
-                    <input id="breakLine" class="option-input savedata" data-default-value="true" type="checkbox" value="1">
+                    <select id="breakLine" class="option-input savedata" data-default-value="ignore">
+                        <?php foreach (['ignore', 'break', 'space'] as $mode): ?>
+                            <option value="<?= $h($mode) ?>"><?= $h($locale["break_line.$mode"]) ?></option>
+                        <?php endforeach ?>
+                    </select>
                 </dd>
             </dl>
         </form>

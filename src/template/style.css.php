@@ -617,8 +617,16 @@ section[data-section-level="<?= $n ?>"] {
 
 <?php endforeach ?>
 
-[data-break-line="false"] br.break-line {
+[data-break-line="ignore"] .implicit-br {
     display: none;
+}
+
+[data-break-line="break"] .implicit-br {
+    white-space: pre-line;
+}
+
+[data-break-line="space"] .implicit-br {
+    white-space: normal;
 }
 
 [data-link-url="false"] a.link-url {

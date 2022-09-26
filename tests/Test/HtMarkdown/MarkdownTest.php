@@ -13,15 +13,15 @@ class MarkdownTest extends \ryunosuke\Test\AbstractTestCase
         that(Markdown::render(<<<MD
             line1
             line2  
+            line3
             MD
-            , [
-                'break_line' => true,
-            ]))->htmlMatchesArray([
+            , []))->htmlMatchesArray([
             "p" => [
                 "line1",
-                "br" => [
-                    "class" => ["break-line"],
+                "span"  => [
+                    "class" => ["implicit-br"],
                 ],
+                "br[1]" => [],
                 "line2",
             ],
         ]);

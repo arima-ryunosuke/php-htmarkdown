@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function () {
     };
     HTMLInputElement.prototype.getValue = HTMLSelectElement.prototype.getValue = function () {
         if (this.tagName === 'SELECT') {
-            return this.$('option:checked').value;
+            return this.$('option:checked')?.value ?? this.dataset.defaultValue;
         }
         else if (this.type === 'checkbox') {
             return '' + this.checked;
@@ -144,7 +144,10 @@ document.addEventListener('DOMContentLoaded', function () {
     };
     HTMLInputElement.prototype.setValue = HTMLSelectElement.prototype.setValue = function (value) {
         if (this.tagName === 'SELECT') {
-            this.$(`option[value="${value}"]`).selected = true;
+            const selected = this.$(`option[value="${value}"]`);
+            if (selected) {
+                selected.selected = true;
+            }
         }
         else if (this.type === 'checkbox') {
             this.checked = value === 'true';

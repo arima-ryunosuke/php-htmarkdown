@@ -11,7 +11,6 @@ class Markdown extends Parsedown
     public function __construct($options)
     {
         $this->setMarkupEscaped(false);
-        $this->setBreaksEnabled(true);
         $this->setUrlsLinked(true);
         $this->setStrictMode(!!($options['strict_mode'] ?? false));
         $this->setSafeMode(!!($options['safe_mode'] ?? false));
@@ -47,12 +46,30 @@ class Markdown extends Parsedown
 
     protected function inlineText($text)
     {
-        $Inline = parent::inlineText($text);
-        foreach ($Inline['element']['elements'] as $n => $element) {
-            if (($element['name'] ?? '') === 'br') {
-                $Inline['element']['elements'][$n]['attributes']['class'] = 'break-line';
+        $Inline = [
+            'extent'  => strlen($text),
+            'element' => [],
+        ];
+
+        while (preg_match('/(?<explicit>[ ]*+\\\\|[ ]{2,}+\n)|(?<implicit>[ ]*+\n)/', $text, $matches, PREG_OFFSET_CAPTURE)) {
+            $offset = $matches[0][1];
+            $before = substr($text, 0, $offset);
+            $after = substr($text, $offset + strlen($matches[0][0]));
+
+            $Inline['element']['elements'][] = ['text' => $before];
+
+            if (($matches['explicit'][1] ?? -1) >= 0) {
+                $Inline['element']['elements'][] = ['name' => 'br'];
             }
+            if (($matches['implicit'][1] ?? -1) >= 0) {
+                $Inline['element']['elements'][] = ['name' => 'span', 'attributes' => ['class' => 'implicit-br'], 'text' => "\n"];
             }
+
+            $text = $after;
+        }
+
+        $Inline['element']['elements'][] = ['text' => $text];
+
         return $Inline;
     }
 
