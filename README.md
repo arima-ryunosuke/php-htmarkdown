@@ -136,6 +136,27 @@ php htmarkdown.phar /path/to/markdown.md /path/to/directory
 
 セクション内のちょっとした区切りやアクセントとして使用します。
 
+#### 拡張リンク
+
+通常のリンク記法（`[text](url)`）に加えて属性が指定可能です。
+画像記法（`![alt](url)`）にも適用されます。
+
+```markdown:拡張リンク
+これは[普通のリンク](https://example.com)です。
+これは[別タブで開くリンク](https://example.com target=_blank)です。
+これは[id, class が指定されたリンク](https://example.com id="link" class="c1 c2")です。
+
+![](fig1.png width="24px")これはwidth指定された画像です。
+```
+
+上記のようにすると下記のようになります。
+
+これは[普通のリンク](https://example.com)です。
+これは[別タブで開くリンク](https://example.com target=_blank)です。
+これは[id, class が指定されたリンク](https://example.com id="link" class="c1 c2")です。
+
+![](fig1.png width="24px")これはwidth指定された画像です。
+
 #### コメント
 
 `//` で html コメントになります。
@@ -816,6 +837,11 @@ semver 準拠はあくまで下記だけです。
 - POST で更新する？
 - 静的ファイルは全部 CDN に逃したい
 - markdown に include 機能を持たせたい
+
+### 1.2.1
+
+- [feature] リンクの属性対応
+- [change] 改行の扱いを変更
 
 ### 1.2.0
 
