@@ -294,9 +294,12 @@ small {
     display: contents;
 }
 
+.rst-content dl.field-list dt {
+    white-space: nowrap;
+}
+
 .rst-content dl.field-list dt,
 .rst-content dl.field-list dd {
-    white-space: nowrap;
     margin: 0;
     padding-top: 0;
     padding-bottom: 0;
