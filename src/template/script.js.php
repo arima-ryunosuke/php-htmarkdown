@@ -173,7 +173,10 @@ document.addEventListener('DOMContentLoaded', function () {
         return dataurl;
     };
 
-    mermaid.initialize({startOnLoad: false});
+    mermaid.initialize({
+        startOnLoad: false,
+        theme: 'neutral',
+    });
 
     // ハイライト
     let svg_id = 0;

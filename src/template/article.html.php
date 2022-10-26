@@ -24,7 +24,7 @@ $siblings = $this->siblings();
     <?php endif ?>
 
     <script defer src="<?= $CDN ?>/npm/highlightjs@9.16.2/highlight.pack.min.js"></script>
-    <script defer src="<?= $CDN ?>/npm/mermaid@8.14.0/dist/mermaid.min.js"></script>
+    <script defer src="<?= $CDN ?>/npm/mermaid@9.1.7/dist/mermaid.min.js"></script>
     <script defer><?php include __DIR__ . '/script.js.php' ?></script>
     <?php if (strlen($this->js_file)): ?>
         <script><?php include $this->js_file ?></script>
