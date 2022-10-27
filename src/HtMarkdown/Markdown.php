@@ -51,7 +51,7 @@ class Markdown extends Parsedown
             'element' => [],
         ];
 
-        while (preg_match('/(?<explicit>[ ]*+\\\\|[ ]{2,}+\n)|(?<implicit>[ ]*+\n)/', $text, $matches, PREG_OFFSET_CAPTURE)) {
+        while (preg_match('/(?<explicit>([ ]*+\\\\|[ ]{2,}+)\n)|(?<implicit>[ ]*+\n)/', $text, $matches, PREG_OFFSET_CAPTURE)) {
             $offset = $matches[0][1];
             $before = substr($text, 0, $offset);
             $after = substr($text, $offset + strlen($matches[0][0]));
