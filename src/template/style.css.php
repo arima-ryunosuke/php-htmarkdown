@@ -565,6 +565,21 @@ a.toc-h<?= $n ?> b.toggler {
     background: #343131;
 }
 
+a.toc-h1 {
+    font-weight: bold;
+    color: #404040 !important;
+    background: #fcfcfc !important;
+}
+
+a.toc-h2 {
+    font-weight: bold;
+    color: #55a5d9;
+}
+
+a.toc-h3 {
+    font-weight: bold;
+}
+
 b.toggler {
     position: absolute;
     top: 0;
