@@ -319,7 +319,7 @@ class Document
         $blockmarkers = ['```', '"""', '///', '<<<'];
         $block = '';
         $queried = !!strlen($query);
-        $matched = !$queried;
+        $matched = false;
 
         $mblen = 0;
         foreach ($this->file->lines() as $line) {
@@ -329,9 +329,10 @@ class Document
                 }
             }
             if (!$matched) {
-                $matched = mb_stripos($line, $query) !== false;
+                $matched = $queried ? mb_stripos($line, $query) !== false : mb_stripos($line, '# ') !== false;
             }
             if ($matched) {
+                $line = strip_tags($line);
                 if ($queried) {
                     $line = preg_replace('#(' . preg_quote($query, '#') . ')#ui', '<mark class="highlighted">$1</mark>', $line);
                 }
