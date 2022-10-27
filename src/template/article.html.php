@@ -150,6 +150,14 @@ $siblings = $this->siblings();
                     <input id="tocSticky" class="option-input savedata" data-default-value="3" type="number" min="0" max="6">
                 </dd>
                 <dd>
+                    <label class="option-title" for="toc_active"><?= $h($locale['toc_active']) ?></label>
+                    <select id="tocActive" class="option-input savedata" data-default-value="none">
+                        <?php foreach (['none', 'some', 'all'] as $mode): ?>
+                            <option value="<?= $h($mode) ?>"><?= $h($locale["toc_active.$mode"]) ?></option>
+                        <?php endforeach ?>
+                    </select>
+                </dd>
+                <dd>
                     <label class="option-title" for="toc_number"><?= $h($locale['toc_number']) ?></label>
                     <input id="tocNumber" class="option-input savedata" data-default-value="true" type="checkbox" value="1">
                 </dd>
@@ -160,10 +168,6 @@ $siblings = $this->siblings();
                 <dd>
                     <label class="option-title" for="toc_follow"><?= $h($locale['toc_follow']) ?></label>
                     <input id="tocFollow" class="option-input savedata" data-default-value="true" type="checkbox" value="1">
-                </dd>
-                <dd>
-                    <label class="option-title" for="toc_active"><?= $h($locale['toc_active']) ?></label>
-                    <input id="tocActive" class="option-input savedata" data-default-value="true" type="checkbox" value="1">
                 </dd>
                 <dt>Body</dt>
                 <dd>

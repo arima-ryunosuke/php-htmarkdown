@@ -447,7 +447,8 @@ small {
     padding-bottom: 0;
 }
 
-.toc-h.visible,
+[data-toc-active="some"] .toc-h.neighbor-visible,
+[data-toc-active="all"] .toc-h.brother-visible,
 .toc-h.forced-visible {
     visibility: visible;
     max-height: unset;
@@ -462,42 +463,42 @@ small {
     font-size: 90%;
 }
 
-[data-toc-level="1"] .toc-h2.visible:not([data-first-above="0"]):before,
-[data-toc-level="1"] .toc-h3.visible:not([data-first-above="0"]):before,
-[data-toc-level="1"] .toc-h4.visible:not([data-first-above="0"]):before,
-[data-toc-level="1"] .toc-h5.visible:not([data-first-above="0"]):before,
-[data-toc-level="1"] .toc-h6.visible:not([data-first-above="0"]):before,
-[data-toc-level="2"] .toc-h3.visible:not([data-first-above="0"]):before,
-[data-toc-level="2"] .toc-h4.visible:not([data-first-above="0"]):before,
-[data-toc-level="2"] .toc-h5.visible:not([data-first-above="0"]):before,
-[data-toc-level="2"] .toc-h6.visible:not([data-first-above="0"]):before,
-[data-toc-level="3"] .toc-h4.visible:not([data-first-above="0"]):before,
-[data-toc-level="3"] .toc-h5.visible:not([data-first-above="0"]):before,
-[data-toc-level="3"] .toc-h6.visible:not([data-first-above="0"]):before,
-[data-toc-level="4"] .toc-h5.visible:not([data-first-above="0"]):before,
-[data-toc-level="4"] .toc-h6.visible:not([data-first-above="0"]):before,
-[data-toc-level="5"] .toc-h6.visible:not([data-first-above="0"]):before {
+[data-toc-active="some"][data-toc-level="1"] .toc-h2:not([data-first-above="0"]):before,
+[data-toc-active="some"][data-toc-level="1"] .toc-h3:not([data-first-above="0"]):before,
+[data-toc-active="some"][data-toc-level="1"] .toc-h4:not([data-first-above="0"]):before,
+[data-toc-active="some"][data-toc-level="1"] .toc-h5:not([data-first-above="0"]):before,
+[data-toc-active="some"][data-toc-level="1"] .toc-h6:not([data-first-above="0"]):before,
+[data-toc-active="some"][data-toc-level="2"] .toc-h3:not([data-first-above="0"]):before,
+[data-toc-active="some"][data-toc-level="2"] .toc-h4:not([data-first-above="0"]):before,
+[data-toc-active="some"][data-toc-level="2"] .toc-h5:not([data-first-above="0"]):before,
+[data-toc-active="some"][data-toc-level="2"] .toc-h6:not([data-first-above="0"]):before,
+[data-toc-active="some"][data-toc-level="3"] .toc-h4:not([data-first-above="0"]):before,
+[data-toc-active="some"][data-toc-level="3"] .toc-h5:not([data-first-above="0"]):before,
+[data-toc-active="some"][data-toc-level="3"] .toc-h6:not([data-first-above="0"]):before,
+[data-toc-active="some"][data-toc-level="4"] .toc-h5:not([data-first-above="0"]):before,
+[data-toc-active="some"][data-toc-level="4"] .toc-h6:not([data-first-above="0"]):before,
+[data-toc-active="some"][data-toc-level="5"] .toc-h6:not([data-first-above="0"]):before {
     content: "(" attr(data-first-above) " more sections)";
     padding-bottom: 0.809em;
     margin-left: 0px;
     display: block;
 }
 
-[data-toc-level="1"] .toc-h2.visible:not([data-last-below="0"]):after,
-[data-toc-level="1"] .toc-h3.visible:not([data-last-below="0"]):after,
-[data-toc-level="1"] .toc-h4.visible:not([data-last-below="0"]):after,
-[data-toc-level="1"] .toc-h5.visible:not([data-last-below="0"]):after,
-[data-toc-level="1"] .toc-h6.visible:not([data-last-below="0"]):after,
-[data-toc-level="2"] .toc-h3.visible:not([data-last-below="0"]):after,
-[data-toc-level="2"] .toc-h4.visible:not([data-last-below="0"]):after,
-[data-toc-level="2"] .toc-h5.visible:not([data-last-below="0"]):after,
-[data-toc-level="2"] .toc-h6.visible:not([data-last-below="0"]):after,
-[data-toc-level="3"] .toc-h4.visible:not([data-last-below="0"]):after,
-[data-toc-level="3"] .toc-h5.visible:not([data-last-below="0"]):after,
-[data-toc-level="3"] .toc-h6.visible:not([data-last-below="0"]):after,
-[data-toc-level="4"] .toc-h5.visible:not([data-last-below="0"]):after,
-[data-toc-level="4"] .toc-h6.visible:not([data-last-below="0"]):after,
-[data-toc-level="5"] .toc-h6.visible:not([data-last-below="0"]):after {
+[data-toc-active="some"][data-toc-level="1"] .toc-h2:not([data-last-below="0"]):after,
+[data-toc-active="some"][data-toc-level="1"] .toc-h3:not([data-last-below="0"]):after,
+[data-toc-active="some"][data-toc-level="1"] .toc-h4:not([data-last-below="0"]):after,
+[data-toc-active="some"][data-toc-level="1"] .toc-h5:not([data-last-below="0"]):after,
+[data-toc-active="some"][data-toc-level="1"] .toc-h6:not([data-last-below="0"]):after,
+[data-toc-active="some"][data-toc-level="2"] .toc-h3:not([data-last-below="0"]):after,
+[data-toc-active="some"][data-toc-level="2"] .toc-h4:not([data-last-below="0"]):after,
+[data-toc-active="some"][data-toc-level="2"] .toc-h5:not([data-last-below="0"]):after,
+[data-toc-active="some"][data-toc-level="2"] .toc-h6:not([data-last-below="0"]):after,
+[data-toc-active="some"][data-toc-level="3"] .toc-h4:not([data-last-below="0"]):after,
+[data-toc-active="some"][data-toc-level="3"] .toc-h5:not([data-last-below="0"]):after,
+[data-toc-active="some"][data-toc-level="3"] .toc-h6:not([data-last-below="0"]):after,
+[data-toc-active="some"][data-toc-level="4"] .toc-h5:not([data-last-below="0"]):after,
+[data-toc-active="some"][data-toc-level="4"] .toc-h6:not([data-last-below="0"]):after,
+[data-toc-active="some"][data-toc-level="5"] .toc-h6:not([data-last-below="0"]):after {
     content: "(" attr(data-last-below) " more sections)";
     padding-top: 0.809em;
     margin-left: 0px;

@@ -25,6 +25,14 @@ document.addEventListener('DOMContentLoaded', function () {
     Window.prototype.requestIdleCallback = Window.prototype.requestIdleCallback || function (callback) {
         setTimeout(callback);
     };
+    Array.prototype.unique = function (callback) {
+        const map = new Map();
+        for (const [i, e] of Object.entries(this)) {
+            const k = callback ? callback(e, i) : e;
+            map.set(k, e);
+        }
+        return Array.from(map.values());
+    };
     Array.prototype.findLastIndex = function (predicate, thisArg) {
         for (let i = this.length - 1; i >= 0; i--) {
             if (predicate.call(thisArg, this[i], i, this)) {
@@ -426,7 +434,7 @@ document.addEventListener('DOMContentLoaded', function () {
     /// アウトラインのハイライト監視
     article.on('intersect', '.section', function (e) {
         let toch = document.getElementById(`toc-${e.target.id}`);
-        if (html.dataset.tocActive === 'false') {
+        if (html.dataset.tocActive === 'none') {
             while (toch.clientHeight <= 1) {
                 toch = toch.previousElementSibling;
             }
@@ -445,16 +453,19 @@ document.addEventListener('DOMContentLoaded', function () {
         const min = firstIndex === -1 ? 0 : firstIndex - 3;
         const max = lastIndex === -1 ? tochs.length - 1 : lastIndex + 3;
 
+        tochs.forEach(toch => toch.classList.remove('neighbor-visible', 'brother-visible'));
+
+        actives.map(toch => toch.dataset.parentBlockId).unique().forEach(function (pid) {
+            outline.$$(`[data-parent-block-id="${pid}"]`).forEach(e => e.classList.add('brother-visible'));
+        });
+
         tochs.forEach(function (toch, i) {
             if ((min <= i && i <= max)) {
-                toch.classList.add('visible');
+                toch.classList.add('neighbor-visible');
                 while (toch) {
                     toch = outline.$(`[data-block-id="${toch.dataset.parentBlockId}"]`);
-                    toch?.classList?.add('visible');
+                    toch?.classList?.add('neighbor-visible');
                 }
-            }
-            else {
-                toch.classList.remove('visible');
             }
         });
         tochs.forEach(function (toch, i) {
@@ -462,16 +473,16 @@ document.addEventListener('DOMContentLoaded', function () {
             toch.dataset.lastBelow = '0';
             if (i === min) {
                 const brother = Array.from(outline.$$(`[data-parent-block-id="${toch.dataset.parentBlockId}"]`));
-                toch.dataset.firstAbove = brother.slice(0, brother.indexOf(toch)).filter(node => !node.matches('.visible,.forced-visible')).length;
+                toch.dataset.firstAbove = brother.slice(0, brother.indexOf(toch)).filter(node => getComputedStyle(node).visibility === 'hidden').length;
             }
             if (i === max) {
                 const brother = Array.from(outline.$$(`[data-parent-block-id="${toch.dataset.parentBlockId}"]`));
-                toch.dataset.lastBelow = brother.slice(brother.indexOf(toch)).filter(node => !node.matches('.visible,.forced-visible')).length;
+                toch.dataset.lastBelow = brother.slice(brother.indexOf(toch)).filter(node => getComputedStyle(node).visibility === 'hidden').length;
             }
         });
     });
     outline.on('mutate', '[data-section-count]', function (e) {
-        if (e.attributeName === 'data-section-count' && html.dataset.tocActive === 'true') {
+        if (e.attributeName === 'data-section-count' && html.dataset.tocActive !== 'none') {
             if (e.oldValue !== e.target.dataset.sectionCount) {
                 outlineTimer.start();
             }
@@ -487,7 +498,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (toch.dataset.sectionLevel >= html.dataset.tocLevel) {
             if (+toch.dataset.childCount) {
                 const tochs = outline.$$(`[data-parent-block-id="${toch.dataset.blockId}"]`);
-                const visibles = Array.prototype.filter.call(tochs, e => e.matches('.visible,.forced-visible'));
+                const visibles = Array.prototype.filter.call(tochs, e => getComputedStyle(e).visibility !== 'hidden');
                 if (tochs.length === visibles.length) {
                     toch.dataset.state = 'close';
                 }
@@ -505,14 +516,14 @@ document.addEventListener('DOMContentLoaded', function () {
         if (toch.dataset.state === 'open') {
             toch.dataset.state = 'close';
             outline.$$(`[data-parent-block-id="${toch.dataset.blockId}"]`).forEach(e => {
-                e.classList.add('forced-visible', 'visible');
+                e.classList.add('forced-visible');
                 e.dataset.firstAbove = '0';
                 e.dataset.lastBelow = '0';
             });
         }
         else {
             toch.dataset.state = 'open';
-            outline.$$(`[data-parent-block-id^="${toch.dataset.blockId}"]`).forEach(e => e.classList.remove('forced-visible', 'visible'));
+            outline.$$(`[data-parent-block-id^="${toch.dataset.blockId}"]`).forEach(e => e.classList.remove('forced-visible'));
         }
         e.preventDefault();
         return false;
