@@ -304,9 +304,12 @@ small {
     display: contents;
 }
 
+.rst-content dl.field-list dt {
+    white-space: nowrap;
+}
+
 .rst-content dl.field-list dt,
 .rst-content dl.field-list dd {
-    white-space: nowrap;
     margin: 0;
     padding-top: 0;
     padding-bottom: 0;
@@ -454,7 +457,8 @@ small {
     padding-bottom: 0;
 }
 
-.toc-h.visible,
+[data-toc-active="some"] .toc-h.neighbor-visible,
+[data-toc-active="all"] .toc-h.brother-visible,
 .toc-h.forced-visible {
     visibility: visible;
     max-height: unset;
@@ -469,42 +473,42 @@ small {
     font-size: 90%;
 }
 
-[data-toc-level="1"] .toc-h2.visible:not([data-first-above="0"]):before,
-[data-toc-level="1"] .toc-h3.visible:not([data-first-above="0"]):before,
-[data-toc-level="1"] .toc-h4.visible:not([data-first-above="0"]):before,
-[data-toc-level="1"] .toc-h5.visible:not([data-first-above="0"]):before,
-[data-toc-level="1"] .toc-h6.visible:not([data-first-above="0"]):before,
-[data-toc-level="2"] .toc-h3.visible:not([data-first-above="0"]):before,
-[data-toc-level="2"] .toc-h4.visible:not([data-first-above="0"]):before,
-[data-toc-level="2"] .toc-h5.visible:not([data-first-above="0"]):before,
-[data-toc-level="2"] .toc-h6.visible:not([data-first-above="0"]):before,
-[data-toc-level="3"] .toc-h4.visible:not([data-first-above="0"]):before,
-[data-toc-level="3"] .toc-h5.visible:not([data-first-above="0"]):before,
-[data-toc-level="3"] .toc-h6.visible:not([data-first-above="0"]):before,
-[data-toc-level="4"] .toc-h5.visible:not([data-first-above="0"]):before,
-[data-toc-level="4"] .toc-h6.visible:not([data-first-above="0"]):before,
-[data-toc-level="5"] .toc-h6.visible:not([data-first-above="0"]):before {
+[data-toc-active="some"][data-toc-level="1"] .toc-h2:not([data-first-above="0"]):before,
+[data-toc-active="some"][data-toc-level="1"] .toc-h3:not([data-first-above="0"]):before,
+[data-toc-active="some"][data-toc-level="1"] .toc-h4:not([data-first-above="0"]):before,
+[data-toc-active="some"][data-toc-level="1"] .toc-h5:not([data-first-above="0"]):before,
+[data-toc-active="some"][data-toc-level="1"] .toc-h6:not([data-first-above="0"]):before,
+[data-toc-active="some"][data-toc-level="2"] .toc-h3:not([data-first-above="0"]):before,
+[data-toc-active="some"][data-toc-level="2"] .toc-h4:not([data-first-above="0"]):before,
+[data-toc-active="some"][data-toc-level="2"] .toc-h5:not([data-first-above="0"]):before,
+[data-toc-active="some"][data-toc-level="2"] .toc-h6:not([data-first-above="0"]):before,
+[data-toc-active="some"][data-toc-level="3"] .toc-h4:not([data-first-above="0"]):before,
+[data-toc-active="some"][data-toc-level="3"] .toc-h5:not([data-first-above="0"]):before,
+[data-toc-active="some"][data-toc-level="3"] .toc-h6:not([data-first-above="0"]):before,
+[data-toc-active="some"][data-toc-level="4"] .toc-h5:not([data-first-above="0"]):before,
+[data-toc-active="some"][data-toc-level="4"] .toc-h6:not([data-first-above="0"]):before,
+[data-toc-active="some"][data-toc-level="5"] .toc-h6:not([data-first-above="0"]):before {
     content: "(" attr(data-first-above) " more sections)";
     padding-bottom: 0.809em;
     margin-left: 0px;
     display: block;
 }
 
-[data-toc-level="1"] .toc-h2.visible:not([data-last-below="0"]):after,
-[data-toc-level="1"] .toc-h3.visible:not([data-last-below="0"]):after,
-[data-toc-level="1"] .toc-h4.visible:not([data-last-below="0"]):after,
-[data-toc-level="1"] .toc-h5.visible:not([data-last-below="0"]):after,
-[data-toc-level="1"] .toc-h6.visible:not([data-last-below="0"]):after,
-[data-toc-level="2"] .toc-h3.visible:not([data-last-below="0"]):after,
-[data-toc-level="2"] .toc-h4.visible:not([data-last-below="0"]):after,
-[data-toc-level="2"] .toc-h5.visible:not([data-last-below="0"]):after,
-[data-toc-level="2"] .toc-h6.visible:not([data-last-below="0"]):after,
-[data-toc-level="3"] .toc-h4.visible:not([data-last-below="0"]):after,
-[data-toc-level="3"] .toc-h5.visible:not([data-last-below="0"]):after,
-[data-toc-level="3"] .toc-h6.visible:not([data-last-below="0"]):after,
-[data-toc-level="4"] .toc-h5.visible:not([data-last-below="0"]):after,
-[data-toc-level="4"] .toc-h6.visible:not([data-last-below="0"]):after,
-[data-toc-level="5"] .toc-h6.visible:not([data-last-below="0"]):after {
+[data-toc-active="some"][data-toc-level="1"] .toc-h2:not([data-last-below="0"]):after,
+[data-toc-active="some"][data-toc-level="1"] .toc-h3:not([data-last-below="0"]):after,
+[data-toc-active="some"][data-toc-level="1"] .toc-h4:not([data-last-below="0"]):after,
+[data-toc-active="some"][data-toc-level="1"] .toc-h5:not([data-last-below="0"]):after,
+[data-toc-active="some"][data-toc-level="1"] .toc-h6:not([data-last-below="0"]):after,
+[data-toc-active="some"][data-toc-level="2"] .toc-h3:not([data-last-below="0"]):after,
+[data-toc-active="some"][data-toc-level="2"] .toc-h4:not([data-last-below="0"]):after,
+[data-toc-active="some"][data-toc-level="2"] .toc-h5:not([data-last-below="0"]):after,
+[data-toc-active="some"][data-toc-level="2"] .toc-h6:not([data-last-below="0"]):after,
+[data-toc-active="some"][data-toc-level="3"] .toc-h4:not([data-last-below="0"]):after,
+[data-toc-active="some"][data-toc-level="3"] .toc-h5:not([data-last-below="0"]):after,
+[data-toc-active="some"][data-toc-level="3"] .toc-h6:not([data-last-below="0"]):after,
+[data-toc-active="some"][data-toc-level="4"] .toc-h5:not([data-last-below="0"]):after,
+[data-toc-active="some"][data-toc-level="4"] .toc-h6:not([data-last-below="0"]):after,
+[data-toc-active="some"][data-toc-level="5"] .toc-h6:not([data-last-below="0"]):after {
     content: "(" attr(data-last-below) " more sections)";
     padding-top: 0.809em;
     margin-left: 0px;
@@ -617,6 +621,21 @@ a.toc-h6 b.toggler {
     top: 0;
     z-index: 1;
     background: #343131;
+}
+
+a.toc-h1 {
+    font-weight: bold;
+    color: #404040 !important;
+    background: #fcfcfc !important;
+}
+
+a.toc-h2 {
+    font-weight: bold;
+    color: #55a5d9;
+}
+
+a.toc-h3 {
+    font-weight: bold;
 }
 
 b.toggler {
@@ -1047,7 +1066,7 @@ a.disabled {
 </style>
     
     <script defer src="https://cdn.jsdelivr.net/npm/highlightjs@9.16.2/highlight.pack.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/mermaid@8.14.0/dist/mermaid.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mermaid@9.1.7/dist/mermaid.min.js"></script>
     <script defer>document.addEventListener('DOMContentLoaded', function () {
     /// ショートカットとユーティリティとプロトタイプ拡張
     const $ = document.querySelector.bind(document);
@@ -1074,6 +1093,14 @@ a.disabled {
     };
     Window.prototype.requestIdleCallback = Window.prototype.requestIdleCallback || function (callback) {
         setTimeout(callback);
+    };
+    Array.prototype.unique = function (callback) {
+        const map = new Map();
+        for (const [i, e] of Object.entries(this)) {
+            const k = callback ? callback(e, i) : e;
+            map.set(k, e);
+        }
+        return Array.from(map.values());
     };
     Array.prototype.findLastIndex = function (predicate, thisArg) {
         for (let i = this.length - 1; i >= 0; i--) {
@@ -1223,7 +1250,10 @@ a.disabled {
         return dataurl;
     };
 
-    mermaid.initialize({startOnLoad: false});
+    mermaid.initialize({
+        startOnLoad: false,
+        theme: 'neutral',
+    });
 
     // ハイライト
     let svg_id = 0;
@@ -1473,7 +1503,7 @@ a.disabled {
     /// アウトラインのハイライト監視
     article.on('intersect', '.section', function (e) {
         let toch = document.getElementById(`toc-${e.target.id}`);
-        if (html.dataset.tocActive === 'false') {
+        if (html.dataset.tocActive === 'none') {
             while (toch.clientHeight <= 1) {
                 toch = toch.previousElementSibling;
             }
@@ -1492,16 +1522,19 @@ a.disabled {
         const min = firstIndex === -1 ? 0 : firstIndex - 3;
         const max = lastIndex === -1 ? tochs.length - 1 : lastIndex + 3;
 
+        tochs.forEach(toch => toch.classList.remove('neighbor-visible', 'brother-visible'));
+
+        actives.map(toch => toch.dataset.parentBlockId).unique().forEach(function (pid) {
+            outline.$$(`[data-parent-block-id="${pid}"]`).forEach(e => e.classList.add('brother-visible'));
+        });
+
         tochs.forEach(function (toch, i) {
             if ((min <= i && i <= max)) {
-                toch.classList.add('visible');
+                toch.classList.add('neighbor-visible');
                 while (toch) {
                     toch = outline.$(`[data-block-id="${toch.dataset.parentBlockId}"]`);
-                    toch?.classList?.add('visible');
+                    toch?.classList?.add('neighbor-visible');
                 }
-            }
-            else {
-                toch.classList.remove('visible');
             }
         });
         tochs.forEach(function (toch, i) {
@@ -1509,16 +1542,16 @@ a.disabled {
             toch.dataset.lastBelow = '0';
             if (i === min) {
                 const brother = Array.from(outline.$$(`[data-parent-block-id="${toch.dataset.parentBlockId}"]`));
-                toch.dataset.firstAbove = brother.slice(0, brother.indexOf(toch)).filter(node => !node.matches('.visible,.forced-visible')).length;
+                toch.dataset.firstAbove = brother.slice(0, brother.indexOf(toch)).filter(node => getComputedStyle(node).visibility === 'hidden').length;
             }
             if (i === max) {
                 const brother = Array.from(outline.$$(`[data-parent-block-id="${toch.dataset.parentBlockId}"]`));
-                toch.dataset.lastBelow = brother.slice(brother.indexOf(toch)).filter(node => !node.matches('.visible,.forced-visible')).length;
+                toch.dataset.lastBelow = brother.slice(brother.indexOf(toch)).filter(node => getComputedStyle(node).visibility === 'hidden').length;
             }
         });
     });
     outline.on('mutate', '[data-section-count]', function (e) {
-        if (e.attributeName === 'data-section-count' && html.dataset.tocActive === 'true') {
+        if (e.attributeName === 'data-section-count' && html.dataset.tocActive !== 'none') {
             if (e.oldValue !== e.target.dataset.sectionCount) {
                 outlineTimer.start();
             }
@@ -1534,7 +1567,7 @@ a.disabled {
         if (toch.dataset.sectionLevel >= html.dataset.tocLevel) {
             if (+toch.dataset.childCount) {
                 const tochs = outline.$$(`[data-parent-block-id="${toch.dataset.blockId}"]`);
-                const visibles = Array.prototype.filter.call(tochs, e => e.matches('.visible,.forced-visible'));
+                const visibles = Array.prototype.filter.call(tochs, e => getComputedStyle(e).visibility !== 'hidden');
                 if (tochs.length === visibles.length) {
                     toch.dataset.state = 'close';
                 }
@@ -1552,14 +1585,14 @@ a.disabled {
         if (toch.dataset.state === 'open') {
             toch.dataset.state = 'close';
             outline.$$(`[data-parent-block-id="${toch.dataset.blockId}"]`).forEach(e => {
-                e.classList.add('forced-visible', 'visible');
+                e.classList.add('forced-visible');
                 e.dataset.firstAbove = '0';
                 e.dataset.lastBelow = '0';
             });
         }
         else {
             toch.dataset.state = 'open';
-            outline.$$(`[data-parent-block-id^="${toch.dataset.blockId}"]`).forEach(e => e.classList.remove('forced-visible', 'visible'));
+            outline.$$(`[data-parent-block-id^="${toch.dataset.blockId}"]`).forEach(e => e.classList.remove('forced-visible'));
         }
         e.preventDefault();
         return false;
@@ -1636,7 +1669,7 @@ a.disabled {
             <div class="wy-side-nav-search">
                 <a href="" class="icon icon-home"> README.md</a>
                 <div class="version">
-                    Last Modified 2022/10/11 11:15:14                </div>
+                    Last Modified 2022/11/12 20:01:01                </div>
                 <div role="search">
                     <form id="rtd-search-form" class="wy-form hidden-download" method="get">
                         <input type="text" name="query" placeholder="Search directory" value="">
@@ -2510,6 +2543,19 @@ BLOCK3
 <li>静的ファイルは全部 CDN に逃したい</li>
 <li>markdown に include 機能を持たせたい</li>
 </ul>
+</section><section id="_6f9f33482da53ff8cae20b0359720e365ffcc25c-1" class="section section-level-h3" data-section-level="3"><h3 class="section-header">1.2.3</h3>
+<ul class=" simple">
+<li>ビルド漏れ</li>
+</ul>
+</section><section id="_6da43ddc66ea2368258688e802388e932e83f73e-1" class="section section-level-h3" data-section-level="3"><h3 class="section-header">1.2.2</h3>
+<ul class=" simple">
+<li>[change] 見出しの色を変更</li>
+<li>[feature] 同レベル見出しをすべて表示するオプションを新設</li>
+<li>[fixbug] 要約の内容が空になったり結合してしまったりする不具合を修正</li>
+<li>[fixbug] バックスラッシュが改行になってしまう不具合を修正</li>
+<li>[fixbug] 印刷時に dl dd が隠れてしまう不具合を修正</li>
+<li>[change] mermaid のバージョンアップ</li>
+</ul>
 </section><section id="_94dcef061335413abfdb9c1ca0b391b7bf178b90-1" class="section section-level-h3" data-section-level="3"><h3 class="section-header">1.2.1</h3>
 <ul class=" simple">
 <li>[feature] リンクの属性対応</li>
@@ -2652,6 +2698,14 @@ BLOCK3
                     <input id="tocSticky" class="option-input savedata" data-default-value="3" type="number" min="0" max="6">
                 </dd>
                 <dd>
+                    <label class="option-title" for="toc_active">TOC active same level</label>
+                    <select id="tocActive" class="option-input savedata" data-default-value="none">
+                                                    <option value="none">none</option>
+                                                    <option value="some">partial</option>
+                                                    <option value="all">all</option>
+                                            </select>
+                </dd>
+                <dd>
                     <label class="option-title" for="toc_number">TOC number</label>
                     <input id="tocNumber" class="option-input savedata" data-default-value="true" type="checkbox" value="1">
                 </dd>
@@ -2662,10 +2716,6 @@ BLOCK3
                 <dd>
                     <label class="option-title" for="toc_follow">TOC follow</label>
                     <input id="tocFollow" class="option-input savedata" data-default-value="true" type="checkbox" value="1">
-                </dd>
-                <dd>
-                    <label class="option-title" for="toc_active">alway visible active level</label>
-                    <input id="tocActive" class="option-input savedata" data-default-value="true" type="checkbox" value="1">
                 </dd>
                 <dt>Body</dt>
                 <dd>
