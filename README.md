@@ -656,6 +656,40 @@ sequenceDiagram
 
 単に mermaid.js を呼んでいるだけであり、特別なことはしていません。
 
+#### graphviz
+
+コードブロックで dot を明示すると dot 記法になります。
+
+````markdown:dot の例
+```dot
+graph ethane {
+    C_0 -- H_0 [type=s];
+    C_0 -- H_1 [type=s];
+    C_0 -- H_2 [type=s];
+    C_0 -- C_1 [type=s];
+    C_1 -- H_3 [type=s];
+    C_1 -- H_4 [type=s];
+    C_1 -- H_5 [type=s];
+}
+```
+````
+
+上記のようにすると下記のようになります。
+
+```dot
+graph ethane {
+    C_0 -- H_0 [type=s];
+    C_0 -- H_1 [type=s];
+    C_0 -- H_2 [type=s];
+    C_0 -- C_1 [type=s];
+    C_1 -- H_3 [type=s];
+    C_1 -- H_4 [type=s];
+    C_1 -- H_5 [type=s];
+}
+```
+
+単に Viz.js を呼んでいるだけであり、特別なことはしていません。
+
 #### div ブロック
 
 `--` で囲むと div ブロックとなります。
@@ -837,6 +871,11 @@ semver 準拠はあくまで下記だけです。
 - POST で更新する？
 - 静的ファイルは全部 CDN に逃したい
 - markdown に include 機能を持たせたい
+
+### 1.2.4
+
+- [change] デザイン調整
+- [feature] graphviz 対応
 
 ### 1.2.3
 
