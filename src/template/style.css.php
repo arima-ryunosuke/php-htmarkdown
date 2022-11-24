@@ -109,6 +109,7 @@ small {
 .rst-content code {
     white-space: inherit;
     font-size: 90%;
+    line-height: 1.6;
 }
 
 .rst-content pre div.code {
@@ -137,23 +138,23 @@ small {
 }
 
 .rst-content pre div.code.digit1 span.row-number::before {
-    width: 0.5rem;
+    width: 1ch;
 }
 
 .rst-content pre div.code.digit2 span.row-number::before {
-    width: 1.0rem;
+    width: 2ch;
 }
 
 .rst-content pre div.code.digit3 span.row-number::before {
-    width: 1.5rem;
+    width: 3ch;
 }
 
 .rst-content pre div.code.digit4 span.row-number::before {
-    width: 2.0rem;
+    width: 4ch;
 }
 
 .rst-content pre div.code.digit5 span.row-number::before {
-    width: 2.5rem;
+    width: 5ch;
 }
 
 .rst-content .section {
@@ -269,6 +270,7 @@ small {
     background: rgba(225, 228, 229, 1);
     margin-bottom: 4px;
     padding: 6px 8px;
+    line-height: 24px;
 }
 
 .rst-content dl dd dl dt {
@@ -311,6 +313,9 @@ small {
 
 .rst-content details summary {
     cursor: pointer;
+}
+.rst-content details[open] summary {
+    margin-bottom: 24px;
 }
 
 .rst-content blockquote {
