@@ -119,6 +119,7 @@ small {
 .rst-content code {
     white-space: inherit;
     font-size: 90%;
+    line-height: 1.6;
 }
 
 .rst-content pre div.code {
@@ -147,23 +148,23 @@ small {
 }
 
 .rst-content pre div.code.digit1 span.row-number::before {
-    width: 0.5rem;
+    width: 1ch;
 }
 
 .rst-content pre div.code.digit2 span.row-number::before {
-    width: 1.0rem;
+    width: 2ch;
 }
 
 .rst-content pre div.code.digit3 span.row-number::before {
-    width: 1.5rem;
+    width: 3ch;
 }
 
 .rst-content pre div.code.digit4 span.row-number::before {
-    width: 2.0rem;
+    width: 4ch;
 }
 
 .rst-content pre div.code.digit5 span.row-number::before {
-    width: 2.5rem;
+    width: 5ch;
 }
 
 .rst-content .section {
@@ -279,6 +280,7 @@ small {
     background: rgba(225, 228, 229, 1);
     margin-bottom: 4px;
     padding: 6px 8px;
+    line-height: 24px;
 }
 
 .rst-content dl dd dl dt {
@@ -321,6 +323,9 @@ small {
 
 .rst-content details summary {
     cursor: pointer;
+}
+.rst-content details[open] summary {
+    margin-bottom: 24px;
 }
 
 .rst-content blockquote {
@@ -1067,6 +1072,8 @@ a.disabled {
     
     <script defer src="https://cdn.jsdelivr.net/npm/highlightjs@9.16.2/highlight.pack.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/mermaid@9.1.7/dist/mermaid.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/viz.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/full.render.js"></script>
     <script defer>document.addEventListener('DOMContentLoaded', function () {
     /// ショートカットとユーティリティとプロトタイプ拡張
     const $ = document.querySelector.bind(document);
@@ -1254,6 +1261,7 @@ a.disabled {
         startOnLoad: false,
         theme: 'neutral',
     });
+    const viz = new Viz();
 
     // ハイライト
     let svg_id = 0;
@@ -1269,6 +1277,15 @@ a.disabled {
                     bindFunctions(element);
                 }
             }, element);
+        }
+        else if (element.classList.contains('dot')) {
+            viz.renderSVGElement(element.textContent)
+                .then(function (svg) {
+                    element.innerHTML = '';
+                    element.appendChild(svg);
+                })
+                .catch(error => console.error(error))
+            ;
         }
         else {
             hljs.highlightBlock(element);
@@ -1669,7 +1686,7 @@ a.disabled {
             <div class="wy-side-nav-search">
                 <a href="" class="icon icon-home"> README.md</a>
                 <div class="version">
-                    Last Modified 2022/11/12 20:01:01                </div>
+                    Last Modified 2022/12/11 01:10:10                </div>
                 <div role="search">
                     <form id="rtd-search-form" class="wy-form hidden-download" method="get">
                         <input type="text" name="query" placeholder="Search directory" value="">
@@ -2385,6 +2402,30 @@ sequenceDiagram
     John-&gt;&gt;Bob: How about you?
     Bob--&gt;&gt;John: Jolly good!</div></pre>
 <p>単に mermaid.js を呼んでいるだけであり、特別なことはしていません。</p>
+</section><section id="_4520fcc97624e5448856e6b13fe3d5f039d324e7-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">graphviz</h4>
+<p>コードブロックで dot を明示すると dot 記法になります。</p>
+<pre data-label="dot の例"><div class="code language-markdown:dot markdown:dot">```dot
+graph ethane {
+    C_0 -- H_0 [type=s];
+    C_0 -- H_1 [type=s];
+    C_0 -- H_2 [type=s];
+    C_0 -- C_1 [type=s];
+    C_1 -- H_3 [type=s];
+    C_1 -- H_4 [type=s];
+    C_1 -- H_5 [type=s];
+}
+```</div></pre>
+<p>上記のようにすると下記のようになります。</p>
+<pre data-label=""><div class="code language-dot dot">graph ethane {
+    C_0 -- H_0 [type=s];
+    C_0 -- H_1 [type=s];
+    C_0 -- H_2 [type=s];
+    C_0 -- C_1 [type=s];
+    C_1 -- H_3 [type=s];
+    C_1 -- H_4 [type=s];
+    C_1 -- H_5 [type=s];
+}</div></pre>
+<p>単に Viz.js を呼んでいるだけであり、特別なことはしていません。</p>
 </section><section id="_72291d2b77a8e0a83d0452decffb3a6cbd3e559d-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">div ブロック</h4>
 <p><code>--</code> で囲むと div ブロックとなります。</p>
 <pre data-label="divブロック"><div class="code language-markdown:divブロック markdown:divブロック">--
@@ -2542,6 +2583,11 @@ BLOCK3
 <li>POST で更新する？</li>
 <li>静的ファイルは全部 CDN に逃したい</li>
 <li>markdown に include 機能を持たせたい</li>
+</ul>
+</section><section id="_9e0a2228de6a8253c7b565fe8caa7a8bb775cb45-1" class="section section-level-h3" data-section-level="3"><h3 class="section-header">1.2.4</h3>
+<ul class=" simple">
+<li>[change] デザイン調整</li>
+<li>[feature] graphviz 対応</li>
 </ul>
 </section><section id="_6f9f33482da53ff8cae20b0359720e365ffcc25c-1" class="section section-level-h3" data-section-level="3"><h3 class="section-header">1.2.3</h3>
 <ul class=" simple">
