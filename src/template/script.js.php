@@ -185,6 +185,7 @@ document.addEventListener('DOMContentLoaded', function () {
         startOnLoad: false,
         theme: 'neutral',
     });
+    const viz = new Viz();
 
     // ハイライト
     let svg_id = 0;
@@ -200,6 +201,15 @@ document.addEventListener('DOMContentLoaded', function () {
                     bindFunctions(element);
                 }
             }, element);
+        }
+        else if (element.classList.contains('dot')) {
+            viz.renderSVGElement(element.textContent)
+                .then(function (svg) {
+                    element.innerHTML = '';
+                    element.appendChild(svg);
+                })
+                .catch(error => console.error(error))
+            ;
         }
         else {
             hljs.highlightBlock(element);

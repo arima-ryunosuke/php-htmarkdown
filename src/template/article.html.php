@@ -2,7 +2,6 @@
 $h = function ($string) { return htmlspecialchars($string, ENT_QUOTES, 'UTF-8'); };
 
 /** @var \ryunosuke\HtMarkdown\Document $this */
-$CDN = "https://cdn.jsdelivr.net";
 $article = $this->markup($_GET['query'] ?? '') ?? '';
 $locale = $this->locale();
 $parents = $this->parents();
@@ -16,15 +15,17 @@ $siblings = $this->siblings();
 
     <title><?= $h($this->localName()) ?></title>
 
-    <link id="sphinx_rtd_theme" href="<?= $CDN ?>/npm/sphinx_rtd_theme@0.4.2/css/theme.css" rel="stylesheet">
-    <link id="highlight_style" data-cdn-url="<?= $CDN ?>/npm/highlightjs@9.16.2/styles/" href="" rel="stylesheet">
+    <link id="sphinx_rtd_theme" href="https://cdn.jsdelivr.net/npm/sphinx_rtd_theme@0.4.2/css/theme.css" rel="stylesheet">
+    <link id="highlight_style" data-cdn-url="https://cdn.jsdelivr.net/npm/highlightjs@9.16.2/styles/" href="" rel="stylesheet">
     <style><?php include __DIR__ . '/style.css.php' ?></style>
     <?php if (strlen($this->css_file)): ?>
         <style><?php include $this->css_file ?></style>
     <?php endif ?>
 
-    <script defer src="<?= $CDN ?>/npm/highlightjs@9.16.2/highlight.pack.min.js"></script>
-    <script defer src="<?= $CDN ?>/npm/mermaid@9.1.7/dist/mermaid.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/highlightjs@9.16.2/highlight.pack.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mermaid@9.1.7/dist/mermaid.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/viz.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/full.render.js"></script>
     <script defer><?php include __DIR__ . '/script.js.php' ?></script>
     <?php if (strlen($this->js_file)): ?>
         <script><?php include $this->js_file ?></script>
