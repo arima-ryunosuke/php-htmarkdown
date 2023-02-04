@@ -15,6 +15,22 @@ document.addEventListener('DOMContentLoaded', function () {
         this.interval = interval;
         this.callback = callback;
     };
+    Timer.throttle = function(cb, interval) {
+        var lastTime = Date.now() - interval;
+        return function() {
+            if ((lastTime + interval) < Date.now()) {
+                lastTime = Date.now();
+                cb.apply(this, arguments);
+            }
+        };
+    };
+    Timer.debounce = function(cb, interval) {
+        var timer;
+        return function() {
+            clearTimeout(timer);
+            timer = setTimeout(() => cb.apply(this, arguments), interval);
+        };
+    };
     Timer.prototype.start = function () {
         clearTimeout(this.timerId);
         this.timerId = setTimeout(this.callback, this.interval);
@@ -340,6 +356,7 @@ document.addEventListener('DOMContentLoaded', function () {
         this.$$('.savedata').forEach(function (input) {
             html.dataset[input.id] = input.getValue();
         });
+        $('.wy-nav-side').style.width = ''; // reset dragging
         const font_size = $('#fontSize');
         $(`[for=${font_size.id}]`).textContent = font_size.getValue() + 'px';
         const highlight_style = $('#highlight_style');
@@ -586,6 +603,15 @@ document.addEventListener('DOMContentLoaded', function () {
         scrollHideTimer.stop();
         scroller.classList.add('scrolling');
         scrollHideTimer.start();
+    });
+
+    // アウトラインのドラッグリサイズ
+    $('.wy-nav-side').on('mutate', Timer.debounce(function (e) {
+        $('#tocWidth').value = e.target.getBoundingClientRect().width;
+        $('#tocWidth').dispatchEvent(new Event('change', {bubbles: true}));
+    }, 50), {
+        attributes: true,
+        attributeFilter: ["style"],
     });
 
     requestIdleCallback(function () {

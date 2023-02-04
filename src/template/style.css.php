@@ -60,8 +60,12 @@ small {
 }
 
 .wy-nav-side {
-    transition: width var(--initial-animation-ms) 0s ease;
     width: var(--side-width);
+    max-width: 700px;
+    min-height: calc(100% - 40px);
+    bottom: 40px;
+    resize: horizontal;
+    padding-bottom: 0;
 }
 
 .wy-nav-content-wrap {
@@ -76,6 +80,7 @@ small {
 .rst-versions {
     width: var(--side-width);
     min-width: 35px;
+    height: 40px;
 }
 
 .rst-versions.shift-up {
