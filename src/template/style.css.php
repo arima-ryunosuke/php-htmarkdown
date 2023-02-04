@@ -87,6 +87,22 @@ small {
     min-width: 370px;
 }
 
+[data-toc-visible="false"] .rst-versions .fa-cog {
+    display: none;
+}
+
+.rst-versions .fa-cog {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: calc(100% - 20px);
+    text-align: left;
+}
+
+.rst-versions.shift-up .fa-cog {
+    display: inline-block !important;
+}
+
 .wy-side-scroll {
     transition: width var(--initial-animation-ms) 0s ease;
     width: calc(var(--side-width) + 20px);

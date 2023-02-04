@@ -110,7 +110,7 @@ $siblings = $this->siblings();
 </div>
 <div data-toggle="wy-nav-shift" class="rst-versions">
     <span class="rst-current-version" data-toggle-target=".rst-versions" data-toggle-class="shift-up">
-        <span class="fa fa-cog pull-left"> <?= $h($locale['control_panel']) ?></span>
+        <span class="fa fa-cog"> <?= $h($locale['control_panel']) ?></span>
         <span class="fa fa-caret-down"></span>
     </span>
     <div class="rst-other-versions">
