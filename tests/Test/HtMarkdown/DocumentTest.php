@@ -99,8 +99,14 @@ class DocumentTest extends \ryunosuke\Test\AbstractTestCase
         $doc = new Document("$dir/vendor", []);
         that($doc->isSupported())->isFalse();
 
-        $doc = new Document("$dir/parent/a", []);
+        $doc = new Document("$dir/parent", []);
         that($doc->isSupported())->isTrue();
+
+        $doc = new Document("$dir/parent/a", []);
+        that($doc->isSupported())->isFalse();
+
+        $doc = new Document("$dir/not/found.md", []);
+        that($doc->isSupported())->isFalse();
     }
 
     function test_parents()
@@ -121,13 +127,13 @@ class DocumentTest extends \ryunosuke\Test\AbstractTestCase
     {
         $dir = __DIR__ . '/../../stub';
 
-        $doc = new Document("$dir/parent/a", [
+        $doc = new Document("$dir/parent/b.md", [
             'docroot' => $dir,
         ]);
         $siblings = $doc->siblings();
         that(array_map('strval', $siblings))->is([
             -1 => null,
-            +1 => realpath("$dir/parent/b.md"),
+            +1 => realpath("$dir/parent/d.md"),
         ]);
 
         $doc = new Document("$dir/parent/d.md", [
@@ -147,7 +153,6 @@ class DocumentTest extends \ryunosuke\Test\AbstractTestCase
         $doc = new Document("$dir/parent", []);
         $children = $doc->children();
         that(array_map('strval', $children))->is([
-            realpath("$dir/parent/a"),
             realpath("$dir/parent/b.md"),
             realpath("$dir/parent/d.md"),
         ]);
@@ -161,7 +166,6 @@ class DocumentTest extends \ryunosuke\Test\AbstractTestCase
         that(array_map('strval', $children))->is([
             realpath("$dir/parent/d.md"),
             realpath("$dir/parent/b.md"),
-            realpath("$dir/parent/a"),
         ]);
     }
 
@@ -177,11 +181,8 @@ class DocumentTest extends \ryunosuke\Test\AbstractTestCase
             realpath("$dir/hogera"),
             realpath("$dir/hogera/hogera1"),
             realpath("$dir/hogera/hogera1/dummy.md"),
-            realpath("$dir/hogera/hogera2"),
             realpath("$dir/img"),
-            realpath("$dir/img/a"),
             realpath("$dir/parent"),
-            realpath("$dir/parent/a"),
             realpath("$dir/parent/b.md"),
             realpath("$dir/parent/d.md"),
             realpath("$dir/php"),
@@ -193,9 +194,7 @@ class DocumentTest extends \ryunosuke\Test\AbstractTestCase
             realpath("$dir/sub"),
             realpath("$dir/sub/sub"),
             realpath("$dir/sub/sub/sub"),
-            realpath("$dir/sub/sub/sub/empty"),
             realpath("$dir/sub/sub/sub/hoge.md"),
-            realpath("$dir/sub/sub/sub/index"),
         ]);
     }
 
@@ -208,7 +207,6 @@ class DocumentTest extends \ryunosuke\Test\AbstractTestCase
         that(array_map('strval', $result))->is([
             realpath("$dir/hogera"),
             realpath("$dir/hogera/hogera1"),
-            realpath("$dir/hogera/hogera2"),
             realpath("$dir/sub/sub/sub"),
             realpath("$dir/sub/sub/sub/hoge.md"),
         ]);
@@ -387,7 +385,6 @@ class DocumentTest extends \ryunosuke\Test\AbstractTestCase
             'img/a.png'           => '',
             'img/a/b.jpg'         => '',
             'parent/index.html'   => '',
-            'parent/a/index.html' => '',
             'parent/b.html'       => '',
         ];
         $actual = [];

@@ -129,7 +129,19 @@ class Document
                 return $this->file->extension() === 'md';
             }
 
-            return true;
+            if ($this->isDirectoryIndex()) {
+                $items = array_filter(glob("{$this->file->dirname()}/*"), function ($item) {
+                    if (pathinfo($item, PATHINFO_EXTENSION) === 'md') {
+                        return true;
+                    }
+                    if (is_dir($item)) {
+                        return count(glob("$item/*"));
+                    }
+                });
+                return !!count($items);
+            }
+
+            return false;
         })();
     }
 
@@ -565,14 +577,18 @@ class Document
 
         $items = strlen($query) ? $this->search($query) : $this->children();
         foreach ($items as $item) {
-            $count++;
             if (!$item->file->exists()) {
-                $summary = $item->summary($this, $query);
-                $contents .= "## [{$link($item)}]({$item->localPath($this)})\n\n";
-                $contents .= $metadata(count($item->children()), 'item', $item->file->parent()->mtime());
-                $contents .= $summary . "\n";
+                $grands = $item->children();
+                if ($grands) {
+                    $count++;
+                    $summary = $item->summary($this, $query);
+                    $contents .= "## [{$link($item)}]({$item->localPath($this)})\n\n";
+                    $contents .= $metadata(count($grands), 'item', $item->file->parent()->mtime());
+                    $contents .= $summary . "\n";
+                }
             }
             else {
+                $count++;
                 $summary = $item->summary($this, $query);
                 $contents .= "## [{$link($item)}]({$item->localPath($this)})\n\n";
                 $contents .= $metadata($item->file->size(), 'byte', $item->file->mtime());
