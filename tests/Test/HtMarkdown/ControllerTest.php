@@ -62,6 +62,8 @@ class ControllerTest extends \ryunosuke\Test\AbstractTestCase
             $this->markTestSkipped();
         }
 
+        touch("$dir/plain.md");
+
         $controller = new Controller([], [null, "$dir/plain.md"]);
         that($controller)->handleCli(...[])->outputMatches("#^PK#");
 

@@ -10,7 +10,7 @@ class File
 
     private $contents;
 
-    public function __construct(string $fullpath, string $contents = null)
+    public function __construct(string $fullpath, $contents = null)
     {
         $this->original = $fullpath;
         $this->contents = $contents;
@@ -111,33 +111,43 @@ class File
         return fnmatch("*$pattern*", $this->original);
     }
 
-    public function isFile(): bool
+    public function isFile(): ?bool
     {
-        assert($this->exists());
+        if (!$this->exists()) {
+            return null;
+        }
         return is_file($this->realpath());
     }
 
-    public function isDir(): bool
+    public function isDir(): ?bool
     {
-        assert($this->exists());
+        if (!$this->exists()) {
+            return null;
+        }
         return is_dir($this->realpath());
     }
 
-    public function size(): int
+    public function size(): ?int
     {
-        assert($this->exists());
+        if (!$this->exists()) {
+            return null;
+        }
         return filesize($this->original);
     }
 
-    public function mtime(): int
+    public function mtime(): ?int
     {
-        assert($this->exists());
+        if (!$this->exists()) {
+            return null;
+        }
         return filemtime($this->original);
     }
 
-    public function mimetype(): string
+    public function mimetype(): ?string
     {
-        assert($this->exists());
+        if (!$this->exists()) {
+            return null;
+        }
         return mime_content_type($this->original);
     }
 
@@ -145,7 +155,7 @@ class File
     {
         if ($this->exists()) {
             if ($this->contents !== null) {
-                return $this->contents;
+                return ($this->contents instanceof \Closure) ? ($this->contents)() : $this->contents;
             }
             if (pathinfo($this->filename(), PATHINFO_EXTENSION) === 'php') {
                 ob_start();
@@ -154,7 +164,7 @@ class File
             }
             return file_get_contents($this->original);
         }
-        return $this->contents;
+        return ($this->contents instanceof \Closure) ? ($this->contents)() : $this->contents;
     }
 
     public function lines(?int $length = null): \Generator

@@ -361,7 +361,7 @@ class Document
     public function contents(): array
     {
         $result = [
-            new File($this->file->changeExtension('.html'), $this->html()),
+            new File($this->file->changeExtension('.html'), fn() => $this->html()),
         ];
 
         $dom = $this->markup('');
@@ -476,28 +476,39 @@ class Document
         return $this->dom;
     }
 
-    public function generate(): \Generator
+    public function generate(?string $output = null): \Generator
     {
         $this->options['docroot'] = $this->file->parent();
         $this->options['singlefile'] = $this->file->exists();
 
         foreach (['script.js', 'style.css'] as $subpath) {
+            $mtime = filemtime(__DIR__ . "/../template/$subpath.php");
             $file = (new File("{$this->options['docroot']}/$subpath",));
-            yield $file->relative($this->file->parent()) => (static function ($subpath) {
-                ob_start();
-                include __DIR__ . "/../template/$subpath.php";
-                return ob_get_clean();
-            })($subpath);
+            if (!isset($output) || (!file_exists("$output/$subpath") || filemtime("$output/$subpath") < $mtime)) {
+                yield $file->relative($this->file->parent()) => (static function ($subpath) {
+                    ob_start();
+                    include __DIR__ . "/../template/$subpath.php";
+                    return ob_get_clean();
+                })($subpath);
+            }
             $this->options['single_assets'][$subpath] = $file;
         }
 
         foreach ($this->contents() as $file) {
-            yield $file->relative($this->file->parent()) => $file->contents();
+            $mtime = $this->file->mtime() ?? PHP_INT_MAX;
+            $subpath = $file->relative($this->file->parent());
+            if (!isset($output) || (!file_exists("$output/$subpath") || filemtime("$output/$subpath") < $mtime)) {
+                yield $subpath => $file->contents();
+            }
         }
 
         foreach ($this->descendants() as $it) {
+            $mtime = $it->file->mtime() ?? PHP_INT_MAX;
             foreach ($it->contents() as $file) {
-                yield $file->relative($this->file->parent()) => $file->contents();
+                $subpath = $file->relative($this->file->parent());
+                if (!isset($output) || (!file_exists("$output/$subpath") || filemtime("$output/$subpath") < $mtime)) {
+                    yield $subpath => $file->contents();
+                }
             }
         }
     }

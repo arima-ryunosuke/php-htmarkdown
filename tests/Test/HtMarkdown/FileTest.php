@@ -149,6 +149,9 @@ class FileTest extends \ryunosuke\Test\AbstractTestCase
 
         $file = new File(__DIR__);
         that($file->isFile())->isFalse();
+
+        $file = new File('/path/to/notfound');
+        that($file->isFile())->isNull();
     }
 
     function test_isDir()
@@ -158,12 +161,18 @@ class FileTest extends \ryunosuke\Test\AbstractTestCase
 
         $file = new File(__DIR__);
         that($file->isDir())->isTrue();
+
+        $file = new File('/path/to/notfound');
+        that($file->isDir())->isNull();
     }
 
     function test_size()
     {
         $file = new File(__FILE__);
         that($file->size())->is(filesize(__FILE__));
+
+        $file = new File('/path/to/notfound');
+        that($file->size())->isNull();
     }
 
     function test_mtime()
@@ -171,6 +180,9 @@ class FileTest extends \ryunosuke\Test\AbstractTestCase
         $file = new File(__FILE__);
         touch(__FILE__);
         that($file->mtime())->is(time());
+
+        $file = new File('/path/to/notfound');
+        that($file->mtime())->isNull();
     }
 
     function test_mimetype()
@@ -180,6 +192,9 @@ class FileTest extends \ryunosuke\Test\AbstractTestCase
 
         $file = new File(__DIR__);
         that($file->mimetype())->is('directory');
+
+        $file = new File('/path/to/notfound');
+        that($file->mimetype())->isNull();
     }
 
     function test_contents()

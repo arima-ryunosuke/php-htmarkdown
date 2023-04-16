@@ -116,7 +116,7 @@ class Controller
 
         $output = $this->request[$rest_index + 1] ?? null;
         if ($output !== null) {
-            foreach ($document->generate() as $name => $contents) {
+            foreach ($document->generate($output) as $name => $contents) {
                 @mkdir(dirname("$output/$name"), 0777, true);
                 file_put_contents("$output/$name", $contents);
             }
