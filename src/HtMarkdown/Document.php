@@ -198,7 +198,12 @@ class Document
             }
 
             $files = glob("{$this->file->dirname()}/*");
-            sort($files);
+            if ($this->options['sort_order'] === 'asc') {
+                sort($files);
+            }
+            if ($this->options['sort_order'] === 'desc') {
+                rsort($files);
+            }
             $children = [];
             foreach ($files as $file) {
                 $child = new self($file, $this->options);

@@ -11,6 +11,7 @@ class Controller
         'js_file'     => null,
         'css_file'    => null,
         'locale'      => 'en',
+        'sort_order'  => 'asc',
         'list_length' => 320,
         'hard_limit'  => 500,
         'ignore_path' => [

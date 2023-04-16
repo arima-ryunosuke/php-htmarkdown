@@ -151,6 +151,18 @@ class DocumentTest extends \ryunosuke\Test\AbstractTestCase
             realpath("$dir/parent/b.md"),
             realpath("$dir/parent/d.md"),
         ]);
+
+        \Closure::bind(function () {
+            Document::$cache = [];
+        }, null, Document::class)();
+
+        $doc = new Document("$dir/parent", ['sort_order' => 'desc']);
+        $children = $doc->children();
+        that(array_map('strval', $children))->is([
+            realpath("$dir/parent/d.md"),
+            realpath("$dir/parent/b.md"),
+            realpath("$dir/parent/a"),
+        ]);
     }
 
     function test_descendants()
