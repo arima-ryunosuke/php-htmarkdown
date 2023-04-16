@@ -17,7 +17,11 @@ $siblings = $this->siblings();
 
     <link id="sphinx_rtd_theme" href="https://cdn.jsdelivr.net/npm/sphinx_rtd_theme@0.4.2/css/theme.css" rel="stylesheet">
     <link id="highlight_style" data-cdn-url="https://cdn.jsdelivr.net/npm/highlightjs@9.16.2/styles/" href="" rel="stylesheet">
-    <style><?php include __DIR__ . '/style.css.php' ?></style>
+    <?php if (isset($this->single_assets['style.css'])): ?>
+        <link href="<?= $this->single_assets['style.css']->relative($this->file->parent()) ?>" rel="stylesheet">
+    <?php else: ?>
+        <style><?php include __DIR__ . '/style.css.php' ?></style>
+    <?php endif ?>
     <?php if (strlen($this->css_file)): ?>
         <style><?php include $this->css_file ?></style>
     <?php endif ?>
@@ -26,7 +30,11 @@ $siblings = $this->siblings();
     <script defer src="https://cdn.jsdelivr.net/npm/mermaid@9.1.7/dist/mermaid.min.js"></script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/viz.js"></script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/full.render.js"></script>
-    <script defer><?php include __DIR__ . '/script.js.php' ?></script>
+    <?php if (isset($this->single_assets['script.js'])): ?>
+        <script defer src="<?= $this->single_assets['script.js']->relative($this->file->parent()) ?>"></script>
+    <?php else: ?>
+        <script defer><?php include __DIR__ . '/script.js.php' ?></script>
+    <?php endif ?>
     <?php if (strlen($this->js_file)): ?>
         <script><?php include $this->js_file ?></script>
     <?php endif ?>

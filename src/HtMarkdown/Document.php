@@ -25,9 +25,10 @@ class Document
     public function __construct(string $filename, array $options = [])
     {
         $options = array_replace([
-            'index_file' => 'index.md',
-            'singlefile' => false,
-            'download'   => false,
+            'index_file'    => 'index.md',
+            'single_assets' => [],
+            'singlefile'    => false,
+            'download'      => false,
         ], array_filter($options, function ($v) { return !is_null($v); }));
 
         if (is_dir($filename)) {
@@ -479,6 +480,16 @@ class Document
     {
         $this->options['docroot'] = $this->file->parent();
         $this->options['singlefile'] = $this->file->exists();
+
+        foreach (['script.js', 'style.css'] as $subpath) {
+            $file = (new File("{$this->options['docroot']}/$subpath",));
+            yield $file->relative($this->file->parent()) => (static function ($subpath) {
+                ob_start();
+                include __DIR__ . "/../template/$subpath.php";
+                return ob_get_clean();
+            })($subpath);
+            $this->options['single_assets'][$subpath] = $file;
+        }
 
         foreach ($this->contents() as $file) {
             yield $file->relative($this->file->parent()) => $file->contents();
