@@ -118,6 +118,6 @@ class ControllerTest extends \ryunosuke\Test\AbstractTestCase
         ], [
             'dl' => true,
         ]);
-        @that($controller)->handleHttp()->final('stdout')->stringStartsWith('PK');
+        @that($controller)->handleHttp()->wasOutputed('PK');
     }
 }
