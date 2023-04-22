@@ -331,7 +331,7 @@ document.addEventListener('DOMContentLoaded', function () {
     /// コンパネ
     const SAVENAME = 'ht-setting';
     const alldata = html.matches('[data-exported]') ? {} : JSON.parse(localStorage.getItem(SAVENAME) ?? '{}');
-    const directory = location.pathname.split('/').slice(0, -1).join('/');
+    const directory = null ?? location.pathname.split('/').slice(0, -1).join('/');
     controlPanel.on('input', function (e) {
         if (!e.target.validity.valid) {
             return;
@@ -560,6 +560,14 @@ document.addEventListener('DOMContentLoaded', function () {
     let intoViewScrolling = false;
     outline.on('click', 'a.toc-h', function (e) {
         e.preventDefault();
+        const oldURL = location.href;
+        const newURL = e.target.href;
+        history.replaceState(null, '', newURL);
+        window.dispatchEvent(new HashChangeEvent("hashchange", {
+            oldURL: oldURL,
+            newURL: newURL,
+        }));
+
         const section = $(e.target.getAttribute('href'));
         intoViewScrolling = true;
         section.scrollIntoView({
