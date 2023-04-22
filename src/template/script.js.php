@@ -560,6 +560,14 @@ document.addEventListener('DOMContentLoaded', function () {
     let intoViewScrolling = false;
     outline.on('click', 'a.toc-h', function (e) {
         e.preventDefault();
+        const oldURL = location.href;
+        const newURL = e.target.href;
+        history.replaceState(null, '', newURL);
+        window.dispatchEvent(new HashChangeEvent("hashchange", {
+            oldURL: oldURL,
+            newURL: newURL,
+        }));
+
         const section = $(e.target.getAttribute('href'));
         intoViewScrolling = true;
         section.scrollIntoView({
