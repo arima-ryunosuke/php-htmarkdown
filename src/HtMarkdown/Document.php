@@ -497,7 +497,7 @@ class Document
             $mtime = filemtime(__DIR__ . "/../template/$subpath.php");
             $file = (new File("{$this->options['docroot']}/$subpath",));
             if (!isset($output) || (!file_exists("$output/$subpath") || filemtime("$output/$subpath") < $mtime)) {
-                yield $file->relative($this->file->parent()) => (static function ($subpath) {
+                yield $file->relative($this->file->parent()) => (function ($subpath) {
                     ob_start();
                     include __DIR__ . "/../template/$subpath.php";
                     return ob_get_clean();

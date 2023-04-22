@@ -6,6 +6,7 @@ class Controller
 {
     const SPECIFIABLE_OPTIONS = [
         'dummy'       => false,
+        'project'     => null,
         'docroot'     => null,
         'index_file'  => null,
         'js_file'     => null,
