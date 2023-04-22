@@ -127,7 +127,7 @@ $siblings = $this->siblings();
                 <dt>View</dt>
                 <dd>
                     <label class="option-title" for="font_family"><?= $h($locale['font_family']) ?></label>
-                    <input id="fontFamily" class="option-input savedata" data-default-value="" type="search" list="fonts">
+                    <input id="fontFamily" class="option-input savedata" data-default-value="sans-serif" type="search" list="fonts">
                     <datalist id="fonts">
                         <?php foreach (['serif', 'sans-serif', 'monospace', /* and more */] as $family): ?>
                             <option value="<?= $h($family) ?>"><?= $h($family) ?></option>
@@ -160,7 +160,7 @@ $siblings = $this->siblings();
                 </dd>
                 <dd>
                     <label class="option-title" for="toc_active"><?= $h($locale['toc_active']) ?></label>
-                    <select id="tocActive" class="option-input savedata" data-default-value="none">
+                    <select id="tocActive" class="option-input savedata" data-default-value="some">
                         <?php foreach (['none', 'some', 'all'] as $mode): ?>
                             <option value="<?= $h($mode) ?>"><?= $h($locale["toc_active.$mode"]) ?></option>
                         <?php endforeach ?>
@@ -201,7 +201,7 @@ $siblings = $this->siblings();
                 </dd>
                 <dd>
                     <label class="option-title" for="break_line"><?= $h($locale['break_line']) ?></label>
-                    <select id="breakLine" class="option-input savedata" data-default-value="ignore">
+                    <select id="breakLine" class="option-input savedata" data-default-value="break">
                         <?php foreach (['ignore', 'break', 'space'] as $mode): ?>
                             <option value="<?= $h($mode) ?>"><?= $h($locale["break_line.$mode"]) ?></option>
                         <?php endforeach ?>
