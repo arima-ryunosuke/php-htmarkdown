@@ -3,6 +3,7 @@
 namespace ryunosuke\HtMarkdown;
 
 use Parsedown;
+use Symfony\Component\Yaml\Parser;
 
 class Markdown extends Parsedown
 {
@@ -37,6 +38,15 @@ class Markdown extends Parsedown
         foreach ($newBlockTypes as $char => $block) {
             $this->BlockTypes[$char] = array_merge($this->BlockTypes[$char] ?? [], $block);
         }
+    }
+
+    public static function metadata(&$contents)
+    {
+        if (preg_match('#\A---(.+?)---$#ums', $contents, $matches)) {
+            $contents = ltrim(substr($contents, strlen($matches[0])));
+            return (new Parser)->parse($matches[1]);
+        }
+        return [];
     }
 
     public static function render($contents, $options)

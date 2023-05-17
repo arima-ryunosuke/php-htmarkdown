@@ -174,8 +174,29 @@ class File
         try {
             $fp = fopen($this->original, 'rb');
 
+            $yamling = false;
+            $metadata = null;
             $length = (array) $length;
             while (($line = fgets($fp, ...$length)) !== false) {
+                // meta yaml block as oneline
+                if ($yamling === false && trim($line) === "---") {
+                    $metadata .= $line;
+                    $yamling = true;
+                    continue;
+                }
+                if ($yamling === true) {
+                    $metadata .= $line;
+                    if (trim($line) !== "---") {
+                        continue;
+                    }
+                    else {
+                        $yamling = null;
+                        yield $metadata;
+                        continue;
+                    }
+                }
+                $yamling = null;
+
                 yield $line;
             }
         }

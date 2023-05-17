@@ -233,5 +233,24 @@ MD
         $file = new File(__FILE__);
         $it = $file->lines();
         that(iterator_to_array($it))->contains("    function test_lines()\n");
+
+        $tmpfile = tempnam(sys_get_temp_dir(), 'md');
+        file_put_contents($tmpfile, <<<MD
+        ---
+        title: this is title
+        ---
+        this is body
+        MD,);
+        $file = new File($tmpfile);
+        $it = $file->lines();
+        that(iterator_to_array($it))->is([
+            <<<MD
+            ---
+            title: this is title
+            ---
+            
+            MD,
+            "this is body"
+        ]);
     }
 }

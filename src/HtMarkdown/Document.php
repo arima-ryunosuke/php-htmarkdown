@@ -299,7 +299,11 @@ class Document
         $localname = $this->localName();
         if ($this->file->exists() && $this->file->extension() === 'md') {
             foreach ($this->file->lines(256) as $line) {
-                if (strlen($line)) {
+                $metadata = Markdown::metadata($line);
+                if (isset($metadata['title'])) {
+                    return $metadata['title'];
+                }
+                if (strlen(trim($line))) {
                     return $localname . ($parentheses ? " (" . trim(ltrim($line, '#')) . ")" : '');
                 }
             }
@@ -400,10 +404,15 @@ class Document
 
         libxml_use_internal_errors(true);
 
-        $html = Markdown::render($this->plain($query), $this->options);
+        $plain = $this->plain($query);
+        $meta = Markdown::metadata($plain);
+        $html = Markdown::render($plain, $this->options);
         $this->dom = new class() extends \DOMDocument {
+            public $metadata;
+
             public function __toString() { return $this->saveHTML($this->documentElement); }
         };
+        $this->dom->metadata = $meta;
         $this->dom->loadHTML("<?xml encoding=\"UTF-8\"><article>$html</article>", LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NOXMLDECL);
 
         $headers = [];

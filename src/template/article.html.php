@@ -13,7 +13,7 @@ $siblings = $this->siblings();
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title><?= $h($this->localName()) ?></title>
+    <title><?= $h($article->metadata['title'] ?? $this->localName()) ?></title>
 
     <link id="sphinx_rtd_theme" href="https://cdn.jsdelivr.net/npm/sphinx_rtd_theme@0.4.2/css/theme.css" rel="stylesheet">
     <link id="highlight_style" data-cdn-url="https://cdn.jsdelivr.net/npm/highlightjs@9.16.2/styles/" href="" rel="stylesheet">
@@ -47,7 +47,7 @@ $siblings = $this->siblings();
             <div class="wy-side-nav-search">
                 <a href="" class="icon icon-home"> <?= $h($this->localName()) ?></a>
                 <div class="version">
-                    <?= $h($locale['last_modified']) ?> <?= $h(date('Y/m/d H:i:s', $this->lastModified())) ?>
+                    <?= $h($locale['last_modified']) ?> <?= $h($article->metadata['lastModified'] ?? date('Y/m/d H:i:s', $this->lastModified())) ?>
                 </div>
                 <div role="search">
                     <form id="rtd-search-form" class="wy-form hidden-download" method="get">
@@ -82,6 +82,18 @@ $siblings = $this->siblings();
                     </ul>
                     <hr>
                 </header>
+                <div class="markdown-head">
+                    <script>
+                        var METADATA = <?= json_encode($article->metadata) ?>;
+                    </script>
+                    <?php if (isset($article->metadata['tags'])): ?>
+                        <ul class="tag-list">
+                            <?php foreach ($article->metadata['tags'] as $tag): ?>
+                                <li><span class="badge info" data-badge-title=""><?= $h($tag) ?></span></li>
+                            <?php endforeach ?>
+                        </ul>
+                    <?php endif ?>
+                </div>
                 <main class="markdown-body">
                     <?= $article ?>
                 </main>

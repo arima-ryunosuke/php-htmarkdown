@@ -182,6 +182,7 @@ class DocumentTest extends \ryunosuke\Test\AbstractTestCase
             realpath("$dir/hogera/hogera1"),
             realpath("$dir/hogera/hogera1/dummy.md"),
             realpath("$dir/img"),
+            realpath("$dir/meta.md"),
             realpath("$dir/parent"),
             realpath("$dir/parent/b.md"),
             realpath("$dir/parent/d.md"),
@@ -293,9 +294,13 @@ class DocumentTest extends \ryunosuke\Test\AbstractTestCase
         that($doc->title(false))->is('dummy.md');
         that($doc->title(true))->is('dummy.md (this is markdown file)');
 
+        $doc = new Document("$dir/meta.md");
+        that($doc->title(false))->is('this is title');
+        that($doc->title(true))->is('this is title');
+
         $doc = new Document("$dir");
         that($doc->title(false))->is('stub/');
-        that($doc->title(true))->is('stub/ (7 items)');
+        that($doc->title(true))->is('stub/ (8 items)');
 
         $doc = new Document("$dir/sub/sub/sub");
         that($doc->title(false))->is('sub/');

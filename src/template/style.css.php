@@ -127,6 +127,16 @@ small {
     background: #a9a9a9;
 }
 
+.rst-content .tag-list {
+    list-style: none;
+    text-align: right;
+    margin-bottom: 12px;
+}
+
+.rst-content .tag-list li {
+    display: inline;
+}
+
 .rst-content code {
     white-space: inherit;
     font-size: 90%;

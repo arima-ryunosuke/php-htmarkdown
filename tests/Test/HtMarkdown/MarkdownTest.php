@@ -8,6 +8,37 @@ use ryunosuke\HtMarkdown\Markdown;
  */
 class MarkdownTest extends \ryunosuke\Test\AbstractTestCase
 {
+    function test_metadata()
+    {
+        $md = <<<MD
+        subheader
+        ---
+        subheader
+        ---
+        MD;
+        that(Markdown::metadata($md))->is([]);
+        that($md)->is($md);
+
+        $md = <<<MD
+        ---
+        key1: value1
+        key2: value2
+        keys: 
+            - val1
+            - val2
+        ---
+        
+        subheader
+        ---
+        MD;
+        that(Markdown::metadata($md))->is([
+            "key1" => "value1",
+            "key2" => "value2",
+            "keys" => ["val1", "val2"],
+        ]);
+        that($md)->is("subheader\n---");
+    }
+
     function test_inlineText()
     {
         that(Markdown::render(<<<MD
