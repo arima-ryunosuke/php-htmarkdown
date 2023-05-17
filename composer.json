@@ -16,7 +16,8 @@
   ],
   "require": {
     "php": ">=7.4",
-    "erusev/parsedown": "dev-master"
+    "erusev/parsedown": "dev-master",
+    "symfony/yaml": "5.*"
   },
   "require-dev": {
     "php": ">=7.4",

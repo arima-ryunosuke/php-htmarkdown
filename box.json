@@ -19,7 +19,8 @@
       "in": [
         "src",
         "vendor/composer",
-        "vendor/erusev/parsedown"
+        "vendor/erusev/parsedown",
+        "vendor/symfony"
       ]
     }
   ],
