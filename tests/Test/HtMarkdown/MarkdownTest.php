@@ -613,7 +613,7 @@ class MarkdownTest extends \ryunosuke\Test\AbstractTestCase
     function test_blockDetail()
     {
         that(Markdown::render(<<<MD
-            ...summary
+            ...summary:title
             details1
             details2
             ...
@@ -622,7 +622,7 @@ class MarkdownTest extends \ryunosuke\Test\AbstractTestCase
             "details" => [
                 "summary" => [
                     "class" => "",
-                    "summary",
+                    "summary:title",
                 ],
                 "p"       => ["details1", "details2"],
             ],

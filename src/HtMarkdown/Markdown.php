@@ -200,11 +200,13 @@ class Markdown extends Parsedown
         return $Link;
     }
 
-    protected function _commonBlock($Line, $Element, $Opener = null)
+    protected function _commonBlock($Line, $Element, $Opener = null, $Stopper = null)
     {
         $marker = $Line['text'][0];
 
         $Opener ??= 3;
+        $Stopper ??= $marker;
+
         if (is_int($Opener)) {
             $openerLength = strspn($Line['text'], $marker);
             if ($openerLength < $Opener) {
@@ -218,7 +220,7 @@ class Markdown extends Parsedown
         }
 
         $infostring = trim(substr($Line['text'], $openerLength), "\t ");
-        if (strpos($infostring, $marker) !== false) {
+        if (strpos($infostring, $Stopper) !== false) {
             return;
         }
 
@@ -510,9 +512,11 @@ class Markdown extends Parsedown
                     'attributes' => [
                         'class' => '',
                     ],
+                    'text'       => '',
+                    'handler'    => 'line',
                 ],
             ],
-        ]);
+        ], null, "\0");
         if ($Block !== null) {
             $Block['element']['elements'][0]['text'] = trim($Block['infoString']);
         }
