@@ -1,7 +1,15 @@
+---
+title: README
+lastModified: 2014/12/24 12:34:56
+tags: 
+  - README
+  - Example
+---
+
 Markdown viewer for web
 ====
 This is sub header
-----
+---
 
 ## Description
 
@@ -22,13 +30,16 @@ markdown を良い感じに表示する phar です。
 
 下記のように web サーバを設定します。
 
-```plaintext:apacheの場合
+[apache]{
+```plaintext
 RewriteRule \.md$ htmarkdown.phar [QSA,L]
 ```
-
-```plaintext:nginxの場合
+}
+[nginx]{
+```plaintext
 rewrite \.md$ htmarkdown.phar;
 ```
+}
 
 説明はほぼ不要ですが、拡張子 md を rewrite して phar に委譲されるようにします。
 `-d` オプションを加えれば Directory Index としても機能します。
@@ -176,23 +187,25 @@ php htmarkdown.phar /path/to/markdown.md /path/to/directory
 
 #### ノート
 
-コードブロックと同じように `"""` で囲むと注意書きブロックが生成されます。
+コードブロックと同じように `:::` で囲むと注意書きブロックが生成されます。
 
 ```markdown:注意書きの例
-"""note:title
+:::note:title
 これは注意書きです。
-"""
+:::
 ```
 
 上記のようにすると下記のようになります。
 
-"""note:title
+:::note:title
 これは注意書きです。
-"""
+:::
 
 `note` の部分は Read The Docs の他のタイプが使えます。頻出するのは `hint` `info` `warning` `important` などでしょう。
 
 title の部分はただのラベルになります。
+
+歴史的な経緯により、 `"""` でもノート記法が使えますが、主流は `:::` なので `:::` を使うようにしてください。
 
 #### サイドバー
 
@@ -357,7 +370,7 @@ title の部分はただのラベルになります。
 そもそも定義リストは**リスト**ですし、もともと markdown は「そのままのテキストでもそれっぽく見える」ような記法だったはずです。
 ので見た目（md）とマークアップ（html）があまり剥離しないこのルールは割と好きです。
 
-"""warning:注意
+:::warning:注意
 コロンスペースのスペースは必須です。でないと下記のような「URL のリスト」が定義リストと認識されてしまいます。
 
 - http://example.com/hoge
@@ -367,26 +380,61 @@ title の部分はただのラベルになります。
 
 - http: //example.com/hoge
 - http: //example.com/fuga
-"""
+:::
 
 #### 折りたたみ
 
 コードブロックと同じように `...` で囲むと折りたたみとなります。
 
 ```
-...ここは summary になります
+...ここは **summary** になります
 ここが折りたたみの中身になります
 ...
 ```
 
 上記のようにすると下記のようになります。
 
-...ここは summary になります
+...ここは **summary** になります
 ここが折りたたみの中身になります
 ...
 
 summary 部分を省略すると summary タグは生成されません。
 その場合ブラウザのデフォルトになります（「省略」など）。
+
+#### タブ
+
+`[タブ名]{タブ内容}` とするとタブ表示になります。
+
+````
+[これはタブAです]{
+これは内容です
+}
+[これはタブBです]{
+- markdown 構文も
+- 使えます
+
+```
+これはコードブロックです
+```
+}
+````
+
+上記のようにすると下記のようになります。
+
+[これはタブAです]{
+これは内容です
+}
+[これはタブBです]{
+- markdown 構文も
+- 使えます
+
+```
+これはコードブロックです
+```
+}
+
+タブ内容に改行は必須です。 `[タブ名]{タブ内容}` のように1行で記述することはできません。
+各タブ間に空行を挟んではいけません。挟むとそれぞれ別のタブブロックと認識されます。
 
 #### 幅指定テーブル
 
@@ -733,9 +781,9 @@ graph ethane {
 - {color:red}li自体にスタイルが適用されています
 
 [class=" hint"]
-"""
+:::
 このノートは .hint が付与されています。
-"""
+:::
 ```
 
 上記のようにすると下記のようになります。
@@ -747,9 +795,9 @@ graph ethane {
 - {color:red}li自体にスタイルが適用されています
 
 [class=" hint"]
-"""
+:::
 このノートは .hint が付与されています。
-"""
+:::
 
 class 属性だけは特別扱いされており、先頭が空白だと追加を意味します。
 空白がないと class 属性自体も完全に置換されます。
@@ -783,9 +831,9 @@ class 属性だけは特別扱いされており、先頭が空白だと追加�
 <<BLOCK1
 ここは BLOCK1 です。
 
-"""note:title
+:::note:title
 test
-"""
+:::
 BLOCK1
 
 <<BLOCK2
@@ -812,9 +860,9 @@ BLOCK3
 <<BLOCK1
 ここは BLOCK1 です。
 
-"""note:title
+:::note:title
 test
-"""
+:::
 BLOCK1
 
 <<BLOCK2
@@ -871,6 +919,15 @@ semver 準拠はあくまで下記だけです。
 - POST で更新する？
 - 静的ファイルは全部 CDN に逃したい
 - markdown に include 機能を持たせたい
+
+### 1.5.0
+
+- [fixbug] 拡張子周りを修正
+- [feature] デフォルトオプションを指定できる機能
+- [feature] ノート記法に ::: を追加
+- [feature] summary はタグそのものなので markdown が活きるように変更
+- [feature] タブ機能を実装
+- [feature] yaml によるメタデータ埋め込みを実装
 
 ### 1.4.0
 
