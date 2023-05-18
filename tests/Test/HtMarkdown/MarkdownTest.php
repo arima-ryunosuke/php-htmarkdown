@@ -867,6 +867,63 @@ class MarkdownTest extends \ryunosuke\Test\AbstractTestCase
         ]);
     }
 
+    function test_blockTab()
+    {
+        that(Markdown::render(<<<MD
+            [A]{
+            tab contents
+            }
+            [B]{
+            - list1
+            - **list1**
+            }
+            
+            plain text
+            MD
+            , []))->htmlMatchesArray([
+            "form" => [
+                "class"  => ["tab-container"],
+                "div[1]" => [
+                    "class" => ["tab-item"],
+                    "label" => [
+                        "class" => ["tab-title"],
+                        "input" => [
+                            "type"    => "radio",
+                            "name"    => "tab-name",
+                            "checked" => "1",
+                        ],
+                        "A",
+                    ],
+                    "div"   => [
+                        "class" => ["tab-content"],
+                        "p[1]"  => ["tab contents"],
+                    ],
+                ],
+                "div[2]" => [
+                    "class" => ["tab-item"],
+                    "label" => [
+                        "class" => ["tab-title"],
+                        "input" => [
+                            "type" => "radio",
+                            "name" => "tab-name",
+                        ],
+                        "B",
+                    ],
+                    "div"   => [
+                        "class" => ["tab-content"],
+                        "ul"    => [
+                            "class" => ["simple"],
+                            "li[1]" => ["list1"],
+                            "li[2]" => [
+                                "strong" => ["list1"],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
     function test_blockTable()
     {
         that(Markdown::render(<<<MD

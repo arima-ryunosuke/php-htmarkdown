@@ -1023,3 +1023,51 @@ a.disabled {
 .downloaded .hidden-download {
     display: none;
 }
+
+.tab-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+}
+
+.tab-container input[type="radio"] {
+    display: none;
+}
+
+.tab-container .tab-item {
+    display: contents;
+}
+
+.tab-container .tab-title {
+    order: -1;
+    padding: 8px 12px;
+    margin-bottom: 0;
+    z-index: 1;
+}
+
+.tab-container .tab-title:has(input:checked) {
+    font-weight: bold;
+    background: #fff;
+    border: 1px solid #e1e4e5;
+    border-bottom: 1px solid white;
+    border-radius: 3px 3px 0 0;
+}
+
+.tab-container .tab-title:hover {
+    background: #e1e4e5;
+}
+
+.tab-container .tab-content {
+    position: relative;
+    top: -1px;
+    display: none;
+    width: 100%;
+    background: #fff;
+    border-radius: 3px;
+    border: 1px solid #e1e4e5;
+    padding: 12px;
+}
+
+.tab-container .tab-title:has(input:checked) + .tab-content {
+    display: block;
+}

@@ -34,6 +34,7 @@ class Markdown extends Parsedown
             '.' => ['Detail'],
             '-' => ['Div'],
             '^' => ['Cascade'],
+            '[' => ['Tab'],
         ];
         foreach ($newBlockTypes as $char => $block) {
             $this->BlockTypes[$char] = array_merge($this->BlockTypes[$char] ?? [], $block);
@@ -588,6 +589,95 @@ class Markdown extends Parsedown
             $main_or_sub = $Block['element']['name'] === 'h1' ? 'main' : 'sub';
             $Block['element']['attributes']['class'] = ($Block['element']['attributes']['class'] ?? '') . " $main_or_sub-header";
         }
+        return $Block;
+    }
+
+    protected function _tabItem($title)
+    {
+        return [
+            'name'       => 'div',
+            'attributes' => [
+                'class' => 'tab-item',
+            ],
+            'elements'   => [
+                'title'   => [
+                    'name'       => 'label',
+                    'attributes' => [
+                        'class' => 'tab-title',
+                    ],
+                    'elements'   => [
+                        'radio' => [
+                            'name'       => 'input',
+                            'attributes' => [
+                                'type' => 'radio',
+                                'name' => 'tab-name',
+                            ],
+                        ],
+                        'text'  => [
+                            'text' => $title,
+                        ],
+                    ],
+                ],
+                'content' => [
+                    'name'       => 'div',
+                    'attributes' => [
+                        'class' => 'tab-content',
+                    ],
+                    'handler'    => [
+                        'function'    => 'linesElements',
+                        'argument'    => [],
+                        'destination' => 'elements',
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    protected function blockTab($Line, $CurrentBlock)
+    {
+        if (isset($CurrentBlock) and $CurrentBlock['type'] === 'Paragraph' and !isset($CurrentBlock['interrupted'])) {
+            return;
+        }
+
+        if (preg_match('#^\[([^]]+?)\]\{$#u', $Line['text'], $matches)) {
+            $Block = [
+                'element' => [
+                    'name'       => 'form',
+                    'attributes' => [
+                        'class' => 'tab-container',
+                    ],
+                    'elements'   => [],
+                ],
+            ];
+            $Block['Tab'] = $this->_tabItem($matches[1]);
+            $Block['element']['elements'][] = &$Block['Tab'];
+            return $Block;
+        }
+    }
+
+    protected function blockTabContinue($Line, $Block)
+    {
+        if (isset($Block['interrupted']) and empty($Block['Tab']['elements']['content']['handler']['argument'])) {
+            return;
+        }
+
+        if (preg_match('#^\[([^]]+?)\]\{$#u', $Line['text'], $matches)) {
+            unset($Block['Tab']);
+            $Block['Tab'] = $this->_tabItem($matches[1]);
+            $Block['element']['elements'][] = &$Block['Tab'];
+        }
+        elseif ($Line['text'] === '}') {
+            unset($Block['Tab']);
+        }
+        else {
+            $Block['Tab']['elements']['content']['handler']['argument'][] = $Line['body'];
+        }
+        return $Block;
+    }
+
+    protected function blockTabComplete($Block)
+    {
+        $Block['element']['elements'][0]['elements']['title']['elements']['radio']['attributes']['checked'] = true;
         return $Block;
     }
 
