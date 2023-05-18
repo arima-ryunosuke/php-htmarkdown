@@ -4,7 +4,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>README.md</title>
+    <title>README</title>
 
     <link id="sphinx_rtd_theme" href="https://cdn.jsdelivr.net/npm/sphinx_rtd_theme@0.4.2/css/theme.css" rel="stylesheet">
     <link id="highlight_style" data-cdn-url="https://cdn.jsdelivr.net/npm/highlightjs@9.16.2/styles/" href="" rel="stylesheet">
@@ -22,9 +22,9 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
         <div class="wy-side-scroll">
             <div class="wy-side-nav-search">
-                <a href="" class="icon icon-home"> README.md</a>
+                <a href="" class="icon icon-home"> README.html</a>
                 <div class="version">
-                    Last Modified 2023/04/29 02:57:52                </div>
+                    Last Modified 2014/12/24 12:34:56                </div>
                 <div role="search">
                     <form id="rtd-search-form" class="wy-form hidden-download" method="get">
                         <input type="text" name="query" placeholder="Search directory" value="">
@@ -39,7 +39,7 @@
     <div data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
         <nav class="wy-nav-top" aria-label="Mobile navigation menu">
             <i data-toggle="wy-nav-top" class="fa fa-bars" data-toggle-target="[data-toggle=&quot;wy-nav-shift&quot;]" data-toggle-class="shift"></i>
-            <a href=""> README.md</a>
+            <a href=""> README.html</a>
         </nav>
         <div class="wy-nav-content">
             <div class="rst-content">
@@ -47,7 +47,7 @@
                     <ul class="wy-breadcrumbs">
                         <li class="top-breadcrumb"><a href="/" class="icon icon-home"></a> »</li>
                                                     <li><a href="index.html">php-markdown/</a> »</li>
-                                                <li>README.md</li>
+                                                <li>README.html</li>
                         <li class="wy-breadcrumbs-aside hidden-download">
                             <a href="?raw=true" class="fa fa-file-text"> View Markdown</a>
                             <a href="?dl=true" class="fa fa-download" download> Download</a>
@@ -56,6 +56,15 @@
                     </ul>
                     <hr>
                 </header>
+                <div class="markdown-head">
+                    <script>
+                        var METADATA = {"title":"README","lastModified":"2014\/12\/24 12:34:56","tags":["README","Example"]};
+                    </script>
+                                            <ul class="tag-list">
+                                                            <li><span class="badge info" data-badge-title="">README</span></li>
+                                                            <li><span class="badge info" data-badge-title="">Example</span></li>
+                                                    </ul>
+                                    </div>
                 <main class="markdown-body">
                     <article><section id="_a1ea035e51bd155b85c882ccf36ecd85554081c8-1" class="main-section"><h1 class="main-header section-header">Markdown viewer for web</h1>
 </section><section id="_9e1516648f1127f9153f91a5a931fd7c7dcfd37f-1" class="sub-section"><h2 class="sub-header section-header">This is sub header</h2>
@@ -72,8 +81,22 @@
 </span>さらに <code>.php.md</code> の場合は php が実行されます。</p>
 </section><section id="_454d783b07841da1d1409e2ec34ec5cfe22e35dc-1" class="section section-level-h3" data-section-level="3"><h3 class="section-header">Rewrite Mode</h3>
 <p>下記のように web サーバを設定します。</p>
-<pre data-label="apacheの場合"><div class="code language-plaintext:apacheの場合 plaintext:apacheの場合">RewriteRule \.md$ htmarkdown.phar [QSA,L]</div></pre>
-<pre data-label="nginxの場合"><div class="code language-plaintext:nginxの場合 plaintext:nginxの場合">rewrite \.md$ htmarkdown.phar;</div></pre>
+<form class="tab-container">
+<div class="tab-item">
+<label class="tab-title">
+<input type="radio" name="tab-name" checked>apache</label>
+<div class="tab-content">
+<pre data-label=""><div class="code language-plaintext plaintext">RewriteRule \.md$ htmarkdown.phar [QSA,L]</div></pre>
+</div>
+</div>
+<div class="tab-item">
+<label class="tab-title">
+<input type="radio" name="tab-name">nginx</label>
+<div class="tab-content">
+<pre data-label=""><div class="code language-plaintext plaintext">rewrite \.md$ htmarkdown.phar;</div></pre>
+</div>
+</div>
+</form>
 <p>説明はほぼ不要ですが、拡張子 md を rewrite して phar に委譲されるようにします。<span class="implicit-br">
 </span><code>-d</code> オプションを加えれば Directory Index としても機能します。</p>
 <p>※ 環境によっては <code>security.limit_extensions</code> や <code>SetHandler</code> 等の設定が必要です</p>
@@ -154,10 +177,10 @@
 <p>上記のようにすると下記のようになります。</p>
 <p>この下にコメントがあります。</p><!--  これは html コメントです --><p>この上にコメントがあります。</p>
 </section><section id="_ac3e6d2e7121b2918cd5d40f68a6c79241452fba-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">ノート</h4>
-<p>コードブロックと同じように <code>"""</code> で囲むと注意書きブロックが生成されます。</p>
-<pre data-label="注意書きの例"><div class="code language-markdown:注意書きの例 markdown:注意書きの例">"""note:title
+<p>コードブロックと同じように <code>:::</code> で囲むと注意書きブロックが生成されます。</p>
+<pre data-label="注意書きの例"><div class="code language-markdown:注意書きの例 markdown:注意書きの例">:::note:title
 これは注意書きです。
-"""</div></pre>
+:::</div></pre>
 <p>上記のようにすると下記のようになります。</p>
 <div class="note admonition">
 <p class="admonition-title">title</p>
@@ -165,6 +188,7 @@
 </div>
 <p><code>note</code> の部分は Read The Docs の他のタイプが使えます。頻出するのは <code>hint</code> <code>info</code> <code>warning</code> <code>important</code> などでしょう。</p>
 <p>title の部分はただのラベルになります。</p>
+<p>歴史的な経緯により、 <code>"""</code> でもノート記法が使えますが、主流は <code>:::</code> なので <code>:::</code> を使うようにしてください。</p>
 </section><section id="_2438d25193d3fde549bb92ce4a6f9e931ad3361d-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">サイドバー</h4>
 <p>コードブロックと同じように <code>///</code> で囲むとサイドバーブロックが生成されます。</p>
 <pre data-label="サイドバーの例"><div class="code language-markdown:サイドバーの例 markdown:サイドバーの例">///note:title
@@ -367,16 +391,52 @@ echo 2;</div></pre>
 </div>
 </section><section id="_58284ace71c2e08e9d914750844e1f73dcb11e14-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">折りたたみ</h4>
 <p>コードブロックと同じように <code>...</code> で囲むと折りたたみとなります。</p>
-<pre data-label=""><div class="code">...ここは summary になります
+<pre data-label=""><div class="code">...ここは **summary** になります
 ここが折りたたみの中身になります
 ...</div></pre>
 <p>上記のようにすると下記のようになります。</p>
 <details>
-<summary class="">ここは summary になります</summary>
+<summary class="">ここは <strong>summary</strong> になります</summary>
 <p>ここが折りたたみの中身になります</p>
 </details>
 <p>summary 部分を省略すると summary タグは生成されません。<span class="implicit-br">
 </span>その場合ブラウザのデフォルトになります（「省略」など）。</p>
+</section><section id="_b1a1cb493ac64dfa293477bcc124f4e64020a68f-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">タブ</h4>
+<p><code>[タブ名]{タブ内容}</code> とするとタブ表示になります。</p>
+<pre data-label=""><div class="code">[これはタブAです]{
+これは内容です
+}
+[これはタブBです]{
+- markdown 構文も
+- 使えます
+
+```
+これはコードブロックです
+```
+}</div></pre>
+<p>上記のようにすると下記のようになります。</p>
+<form class="tab-container">
+<div class="tab-item">
+<label class="tab-title">
+<input type="radio" name="tab-name" checked>これはタブAです</label>
+<div class="tab-content">
+<p>これは内容です</p>
+</div>
+</div>
+<div class="tab-item">
+<label class="tab-title">
+<input type="radio" name="tab-name">これはタブBです</label>
+<div class="tab-content">
+<ul class=" simple">
+<li>markdown 構文も</li>
+<li>使えます<pre data-label=""><div class="code">これはコードブロックです</div></pre>
+</li>
+</ul>
+</div>
+</div>
+</form>
+<p>タブ内容に改行は必須です。 <code>[タブ名]{タブ内容}</code> のように1行で記述することはできません。<span class="implicit-br">
+</span>各タブ間に空行を挟んではいけません。挟むとそれぞれ別のタブブロックと認識されます。</p>
 </section><section id="_9ee41198fa16304a56f1a575a1af05a6b5ec50fa-1" class="section section-level-h4" data-section-level="4"><h4 class="section-header">幅指定テーブル</h4>
 <p>テーブル記法で2行目に空白を含めると <code>-</code> の数が列の幅になります。</p>
 <pre data-label="幅指定テーブルの例"><div class="code language-markdown:幅指定テーブルの例 markdown:幅指定テーブルの例">| 連番 | 名前 | 日付                |
@@ -794,9 +854,9 @@ graph ethane {
 - {color:red}li自体にスタイルが適用されています
 
 [class=" hint"]
-"""
+:::
 このノートは .hint が付与されています。
-"""</div></pre>
+:::</div></pre>
 <p>上記のようにすると下記のようになります。</p>
 <p><a href="https://example.com" target="_blank">このリンクは target=_blank が指定されています</a><span class="implicit-br">
 </span><strong hoge="hoge" fuga="fuga" piyo="piyo">この太字は hoge fuga piyo が指定されています</strong><span class="implicit-br">
@@ -835,9 +895,9 @@ graph ethane {
 <pre data-label=""><div class="code">&lt;&lt;BLOCK1
 ここは BLOCK1 です。
 
-"""note:title
+:::note:title
 test
-"""
+:::
 BLOCK1
 
 &lt;&lt;BLOCK2
@@ -921,6 +981,15 @@ BLOCK3
 <li>POST で更新する？</li>
 <li>静的ファイルは全部 CDN に逃したい</li>
 <li>markdown に include 機能を持たせたい</li>
+</ul>
+</section><section id="_3591720dc29efed55da59e353bbd1e1ad90dedf6-1" class="section section-level-h3" data-section-level="3"><h3 class="section-header">1.5.0</h3>
+<ul class=" simple">
+<li>[fixbug] 拡張子周りを修正</li>
+<li>[feature] デフォルトオプションを指定できる機能</li>
+<li>[feature] ノート記法に ::: を追加</li>
+<li>[feature] summary はタグそのものなので markdown が活きるように変更</li>
+<li>[feature] タブ機能を実装</li>
+<li>[feature] yaml によるメタデータ埋め込みを実装</li>
 </ul>
 </section><section id="_e2060004dffbdc6873d309c73a458221a047212b-1" class="section section-level-h3" data-section-level="3"><h3 class="section-header">1.4.0</h3>
 <ul class=" simple">
@@ -1041,7 +1110,7 @@ BLOCK3
                                                             <a href="index.html" class="btn btn-neutral" accesskey="u" rel="up"><span class="fa fa-arrow-circle-up" aria-hidden="true"></span> php-markdown/</a>
                                                     </div>
                         <div>
-                                                            <a href="snippet.html" class="btn btn-neutral" accesskey="n" rel="next">snippet.md <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+                                                            <a href="snippet.html" class="btn btn-neutral" accesskey="n" rel="next">snippet.html <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
                                                     </div>
                     </div>
                     <hr>
@@ -1089,7 +1158,7 @@ BLOCK3
                 <dt>Head</dt>
                 <dd>
                     <label class="option-title" for="toc_width">TOC width</label>
-                    <input id="tocWidth" class="option-input savedata" data-default-value="370" type="number" min="0" max="700">
+                    <input id="tocWidth" class="option-input savedata" data-default-value="380" type="number" min="0" max="700">
                 </dd>
                 <dd>
                     <label class="option-title" for="toc_level">TOC level</label>
