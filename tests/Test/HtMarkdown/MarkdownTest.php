@@ -247,21 +247,21 @@ class MarkdownTest extends \ryunosuke\Test\AbstractTestCase
     function test_commonBlock()
     {
         that(Markdown::render(<<<MD
-            ""
+            ::
             less
-            ""
+            ::
             
-            """type:la"bel
+            ///type:la/bel
             invalid
-            """
+            ///
             
-            """
+            ///
             interrupt
             MD
             , []))->htmlMatchesArray([
             "body" => [
-                "p[1]" => ["\"\"", "less", "\"\""],
-                "p[2]" => ["\"\"\"type:la\"bel", "invalid"],
+                "p[1]" => ["::", "less", "::"],
+                "p[2]" => ["///type:la/bel", "invalid"],
                 "p[3]" => ["interrupt"],
             ],
         ]);
@@ -435,9 +435,9 @@ class MarkdownTest extends \ryunosuke\Test\AbstractTestCase
     function test_blockNote()
     {
         that(Markdown::render(<<<MD
-            """
+            :::
             text
-            """
+            :::
             MD
             , []))->htmlMatchesArray([
             "div" => [
@@ -450,9 +450,9 @@ class MarkdownTest extends \ryunosuke\Test\AbstractTestCase
         ]);
 
         that(Markdown::render(<<<MD
-            """note
+            :::note
             text
-            """
+            :::
             MD
             , []))->htmlMatchesArray([
             "div" => [
@@ -465,9 +465,9 @@ class MarkdownTest extends \ryunosuke\Test\AbstractTestCase
         ]);
 
         that(Markdown::render(<<<MD
-            """note:label
+            :::note:label
             text
-            """
+            :::
             MD
             , []))->htmlMatchesArray([
             "div" => [
@@ -1017,6 +1017,22 @@ class MarkdownTest extends \ryunosuke\Test\AbstractTestCase
                         "caption-center",
                     ],
                 ],
+            ],
+        ]);
+
+        that(Markdown::render(<<<MD
+            ::
+            ::
+            --
+            MD
+            , []))->htmlMatchesArray([
+            "h2" => [
+                "class"   => ["sub-header"],
+                "::",
+                "span[1]" => [
+                    "class" => ["implicit-br"],
+                ],
+                "::",
             ],
         ]);
     }

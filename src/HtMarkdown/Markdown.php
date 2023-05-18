@@ -30,6 +30,7 @@ class Markdown extends Parsedown
         $newBlockTypes = [
             '<' => ['Alias', 'Here'],
             '"' => ['Note'],
+            ':' => ['Note'],
             '/' => ['Side', 'LineComment'],
             '.' => ['Detail'],
             '-' => ['Div'],
@@ -411,7 +412,7 @@ class Markdown extends Parsedown
                     ],
                 ],
             ],
-        ]);
+        ], null, "\0");
         if ($Block !== null) {
             [$type, $title] = explode(':', $Block['infoString']) + [1 => ''];
             $Block['element']['attributes']['class'] = "$type admonition";
@@ -688,9 +689,9 @@ class Markdown extends Parsedown
     protected function _tableCaption($oneline)
     {
         if (false
-            || preg_match('#^(:)(.+?)(:)$#u', $oneline, $matches)
-            || preg_match('#^(:)(.+?)(:?)$#u', $oneline, $matches)
-            || preg_match('#^(:?)(.+?)(:)$#u', $oneline, $matches)
+            || preg_match('#^(:)([^:]+?)(:)$#u', $oneline, $matches)
+            || preg_match('#^(:)([^:]+?)(:?)$#u', $oneline, $matches)
+            || preg_match('#^(:?)([^:]+?)(:)$#u', $oneline, $matches)
         ) {
             $caption['text'] = $matches[2];
             $caption['align'] = 'unset';
@@ -725,6 +726,10 @@ class Markdown extends Parsedown
 
         $text = trim($Line['text']);
         $bare = trim($text, '|');
+
+        if (trim($text, ':') === '' || trim($text, '-') === '') {
+            return;
+        }
 
         $Block['cols'] = [];
         foreach (explode('|', $bare) as $dividerCell) {
