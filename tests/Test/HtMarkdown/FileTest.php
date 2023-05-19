@@ -94,6 +94,7 @@ class FileTest extends \ryunosuke\Test\AbstractTestCase
     {
         $file = new File('/path/to/file.txt');
         that($file->basename())->is('file.txt');
+        that($file->basename('.csv'))->is('file.csv');
     }
 
     function test_filename()
@@ -116,6 +117,9 @@ class FileTest extends \ryunosuke\Test\AbstractTestCase
 
     function test_changeExtension()
     {
+        $file = new File('/path/to/file.txt');
+        that($file->changeExtension(null))->is('/path/to/file.txt');
+
         $file = new File('/path/to/file.txt');
         that($file->changeExtension(''))->is('/path/to/file');
 

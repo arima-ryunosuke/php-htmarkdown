@@ -81,8 +81,11 @@ class File
         return dirname($this->original, $levels);
     }
 
-    public function basename(): string
+    public function basename(string $alterext = null): string
     {
+        if ($alterext !== null) {
+            return $this->filename() . $alterext;
+        }
         return basename($this->original);
     }
 
@@ -96,8 +99,9 @@ class File
         return pathinfo($this->original, PATHINFO_EXTENSION);
     }
 
-    public function changeExtension(string $ext): string
+    public function changeExtension(string $ext = null): string
     {
+        $ext ??= '.' . $this->extension();
         return $this->dirname() . '/' . $this->filename() . $ext;
     }
 

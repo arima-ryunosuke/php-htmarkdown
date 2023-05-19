@@ -277,7 +277,7 @@ class Document
     public function localName(): string
     {
         if (!$this->isDirectoryIndex()) {
-            return $this->file->basename();
+            return $this->file->basename($this->download ? '.html' : null);
         }
         else {
             return $this->file->parent()->basename() . '/';
@@ -288,7 +288,7 @@ class Document
     {
         if ($this->isSupported()) {
             $path = $this->file->relative($from->file->parent());
-            return preg_replace('#^\\./#u', '', $path->changeExtension($this->download ? '.html' : '.md'));
+            return preg_replace('#^\\./#u', '', $path->changeExtension($this->download ? '.html' : null));
         }
         else {
             return $this->file->basename();
