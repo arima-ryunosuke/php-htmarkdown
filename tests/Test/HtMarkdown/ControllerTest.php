@@ -67,9 +67,10 @@ class ControllerTest extends \ryunosuke\Test\AbstractTestCase
         $controller = new Controller([], [null, "$dir/plain.md"]);
         that($controller)->handleCli(...[])->outputMatches("#^PK#");
 
-        $controller = new Controller([], [null, "$dir/plain.md", sys_get_temp_dir() . 'htt']);
+        $controller = new Controller(['options' => ['defaults.font_family' => 'somefont']], [null, "$dir/plain.md", sys_get_temp_dir() . 'htt']);
         that($controller)->handleCli(...[])->outputEquals("");
         $this->assertCount(1, glob(sys_get_temp_dir() . 'htt'));
+        that(sys_get_temp_dir() . 'htt/plain.html')->fileContains('data-default-value="somefont"');
 
         $controller = new Controller([], [null, "$dir/notfound"]);
         that($controller)->handleCli()->wasThrown('is not found');

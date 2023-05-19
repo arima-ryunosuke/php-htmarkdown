@@ -38,8 +38,9 @@ class Document
         $this->file = new File($filename);
 
         $this->options = array_replace(Controller::SPECIFIABLE_OPTIONS, [
-            'docroot' => $this->file->dirname(),
-            'navroot' => '',
+            'docroot'  => $this->file->dirname(),
+            'navroot'  => '',
+            'defaults' => Controller::DEFAULT_SETTINGS,
         ], $options);
     }
 

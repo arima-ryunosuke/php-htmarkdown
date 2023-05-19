@@ -21,6 +21,24 @@ class Controller
         ],
     ];
 
+    const DEFAULT_SETTINGS = [
+        'font_family'    => 'sans-serif',
+        'font_size'      => 16,
+        'toc_visible'    => true,
+        'toc_width'      => 380,
+        'toc_level'      => 5,
+        'toc_sticky'     => 3,
+        'toc_active'     => 'some',
+        'toc_number'     => true,
+        'toc_child'      => true,
+        'toc_follow'     => true,
+        'section_indent' => 0,
+        'highlight_css'  => 'default',
+        'section_number' => true,
+        'link_url'       => true,
+        'break_line'     => 'break',
+    ];
+
     private $server;
     private $request;
 
@@ -102,9 +120,19 @@ class Controller
             array_keys(self::SPECIFIABLE_OPTIONS),
             array_values(self::SPECIFIABLE_OPTIONS)
         );
-        $options = getopt('', $long_options, $rest_index);
+        $long_options = array_merge($long_options, array_map(fn($setting) => "defaults.$setting::", array_keys(self::DEFAULT_SETTINGS)));
+
+        $options = getopt('', $long_options, $rest_index) + ($this->server['options'] ?? []);
+        $defaults = [];
+        foreach ($options as $opt => $val) {
+            if (strpos($opt, 'defaults.') === 0) {
+                $defaults[substr($opt, strlen('defaults.'))] = $val;
+                unset($options[$opt]);
+            }
+        }
         $options = array_replace($options, [
             'download' => true,
+            'defaults' => $defaults + self::DEFAULT_SETTINGS,
         ]);
 
         $input = $this->request[$rest_index];
@@ -149,6 +177,8 @@ class Controller
         $n = 0;
         $navroot = implode('', array_filter($commons, function ($i) use (&$n) { return $i === $n++; }, ARRAY_FILTER_USE_KEY));
         $options['navroot'] = dirname("{$navroot}dummy");
+
+        $options['defaults'] = ((array) ($this->request['defaults'] ?? [])) + self::DEFAULT_SETTINGS;
 
         $document = new Document($filename, $options);
 
