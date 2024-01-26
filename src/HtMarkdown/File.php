@@ -155,6 +155,14 @@ class File
         return mime_content_type($this->original);
     }
 
+    public function datauri(): ?string
+    {
+        if ($this->exists()) {
+            return "data:" . $this->mimetype() . ";base64," . base64_encode(file_get_contents($this->original));
+        }
+        return null;
+    }
+
     public function contents(): ?string
     {
         if ($this->exists()) {

@@ -8,6 +8,7 @@ class Controller
         'dummy'       => false,
         'project'     => null,
         'docroot'     => null,
+        'singlehtml'  => false,
         'index_file'  => null,
         'js_file'     => null,
         'css_file'    => null,
@@ -122,7 +123,14 @@ class Controller
         );
         $long_options = array_merge($long_options, array_map(fn($setting) => "defaults.$setting::", array_keys(self::DEFAULT_SETTINGS)));
 
-        $options = getopt('', $long_options, $rest_index) + ($this->server['options'] ?? []);
+        $options = getopt('', $long_options, $rest_index) + ['dummy' => false]; // for coverage
+        foreach ($options as $k => $v) {
+            // false is no value option or optional value option
+            if ($v === false) {
+                $options[$k] = is_bool(self::SPECIFIABLE_OPTIONS[$k]) ? true : self::SPECIFIABLE_OPTIONS[$k];
+            }
+        }
+        $options += $this->server['options'] ?? [];
         $defaults = [];
         foreach ($options as $opt => $val) {
             if (strpos($opt, 'defaults.') === 0) {
@@ -130,7 +138,9 @@ class Controller
                 unset($options[$opt]);
             }
         }
-        $options = array_replace($options, [
+        $options = array_replace([
+            'singlehtml' => false,
+        ], $options, [
             'download' => true,
             'defaults' => $defaults + self::DEFAULT_SETTINGS,
         ]);
@@ -144,7 +154,7 @@ class Controller
         $document = new Document($filename, $options);
 
         $output = $this->request[$rest_index + 1] ?? null;
-        if ($output !== null) {
+        if ($output !== null && !$options['singlehtml']) {
             foreach ($document->generate($output) as $name => $contents) {
                 @mkdir(dirname("$output/$name"), 0777, true);
                 file_put_contents("$output/$name", $contents);
@@ -152,7 +162,13 @@ class Controller
             return true;
         }
 
-        readfile($document->archive()->realpath());
+        if ($options['singlehtml']) {
+            print($document->html());
+        }
+        else {
+            readfile($document->archive()->realpath());
+        }
+
         return true;
     }
 

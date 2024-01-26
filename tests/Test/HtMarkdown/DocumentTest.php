@@ -377,6 +377,14 @@ class DocumentTest extends \ryunosuke\Test\AbstractTestCase
             '<del class="replace" style="color:red">text</del>',
             '<ul class=" simple" attrname="hoge" style="color:red">',
         ]);
+
+        $doc = new Document("$dir/dummy.md", [
+            'docroot'    => $dir,
+            'singlehtml' => true,
+        ]);
+        that($doc->markup('')->saveHTML())->containsAll([
+            'data:image/png;base64,',
+        ]);
     }
 
     function test_generate()

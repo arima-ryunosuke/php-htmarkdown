@@ -466,6 +466,19 @@ class Document
             }
         }
 
+        if ($this->options['singlehtml']) {
+            foreach ($xpath->query('//img') as $img) {
+                /** @var \DOMElement $img */
+                $src = $img->getAttribute('src');
+                if (!parse_url($src, PHP_URL_HOST)) {
+                    $imgfile = new File($this->file->parent() . '/' . $src);
+                    if ($imgfile->exists()) {
+                        $img->setAttribute('src', $imgfile->datauri());
+                    }
+                }
+            }
+        }
+
         $targeting = function (\DOMNode $node) use (&$targeting) {
             $target = $node->nextSibling;
             while ($target !== null) {

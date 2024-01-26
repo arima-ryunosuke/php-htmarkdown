@@ -67,6 +67,9 @@ class ControllerTest extends \ryunosuke\Test\AbstractTestCase
         $controller = new Controller([], [null, "$dir/plain.md"]);
         that($controller)->handleCli(...[])->outputMatches("#^PK#");
 
+        $controller = new Controller(['options' => ['singlehtml' => true]], [null, "$dir/dummy.md"]);
+        that($controller)->handleCli(...[])->outputContainsAll(["<html", ":root {", "DOMContentLoaded", "data:image/png;base64"]);
+
         $controller = new Controller(['options' => ['defaults.font_family' => 'somefont']], [null, "$dir/plain.md", sys_get_temp_dir() . 'htt']);
         that($controller)->handleCli(...[])->outputEquals("");
         $this->assertCount(1, glob(sys_get_temp_dir() . 'htt'));

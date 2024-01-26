@@ -201,6 +201,15 @@ class FileTest extends \ryunosuke\Test\AbstractTestCase
         that($file->mimetype())->isNull();
     }
 
+    function test_datauri()
+    {
+        $file = new File(__FILE__);
+        that($file->datauri())->stringStartsWith('data:text/x-php;base64,');
+
+        $file = new File('/path/to/notfound');
+        that($file->datauri())->isNull();
+    }
+
     function test_contents()
     {
         $file = new File('/path/to/file.txt');
