@@ -21,12 +21,12 @@ class ControllerTest extends \ryunosuke\Test\AbstractTestCase
     function test_isDownload()
     {
         $controller = new Controller([], []);
-        that($controller->isDownload())->isFalse();
+        that($controller->getDownloadType())->is(null);
 
         $controller = new Controller([], [
-            'dl' => true,
+            'dl' => 'zip',
         ]);
-        that($controller->isDownload())->isTrue();
+        that($controller->getDownloadType())->is('zip');
     }
 
     function test_isPlain()
@@ -120,8 +120,16 @@ class ControllerTest extends \ryunosuke\Test\AbstractTestCase
             'DOCUMENT_ROOT' => realpath($dir),
             'REQUEST_URI'   => '/',
         ], [
-            'dl' => true,
+            'dl' => 'zip',
         ]);
         @that($controller)->handleHttp()->wasOutputed('PK');
+
+        $controller = new Controller([
+            'DOCUMENT_ROOT' => realpath($dir),
+            'REQUEST_URI'   => '/',
+        ], [
+            'dl' => 'html',
+        ]);
+        @that($controller)->handleHttp()->wasOutputed('/* override theme.css */');
     }
 }

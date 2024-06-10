@@ -57,9 +57,9 @@ class Controller
         return $lastModified > strtotime($this->server['HTTP_IF_MODIFIED_SINCE'] ?? null);
     }
 
-    public function isDownload(): bool
+    public function getDownloadType(): ?string
     {
-        return !!($this->request['dl'] ?? false);
+        return $this->request['dl'] ?? null;
     }
 
     public function isPlain(): bool
@@ -175,10 +175,11 @@ class Controller
     public function handleHttp(): bool
     {
         $options = [
-            'navroot'  => null,
-            'docroot'  => null,
-            'download' => $this->isDownload(),
-            'locale'   => locale_accept_from_http($this->server['HTTP_ACCEPT_LANGUAGE']),
+            'navroot'    => null,
+            'docroot'    => null,
+            'download'   => $this->getDownloadType() !== null,
+            'singlehtml' => $this->getDownloadType() === 'html',
+            'locale'     => locale_accept_from_http($this->server['HTTP_ACCEPT_LANGUAGE']),
         ];
         $options += array_intersect_key($this->server, self::SPECIFIABLE_OPTIONS);
 
@@ -218,10 +219,14 @@ class Controller
                 return false;
             }
 
-            if ($this->isDownload()) {
+            if ($this->getDownloadType() === 'zip') {
                 $file = $document->archive();
                 $this->header(['Content-Disposition: attachment; filename="' . $file . '"']);
                 $this->content($file->contents());
+            }
+            elseif ($this->getDownloadType() === 'html') {
+                $this->header(['Content-Disposition: attachment; filename="' . $document->localName() . '"']);
+                $this->content($document->html());
             }
             elseif ($this->isPlain()) {
                 $this->header(['Last-Modified' => date('r', $lastModified)]);
