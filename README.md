@@ -920,6 +920,10 @@ semver 準拠はあくまで下記だけです。
 - 静的ファイルは全部 CDN に逃したい
 - markdown に include 機能を持たせたい
 
+### 1.7.0
+
+- [feature] HTTP でシングルhtmlの出力に対応
+
 ### 1.6.0
 
 - [feature] CLI でシングルhtmlの出力に対応
