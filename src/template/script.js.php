@@ -69,6 +69,22 @@ document.addEventListener('DOMContentLoaded', function () {
         children.forEach(child => this.append(child));
         return children;
     };
+    Object.defineProperty(Element.prototype, "textNodes", {
+        enumerable: false,
+        configurable: false,
+        get: function () {
+            const texts = [];
+            for (e of this.childNodes) {
+                if (e.nodeName === "#text" || e.nodeName === "#comment") {
+                    texts.push(e);
+                }
+                else {
+                    texts.push(...e.textNodes);
+                }
+            }
+            return texts;
+        },
+    });
     Document.prototype.createElements = function (nodes) {
         const elements = [];
         for (const [tagname, attributes] of Object.entries(nodes)) {
@@ -392,6 +408,7 @@ document.addEventListener('DOMContentLoaded', function () {
         article.$$('.section').forEach(function (section) {
             const sectionId = `toc-${section.id}`;
             const sectionTitle = section.$('.section-header').textContent;
+            const sectionContents = section.$('.section-header').textNodes;
             const sectionLevel = +section.dataset.sectionLevel;
 
             levels[sectionLevel - 1]++;
@@ -441,7 +458,16 @@ document.addEventListener('DOMContentLoaded', function () {
                                 }
                             }
                         },
-                        sectionTitle
+                        ...sectionContents.map(function (e) {
+                            const span = document.createElement('span');
+                            if (e.nodeName === '#text') {
+                                span.textContent = e.nodeValue;
+                            }
+                            if (e.nodeName === '#comment') {
+                                span.innerHTML = e.nodeValue;
+                            }
+                            return span;
+                        })
                     ],
                 },
             });
