@@ -25,6 +25,7 @@ class Document
     public function __construct(string $filename, array $options = [])
     {
         $options = array_replace([
+            'filename'      => $filename,
             'index_file'    => 'index.md',
             'single_assets' => [],
             'singlefile'    => false,
@@ -514,7 +515,7 @@ class Document
     public function generate(?string $output = null): \Generator
     {
         $this->options['docroot'] = $this->file->parent();
-        $this->options['singlefile'] = $this->file->exists();
+        $this->options['singlefile'] = !is_dir($this->options['filename']);
 
         foreach (['script.js', 'style.css'] as $subpath) {
             $mtime = filemtime(__DIR__ . "/../template/$subpath.php");
