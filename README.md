@@ -920,6 +920,10 @@ semver 準拠はあくまで下記だけです。
 - 静的ファイルは全部 CDN に逃したい
 - markdown に include 機能を持たせたい
 
+### 1.7.2
+
+- [fixbug] index.md が存在するときに singlemode になる不具合
+
 ### 1.7.1
 
 - [feature] セクションタイトルをタグ化
