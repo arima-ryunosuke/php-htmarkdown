@@ -1,31 +1,9 @@
 {
   "compression": "GZ",
-  "files": [
-    "vendor/autoload.php"
-  ],
-  "finder": [
-    {
-      "name": "*.php",
-      "exclude": [
-        "demo",
-        "Demo",
-        "Examples",
-        "test",
-        "tests",
-        "Test",
-        "Tests",
-        "unitTests"
-      ],
-      "in": [
-        "src",
-        "vendor/composer",
-        "vendor/erusev/parsedown",
-        "vendor/symfony"
-      ]
-    }
-  ],
+  "force-autodiscovery": true,
+  "directories": ["src"],
   "output": "htmarkdown.phar",
   "shebang": false,
-  "main": "src/index.php",
-  "stub": true
+  "check-requirements": false,
+  "main": "src/index.php"
 }

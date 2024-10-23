@@ -47,9 +47,7 @@
       "vendor/bin/phpunit --configuration=tests/phpunit.xml"
     ],
     "box": [
-      "@composer dump-autoload --no-dev",
-      "@php bin/box.phar build -c box.json",
-      "@composer dump-autoload"
+      "bin/box.phar compile -c box.json"
     ],
     "docs": [
       "rm -rf docs",
