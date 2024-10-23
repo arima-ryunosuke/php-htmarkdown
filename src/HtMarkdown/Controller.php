@@ -54,7 +54,7 @@ class Controller
 
     public function isModifiedSince(int $lastModified): bool
     {
-        return $lastModified > strtotime($this->server['HTTP_IF_MODIFIED_SINCE'] ?? null);
+        return $lastModified > strtotime($this->server['HTTP_IF_MODIFIED_SINCE'] ?? '');
     }
 
     public function getDownloadType(): ?string
