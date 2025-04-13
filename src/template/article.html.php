@@ -1,6 +1,5 @@
 <?php
 $h = function ($string) { return htmlspecialchars($string, ENT_QUOTES, 'UTF-8'); };
-$v = function ($value) { return is_string($value) ? $value : var_export($value, true); };
 
 /** @var \ryunosuke\HtMarkdown\Document $this */
 $article = $this->markup($_GET['query'] ?? '') ?? '';
@@ -27,17 +26,17 @@ $siblings = $this->siblings();
         <style><?php include $this->css_file ?></style>
     <?php endif ?>
 
+    <script defer src="https://cdn.jsdelivr.net/gh/arima-ryunosuke/js-kQuery/dist/kQuery-full.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/highlightjs@9.16.2/highlight.pack.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/mermaid@9.1.7/dist/mermaid.min.js"></script>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/viz.js"></script>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/full.render.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@viz-js/viz@3.12.0/lib/viz-standalone.min.js"></script>
     <?php if (isset($this->single_assets['script.js'])): ?>
         <script defer src="<?= $this->single_assets['script.js']->relative($this->file->parent()) ?>"></script>
     <?php else: ?>
-        <script defer><?php include __DIR__ . '/script.js.php' ?></script>
+        <script type="module"><?php include __DIR__ . '/script.js.php' ?></script>
     <?php endif ?>
     <?php if (strlen($this->js_file)): ?>
-        <script><?php include $this->js_file ?></script>
+        <script type="module"><?php include $this->js_file ?></script>
     <?php endif ?>
 </head>
 
@@ -141,7 +140,7 @@ $siblings = $this->siblings();
                 <dt>View</dt>
                 <dd>
                     <label class="option-title" for="font_family"><?= $h($locale['font_family']) ?></label>
-                    <input id="fontFamily" class="option-input savedata" data-default-value="<?= $h($v($this->defaults['font_family'])) ?>" type="search" list="fonts">
+                    <input id="fontFamily" class="option-input savedata" data-default-value="<?= $h($this->defaults['font_family']) ?>" type="search" list="fonts">
                     <datalist id="fonts">
                         <?php foreach (['serif', 'sans-serif', 'monospace', /* and more */] as $family): ?>
                             <option value="<?= $h($family) ?>"><?= $h($family) ?></option>
@@ -151,30 +150,30 @@ $siblings = $this->siblings();
                 <dd>
                     <label class="option-title" for="font_size"><?= $h($locale['font_size']) ?></label>
                     <span>
-                        <input id="fontSize" class="option-input savedata" data-default-value="<?= $h($v($this->defaults['font_size'])) ?>" type="range" min="10" max="24">
+                        <input id="fontSize" class="option-input savedata" data-default-value="<?= $h($this->defaults['font_size']) ?>" type="range" min="10" max="24">
                         <output for="fontSize"></output>
                     </span>
                 </dd>
                 <dd>
                     <label class="option-title" for="toc_visible"><?= $h($locale['toc_visible']) ?></label>
-                    <input id="tocVisible" class="option-input savedata" data-default-value="<?= $h($v($this->defaults['toc_visible'])) ?>" type="checkbox" value="1">
+                    <input id="tocVisible" class="option-input savedata" data-default-value="<?= $h($this->defaults['toc_visible']) ?>" type="checkbox" value="1">
                 </dd>
                 <dt>Head</dt>
                 <dd>
                     <label class="option-title" for="toc_width"><?= $h($locale['toc_width']) ?></label>
-                    <input id="tocWidth" class="option-input savedata" data-default-value="<?= $h($v($this->defaults['toc_width'])) ?>" type="number" min="0" max="700">
+                    <input id="tocWidth" class="option-input savedata" data-default-value="<?= $h($this->defaults['toc_width']) ?>" type="number" min="0" max="700">
                 </dd>
                 <dd>
                     <label class="option-title" for="toc_level"><?= $h($locale['toc_level']) ?></label>
-                    <input id="tocLevel" class="option-input savedata" data-default-value="<?= $h($v($this->defaults['toc_level'])) ?>" type="number" min="1" max="6">
+                    <input id="tocLevel" class="option-input savedata" data-default-value="<?= $h($this->defaults['toc_level']) ?>" type="number" min="1" max="6">
                 </dd>
                 <dd>
                     <label class="option-title" for="toc_sticky"><?= $h($locale['toc_sticky']) ?></label>
-                    <input id="tocSticky" class="option-input savedata" data-default-value="<?= $h($v($this->defaults['toc_sticky'])) ?>" type="number" min="0" max="6">
+                    <input id="tocSticky" class="option-input savedata" data-default-value="<?= $h($this->defaults['toc_sticky']) ?>" type="number" min="0" max="6">
                 </dd>
                 <dd>
                     <label class="option-title" for="toc_active"><?= $h($locale['toc_active']) ?></label>
-                    <select id="tocActive" class="option-input savedata" data-default-value="<?= $h($v($this->defaults['toc_active'])) ?>">
+                    <select id="tocActive" class="option-input savedata" data-default-value="<?= $h($this->defaults['toc_active']) ?>">
                         <?php foreach (['none', 'some', 'all'] as $mode): ?>
                             <option value="<?= $h($mode) ?>"><?= $h($locale["toc_active.$mode"]) ?></option>
                         <?php endforeach ?>
@@ -182,24 +181,24 @@ $siblings = $this->siblings();
                 </dd>
                 <dd>
                     <label class="option-title" for="toc_number"><?= $h($locale['toc_number']) ?></label>
-                    <input id="tocNumber" class="option-input savedata" data-default-value="<?= $h($v($this->defaults['toc_number'])) ?>" type="checkbox" value="1">
+                    <input id="tocNumber" class="option-input savedata" data-default-value="<?= $h($this->defaults['toc_number']) ?>" type="checkbox" value="1">
                 </dd>
                 <dd>
                     <label class="option-title" for="toc_child"><?= $h($locale['toc_child']) ?></label>
-                    <input id="tocChild" class="option-input savedata" data-default-value="<?= $h($v($this->defaults['toc_child'])) ?>" type="checkbox" value="1">
+                    <input id="tocChild" class="option-input savedata" data-default-value="<?= $h($this->defaults['toc_child']) ?>" type="checkbox" value="1">
                 </dd>
                 <dd>
                     <label class="option-title" for="toc_follow"><?= $h($locale['toc_follow']) ?></label>
-                    <input id="tocFollow" class="option-input savedata" data-default-value="<?= $h($v($this->defaults['toc_follow'])) ?>" type="checkbox" value="1">
+                    <input id="tocFollow" class="option-input savedata" data-default-value="<?= $h($this->defaults['toc_follow']) ?>" type="checkbox" value="1">
                 </dd>
                 <dt>Body</dt>
                 <dd>
                     <label class="option-title" for="section_indent"><?= $h($locale['section_indent']) ?></label>
-                    <input id="sectionIndent" class="option-input savedata" data-default-value="<?= $h($v($this->defaults['section_indent'])) ?>" type="number" min="0" max="6">
+                    <input id="sectionIndent" class="option-input savedata" data-default-value="<?= $h($this->defaults['section_indent']) ?>" type="number" min="0" max="6">
                 </dd>
                 <dd>
                     <label class="option-title" for="highlight_css"><?= $h($locale['highlight_css']) ?></label>
-                    <select id="highlightCss" class="option-input savedata" data-default-value="<?= $h($v($this->defaults['highlight_css'])) ?>">
+                    <select id="highlightCss" class="option-input savedata" data-default-value="<?= $h($this->defaults['highlight_css']) ?>">
                         <?php foreach (['default', 'zenburn', 'github', 'vs', /* and more */] as $cssname): ?>
                             <option value="<?= $h($cssname) ?>"><?= $h($cssname) ?></option>
                         <?php endforeach ?>
@@ -207,15 +206,15 @@ $siblings = $this->siblings();
                 </dd>
                 <dd>
                     <label class="option-title" for="section_number"><?= $h($locale['section_number']) ?></label>
-                    <input id="sectionNumber" class="option-input savedata" data-default-value="<?= $h($v($this->defaults['section_number'])) ?>" type="checkbox" value="1">
+                    <input id="sectionNumber" class="option-input savedata" data-default-value="<?= $h($this->defaults['section_number']) ?>" type="checkbox" value="1">
                 </dd>
                 <dd>
                     <label class="option-title" for="link_url"><?= $h($locale['link_url']) ?></label>
-                    <input id="linkUrl" class="option-input savedata" data-default-value="<?= $h($v($this->defaults['link_url'])) ?>" type="checkbox" value="1">
+                    <input id="linkUrl" class="option-input savedata" data-default-value="<?= $h($this->defaults['link_url']) ?>" type="checkbox" value="1">
                 </dd>
                 <dd>
                     <label class="option-title" for="break_line"><?= $h($locale['break_line']) ?></label>
-                    <select id="breakLine" class="option-input savedata" data-default-value="<?= $h($v($this->defaults['break_line'])) ?>">
+                    <select id="breakLine" class="option-input savedata" data-default-value="<?= $h($this->defaults['break_line']) ?>">
                         <?php foreach (['ignore', 'break', 'space'] as $mode): ?>
                             <option value="<?= $h($mode) ?>"><?= $h($locale["break_line.$mode"]) ?></option>
                         <?php endforeach ?>
