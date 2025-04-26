@@ -26,7 +26,7 @@ $siblings = $this->siblings();
         <style><?php include $this->css_file ?></style>
     <?php endif ?>
 
-    <script defer src="https://cdn.jsdelivr.net/gh/arima-ryunosuke/js-kQuery/dist/kQuery-full.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/gh/arima-ryunosuke/js-kQuery@0.2.1/dist/kQuery-full.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/highlightjs@9.16.2/highlight.pack.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/mermaid@9.1.7/dist/mermaid.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/@viz-js/viz@3.12.0/lib/viz-standalone.min.js"></script>
